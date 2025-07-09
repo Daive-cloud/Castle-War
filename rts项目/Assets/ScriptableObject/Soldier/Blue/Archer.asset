@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42a34e44fbab21c4bbae0f236461a5d8, type: 3}
+  m_Name: Archer
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 817934937, guid: 13f1796599ff3f444b6cac5870dca775, type: 3}
+  ID: 0338b49b-68b7-4047-b8f8-51655c3922f7
+  m_UnitPrefab: {fileID: 4121930742748061984, guid: 0b0ebc8e472dccf4d92db2483f6d9c5d, type: 3}
+  m_TrainingCost: 250
+  m_TrainingTime: 12
+  m_UnitType: 1

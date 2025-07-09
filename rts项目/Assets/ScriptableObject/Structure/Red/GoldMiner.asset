@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdb84294578037243bc5a3d40925b25b, type: 3}
+  m_Name: GoldMiner
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: 476b5ed1647782f40ba8fbc1df48e783, type: 3}
+  ID: c4abe58b-6555-4a31-81cc-db795f6f9db2
+  m_FoundationSprite: {fileID: 21300000, guid: 82bf320113c26434f8d75a459acd9022, type: 3}
+  m_CompletionSprite: {fileID: 21300000, guid: 476b5ed1647782f40ba8fbc1df48e783, type: 3}
+  m_StructurePrefab: {fileID: 9029401181094154268, guid: 8af2a9e3c9d80f84c8b6b85976791460, type: 3}
+  m_GoldCost: 300
+  m_WoodCost: 400
+  m_BuildingSize: {x: 3, y: 2, z: 0}
+  m_BuildingOffset: {x: -1, y: -1, z: 0}

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdb84294578037243bc5a3d40925b25b, type: 3}
+  m_Name: Barrack
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: 99d3ef6bb68b2d74e8e1776fc1988d78, type: 3}
+  ID: c4abe58b-6555-4a31-81cc-db795f6f9db2
+  m_FoundationSprite: {fileID: 21300000, guid: 81674510ef22d7a4181100f9a10f4352, type: 3}
+  m_CompletionSprite: {fileID: 21300000, guid: 99d3ef6bb68b2d74e8e1776fc1988d78, type: 3}
+  m_StructurePrefab: {fileID: 3684407751181403457, guid: 06898608c72036f44bc8473174805732, type: 3}
+  m_GoldCost: 200
+  m_WoodCost: 100
+  m_BuildingSize: {x: 2, y: 2, z: 0}
+  m_BuildingOffset: {x: -1, y: -1, z: 0}

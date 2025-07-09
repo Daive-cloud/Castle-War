@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42a34e44fbab21c4bbae0f236461a5d8, type: 3}
+  m_Name: Worker
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 1228714333, guid: 846d345a908e9ca41b808c1de2e9c5c6, type: 3}
+  ID: ffee1f69-776f-48dc-aa9c-3a1fa42ef656
+  m_UnitPrefab: {fileID: 3339719448614179751, guid: 13e34eef3755f8647a582c966db6e593, type: 3}
+  m_TrainingCost: 100
+  m_TrainingTime: 10
+  m_UnitType: 2
