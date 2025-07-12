@@ -11,6 +11,7 @@ TagManager:
   - RedUnit
   - Tree
   - AudioManager
+  - SettingsManager
   layers:
   - Default
   - TransparentFX

@@ -25,6 +25,8 @@ public class Unit : MonoBehaviour
     {
         m_GameManager = GameManager.Get();
         m_GameManager.RegisterUnit(this);
+
+        HealthBar.SetActive(false);
     }
 
     protected virtual void Update()
@@ -37,11 +39,21 @@ public class Unit : MonoBehaviour
        
     }
 
+    public virtual void SelectedUnit()
+    {
+        HealthBar.SetActive(true);
+    }
+
+    public virtual void UnselectedUnit()
+    {
+        HealthBar.SetActive(false);
+    }
+
     public virtual void Death()
     {
         IsDead = true;
         m_GameManager.RemoveUnit(this);
-        if(HealthBar != null)
+        if (HealthBar != null)
             HealthBar.SetActive(false);
     }
 

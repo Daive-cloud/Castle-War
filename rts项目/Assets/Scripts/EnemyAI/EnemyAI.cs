@@ -57,7 +57,7 @@ public class EnemyAI : MonoBehaviour
                 var stage = EnemyAIStages[CurrentStageIndex];
                 StageUpdateFruency = stage.StageExistWindow;
 
-                EnemyPlaceBuilding(stage.BuildingAction); // 自动放置建筑
+                EnemyPlaceBuilding(stage.BuildingAction); 
                 foreach(var action in stage.TrainingActions)
                 {
                     EnemyTrainingUnit(action);

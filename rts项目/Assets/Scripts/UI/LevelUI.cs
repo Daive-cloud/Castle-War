@@ -1,8 +1,8 @@
 using System.Collections;
 using TMPro;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class LevelUI : MonoBehaviour
 {
@@ -23,11 +23,13 @@ public class LevelUI : MonoBehaviour
 
     public void ShowMapChooseUI()
     {
+        AudioManager.Get().PlaySFX(2);
         ChooseMapUI.gameObject.SetActive(true);
     }
 
     public void CloseMapChooseUI()
     {
+        AudioManager.Get().PlaySFX(2);
         ChooseMapUI.gameObject.SetActive(false);
     }
 
@@ -50,7 +52,8 @@ public class LevelUI : MonoBehaviour
         }
         for (int i = 0; i < _count - 1; i++)
         {
-            Instantiate(PlayerDropPrefab, PlayerDropParent);
+            var newDrop = Instantiate(PlayerDropPrefab, PlayerDropParent);
+            newDrop.GetComponent<TMP_Dropdown>().onValueChanged.AddListener((index) => { AudioManager.Get().PlaySFX(3); });
         }
 
         for (int i = 0; i < _count; i++)
@@ -66,5 +69,16 @@ public class LevelUI : MonoBehaviour
         yield return null;
 
         ChooseMapUI.GetComponent<ChooseMapUI>().ApplyPositionUIUpdate();
+    }
+
+    public void BackToMainMenu()
+    {
+        AudioManager.Get().PlaySFX(2);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+    }
+
+    public void Temp()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 }

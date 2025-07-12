@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.000015258789, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.000091552734, y: 0.000024795532}
+  m_SizeDelta: {x: -0.00032043, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5987759073389516657
 CanvasRenderer:
@@ -58,15 +58,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 1, b: 0.0824852, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 9f5e63e88366273428a4d9d47c3cebd9, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -224,8 +224,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -81985740, guid: 7c6f7937fa100c04db4ed09bf1809411, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 68704d6c55e7d0144bc3c712160d0fd4, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -358,8 +358,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -13.622, y: 53}
-  m_SizeDelta: {x: 280.57, y: 37.7}
+  m_AnchoredPosition: {x: 12.2, y: 53}
+  m_SizeDelta: {x: 205.4, y: 37.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1436077091156979645
 MonoBehaviour:
@@ -481,8 +481,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0.000030518, y: 0}
+  m_AnchoredPosition: {x: -0.04499817, y: 0.45199966}
+  m_SizeDelta: {x: -9.321, y: -5.808}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2302403103476469115
 GameObject:
@@ -764,7 +764,7 @@ MonoBehaviour:
   Actions: []
   CheckFrequency: 0.5
   IsDead: 0
-  HealthBar: {fileID: 0}
+  HealthBar: {fileID: 2302403103476469115}
   BuildingEffect: {fileID: 4568846826122421722}
   TowerUnit: {fileID: 6715445241105376968}
   DeathEffect: {fileID: 7527831074656740747}

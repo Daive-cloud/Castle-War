@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class DamageFontUI : MonoBehaviour
 {
-     private TextMeshPro DamageFont => GetComponent<TextMeshPro>();
+    private TextMeshPro DamageFont => GetComponent<TextMeshPro>();
+    private static int SortingOrder = 0;
 
     [SerializeField] private AnimationCurve m_ScaleCurve;
     [SerializeField] private float m_FontExistTime;
@@ -16,6 +17,13 @@ public class DamageFontUI : MonoBehaviour
     private void Start()
     {
         FontSize = DamageFont.fontSize;
+        DamageFont.sortingOrder = SortingOrder;
+        SortingOrder++;
+
+        if (SortingOrder > 1000)
+        {
+            SortingOrder = 0;
+        }
     }
 
     private void Update()
