@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PathFinding 
+public class PathFinding
 {
     private Node[,] m_Grid;
     public Node[,] Grid => m_Grid;
@@ -27,7 +27,7 @@ public class PathFinding
         m_Height = bounds.size.y;
 
         m_GridOffset = bounds.min;
-        m_Grid = new Node[m_Width,m_Height];
+        m_Grid = new Node[m_Width, m_Height];
 
         InitializeGrid(m_GridOffset);
     }
@@ -36,38 +36,38 @@ public class PathFinding
     {
         Vector3 cellSize = m_TilemapManager.WalkableTilemap.cellSize;
 
-        for(int i=0;i<m_Width; i++)
+        for (int i = 0; i < m_Width; i++)
         {
-            for(int j=0;j<m_Height;j++)
+            for (int j = 0; j < m_Height; j++)
             {
-                Vector3Int leftButtomPosition = new Vector3Int(i + _offset.x,j + _offset.y,0);
+                Vector3Int leftButtomPosition = new Vector3Int(i + _offset.x, j + _offset.y, 0);
                 bool isWalkable = m_TilemapManager.CanWalkAtTile(leftButtomPosition);
-                var node = new Node(leftButtomPosition,cellSize,isWalkable);
+                var node = new Node(leftButtomPosition, cellSize, isWalkable);
                 m_Grid[i, j] = node;
             }
         }
     }
 
-    public Node FindNode(Vector3 _position) // ½«×ø±êÎ»ÖÃ×ª³É½ÚµãÎ»ÖÃ
+    public Node FindNode(Vector3 _position) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½×ªï¿½É½Úµï¿½Î»ï¿½ï¿½
     {
-        Vector3Int flooredPosition = new Vector3Int(Mathf.FloorToInt(_position.x),Mathf.FloorToInt(_position.y));
+        Vector3Int flooredPosition = new Vector3Int(Mathf.FloorToInt(_position.x), Mathf.FloorToInt(_position.y));
 
         int gridX = flooredPosition.x - m_GridOffset.x;
-        int gridY = flooredPosition .y - m_GridOffset.y;
+        int gridY = flooredPosition.y - m_GridOffset.y;
 
-        if(gridX >= 0 && gridY >= 0 && gridX < m_Width && gridY < m_Height)
+        if (gridX >= 0 && gridY >= 0 && gridX < m_Width && gridY < m_Height)
         {
-            return Grid[gridX,gridY];
+            return Grid[gridX, gridY];
         }
         return null;
     }
 
-    public List<Node> FindPath(Vector3 _startPosition,Vector3 _endPosition)
+    public List<Node> FindPath(Vector3 _startPosition, Vector3 _endPosition)
     {
         Node startNode = FindNode(_startPosition);
         Node endNode = FindNode(_endPosition);
 
-        if(startNode == null || endNode == null)
+        if (startNode == null || endNode == null)
         {
             ResetNode();
             return new List<Node>();
@@ -77,13 +77,13 @@ public class PathFinding
         Node closestNode = startNode;
         int closestDistance = FindDistanceBetweenTwoNodes(startNode, endNode);
 
-        while(OpenList.Count > 0)
+        while (OpenList.Count > 0)
         {
             Node currentNode = FindLowestFCostNode();
 
-            if(currentNode == endNode)
+            if (currentNode == endNode)
             {
-                var path = RetracePath(startNode,endNode);
+                var path = RetracePath(startNode, endNode);
                 ResetNode();
                 return path;
             }
@@ -93,13 +93,13 @@ public class PathFinding
 
             List<Node> neighbors = FindNodeNeighbors(currentNode);
 
-            foreach(var node in neighbors)
+            foreach (var node in neighbors)
             {
-                if(!CloseList.Contains(node))
+                if (!CloseList.Contains(node))
                 {
-                    int tentativeGCost = FindDistanceBetweenTwoNodes(currentNode,node) + currentNode.gCost;
+                    int tentativeGCost = FindDistanceBetweenTwoNodes(currentNode, node) + currentNode.gCost;
 
-                    if(!OpenList.Contains(node) || tentativeGCost < node.gCost)
+                    if (!OpenList.Contains(node) || tentativeGCost < node.gCost)
                     {
                         node.parent = currentNode;
                         node.gCost = tentativeGCost;
@@ -107,7 +107,7 @@ public class PathFinding
                         node.hCost = distance;
                         node.fCost = node.gCost + node.hCost;
 
-                        if(distance < closestDistance)
+                        if (distance < closestDistance)
                         {
                             closestDistance = distance;
                             closestNode = node;
@@ -119,12 +119,12 @@ public class PathFinding
                 }
             }
         }
-        var unfinishedPath = RetracePath(startNode,closestNode);
+        var unfinishedPath = RetracePath(startNode, closestNode);
         ResetNode();
         return unfinishedPath;
     }
 
-    private void ResetNode() // ÖØÖÃ¿ª·ÅÁÐ±íºÍ¹Ø±ÕÁÐ±íÖÐµÄÖµ
+    private void ResetNode() // ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½Í¹Ø±ï¿½ï¿½Ð±ï¿½ï¿½Ðµï¿½Öµ
     {
         foreach (var node in OpenList)
         {
@@ -151,9 +151,9 @@ public class PathFinding
     {
         Node currentNode = OpenList[0];
 
-        foreach(var node in OpenList)
+        foreach (var node in OpenList)
         {
-            if(node.fCost < currentNode.fCost || (node.fCost == currentNode.fCost && node.hCost < currentNode.hCost))
+            if (node.fCost < currentNode.fCost || (node.fCost == currentNode.fCost && node.hCost < currentNode.hCost))
             {
                 currentNode = node;
             }
@@ -162,12 +162,12 @@ public class PathFinding
         return currentNode;
     }
 
-    private List<Node> RetracePath(Node _startNode,Node _endNode)
+    private List<Node> RetracePath(Node _startNode, Node _endNode)
     {
         List<Node> path = new List<Node>();
 
         Node currentNode = _endNode;
-        while(currentNode != _startNode)
+        while (currentNode != _startNode)
         {
             path.Add(currentNode);
             currentNode = currentNode.parent;
@@ -180,9 +180,9 @@ public class PathFinding
     {
         List<Node> neighbors = new List<Node>();
 
-        for(int i=-1;i<=1;i++)
+        for (int i = -1; i <= 1; i++)
         {
-            for(int j=-1;j<=1;j++)
+            for (int j = -1; j <= 1; j++)
             {
                 if (i == 0 && j == 0)
                     continue;
@@ -191,8 +191,8 @@ public class PathFinding
                 int gridY = _node.ButtomY + j - m_GridOffset.y;
                 if (gridX >= 0 && gridY >= 0 && gridX < m_Width && gridY < m_Height)
                 {
-                    var node = Grid[gridX,gridY];
-                    if(node.IsWalkable)
+                    var node = Grid[gridX, gridY];
+                    if (node.IsWalkable)
                         neighbors.Add(node);
                 }
 
@@ -201,12 +201,12 @@ public class PathFinding
         return neighbors;
     }
 
-    private int FindDistanceBetweenTwoNodes(Node _nodeA,Node _nodeB)
+    private int FindDistanceBetweenTwoNodes(Node _nodeA, Node _nodeB)
     {
         int distanceX = Mathf.Abs(_nodeA.ButtomX - _nodeB.ButtomX);
         int distanceY = Mathf.Abs(_nodeA.ButtomY - _nodeB.ButtomY);
 
-        if(distanceX > distanceY)
+        if (distanceX > distanceY)
         {
             return distanceY * 14 + (distanceX - distanceY) * 10;
         }
@@ -215,5 +215,40 @@ public class PathFinding
             return distanceX * 14 + (distanceY - distanceX) * 10;
         }
     }
-  
+
+    public void UpdateNodesInArea(Vector3Int _startPosition, int _width, int _height)
+    {
+        for (int i = 0; i < _width; i++)
+        {
+            for (int j = 0; j < _height; j++)
+            {
+                int gridX = _startPosition.x + i - m_GridOffset.x;
+                int gridY = _startPosition.y + j - m_GridOffset.y;
+
+
+                if (gridX >= 0 && gridY >= 0 && gridX < m_Width && gridY < m_Height) // è¿™é‡Œè¦åˆ¤æ–­èŠ‚ç‚¹æ˜¯å¦åœ¨åœ°å›¾èŒƒå›´å†…ï¼ŒåŽé¢çš„å•ä½å·²ç»è½¬ç§»å¥½äº†
+                {
+                    //Debug.Log($"({gridX} , {gridY})");
+                    Node node = Grid[gridX, gridY];
+                    Vector3Int cellPosition = new Vector3Int(node.ButtomX, node.ButtomY, 0);
+                    node.IsWalkable = m_TilemapManager.CanWalkAtTile(cellPosition);
+                    //Debug.Log($"Is Walkable : {node.IsWalkable}.");
+                }
+            }
+        }
+    }
+
+    public void UpdateNodesOverMap()
+    {
+        for (int i = 0; i < m_Width; i++)
+        {
+            for (int j = 0; j < m_Height; j++)
+            {
+                Node node = m_Grid[i, j];
+                Vector3Int cellPosition = new Vector3Int(node.ButtomX, node.ButtomY, 0);
+                node.IsWalkable = m_TilemapManager.CanWalkAtTile(cellPosition);
+                Debug.Log($"Is Walkable : {node.IsWalkable}.");
+            }
+        }
+    }
 }

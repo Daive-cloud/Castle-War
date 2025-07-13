@@ -9,6 +9,7 @@ public class Unit : MonoBehaviour
    
     protected SpriteRenderer sr => GetComponentInChildren<SpriteRenderer>();
     public UnitStats stats => GetComponent<UnitStats>();
+    public VFX fx => GetComponent<VFX>();
 
     [Header("Check Time")]
     [SerializeField] protected float CheckFrequency;
@@ -26,7 +27,7 @@ public class Unit : MonoBehaviour
         m_GameManager = GameManager.Get();
         m_GameManager.RegisterUnit(this);
 
-        HealthBar.SetActive(false);
+        HideHealthBar();
     }
 
     protected virtual void Update()
@@ -41,12 +42,12 @@ public class Unit : MonoBehaviour
 
     public virtual void SelectedUnit()
     {
-        HealthBar.SetActive(true);
+        ShowHealthBar();
     }
 
     public virtual void UnselectedUnit()
     {
-        HealthBar.SetActive(false);
+        HideHealthBar();
     }
 
     public virtual void Death()
@@ -56,6 +57,9 @@ public class Unit : MonoBehaviour
         if (HealthBar != null)
             HealthBar.SetActive(false);
     }
+
+    public void ShowHealthBar() => HealthBar.SetActive(true);
+    public void HideHealthBar() =>  HealthBar.SetActive(false);
 
     public void DestroyUnit() => Destroy(gameObject);
   

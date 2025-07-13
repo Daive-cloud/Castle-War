@@ -149,8 +149,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.25}
   m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: 0.0000076293945, y: 0}
-  m_SizeDelta: {x: 0.000030518, y: 0}
+  m_AnchoredPosition: {x: -0.000034332275, y: 0.000015258789}
+  m_SizeDelta: {x: -0.00017548, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2185612874172579871
 GameObject:
@@ -187,8 +187,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -3.8, y: 83.05}
-  m_SizeDelta: {x: 123.3, y: 27.7}
+  m_AnchoredPosition: {x: -16.3, y: 83.05}
+  m_SizeDelta: {x: 86.4, y: 27.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5810238956593917119
 MonoBehaviour:
@@ -329,6 +329,7 @@ GameObject:
   - component: {fileID: 6102228833881986651}
   - component: {fileID: 425251613063951071}
   - component: {fileID: 7462713272146701513}
+  - component: {fileID: 8036106479385903509}
   m_Layer: 0
   m_Name: Worker_Blue
   m_TagString: BlueUnit
@@ -401,7 +402,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Actions: []
-  CheckFrequency: 0.5
+  CheckFrequency: 0.1
   IsDead: 0
   HealthBar: {fileID: 76179427290875412}
   ObjectCheckRadius: 1
@@ -441,6 +442,19 @@ MonoBehaviour:
   CritChance: 0
   CurrentHealth: 0
   DamageFont: {fileID: 0}
+--- !u!114 &8036106479385903509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3339719448614179751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5873de0d798c8a145927c5b9f3dff05f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BloodEffect: {fileID: 2724353094694027244, guid: 081d380e0b67f3346b2ac0fcf2e0bfc0, type: 3}
 --- !u!1 &4454138643345132112
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,7 +509,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -618,15 +632,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 1, b: 0.0035910606, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 9f5e63e88366273428a4d9d47c3cebd9, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4

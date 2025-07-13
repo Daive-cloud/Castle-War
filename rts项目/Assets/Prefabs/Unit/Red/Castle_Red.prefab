@@ -5214,7 +5214,7 @@ GameObject:
   - component: {fileID: 7750881656134787874}
   - component: {fileID: 8893803270541366128}
   - component: {fileID: 7846189944548766434}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Castle_Red
   m_TagString: RedUnit
   m_Icon: {fileID: 0}

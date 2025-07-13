@@ -5055,7 +5055,7 @@ GameObject:
   - component: {fileID: 3643007766874300881}
   - component: {fileID: 2571186319549840093}
   - component: {fileID: 8815279042860358055}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: GoldMiner
   m_TagString: BlueUnit
   m_Icon: {fileID: 0}

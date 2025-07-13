@@ -32,6 +32,7 @@ public class GameManager : SingletonManager<GameManager>
     [Header("Camera Options")]
     [SerializeField] private float PanSpeed;
     [SerializeField] private CameraBounds CameraBounds;
+    [SerializeField] private Joystick joyStick;
 
     [Header("Resources Amount")]
     public int WoodAmount;
@@ -57,7 +58,7 @@ public class GameManager : SingletonManager<GameManager>
     private void Start()
     {
         m_TilemapManager = TilemapManager.Get();
-        m_CameraController = new(PanSpeed, CameraBounds);
+        m_CameraController = new(PanSpeed, CameraBounds,joyStick);
         InitializeBoxRender();
     }
     private void Update()
@@ -91,12 +92,12 @@ public class GameManager : SingletonManager<GameManager>
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             m_MousePosition = mousePosition;
             HandleUnitBehaviour(mousePosition);
-            //var path = m_TilemapManager.FindPath(ActiveUnit.transform.position, mousePosition);
+            // var path = m_TilemapManager.FindPath(ActiveUnit.transform.position, mousePosition);
 
-            //foreach(var node in path)
-            //{
+            // foreach(var node in path)
+            // {
             //    m_TilemapManager.SetTile(new Vector3Int(node.ButtomX,node.ButtomY));
-            //}
+            // }
         }
 
         return true;
@@ -121,7 +122,6 @@ public class GameManager : SingletonManager<GameManager>
 
     private void HandleUnitsMovement(Vector2 _mousePosition)
     {
-        Debug.Log($"IsDrawing : {IsDrawing}");
         if (!IsDrawing)
         {
             if (SelectedUnits.Count > 0)
@@ -164,30 +164,15 @@ public class GameManager : SingletonManager<GameManager>
             }
         }
         // 处理攻击的情况
-        if (_unit.CompareTag("RedUnit") && !_unit.IsDead)
+        bool flowControl = HandleUnitsAttack(_unit, _mousePosition);
+        if (!flowControl)
         {
-            GenerateFollowRay(_mousePosition, Color.red);
-            if (SelectedUnits.Count > 0)
-            {
-                foreach (var unit in SelectedUnits.Where(unit => !unit.TryGetComponent(out WorkerUnit _)))
-                {
-                    unit.GetComponent<HumanoidUnit>().AssignTarget(_unit);
-                }
-                return;
-            }
-            else
-            {
-                if (ActiveUnit != null && (!ActiveUnit.TryGetComponent(out WorkerUnit _) || !ActiveUnit.TryGetComponent(out StructureUnit _)))
-                {
-                    (ActiveUnit as HumanoidUnit).AssignTarget(_unit);
-                    return;
-                }
-            }
+            return;
         }
 
         ResetSelectedUnits();
 
-        ActiveUnit = _unit.CompareTag("BlueUnit") ? _unit : null;
+        ActiveUnit = _unit.CompareTag("BlueUnit") && !_unit.TryGetComponent(out TowerUnit _) ? _unit : null;
         ActiveUnit.SelectedUnit();
 
         if (ActiveUnit != null && ActiveUnit.Actions.Count > 0)
@@ -201,6 +186,32 @@ public class GameManager : SingletonManager<GameManager>
         }
     }
 
+    private bool HandleUnitsAttack(Unit _unit, Vector2 _mousePosition)
+    {
+        if (_unit.CompareTag("RedUnit") && !_unit.IsDead)
+        {
+            GenerateFollowRay(_mousePosition, Color.red);
+            if (SelectedUnits.Count > 0)
+            {
+                foreach (var unit in SelectedUnits.Where(unit => !unit.TryGetComponent(out WorkerUnit _)))
+                {
+                    unit.GetComponent<HumanoidUnit>().AssignTarget(_unit);
+                }
+                return false;
+            }
+            else
+            {
+                if (ActiveUnit != null && (!ActiveUnit.TryGetComponent(out WorkerUnit _) || !ActiveUnit.TryGetComponent(out StructureUnit _)))
+                {
+                    (ActiveUnit as HumanoidUnit).AssignTarget(_unit);
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     private void SelectUnitsInRectangle(Vector3 _startPos, Vector3 _endPos)
     {
         ResetSelectedUnits();
@@ -209,7 +220,7 @@ public class GameManager : SingletonManager<GameManager>
         float minY = Mathf.Min(_startPos.y, _endPos.y);
         float maxY = Mathf.Max(_startPos.y, _startPos.y);
 
-        var vaildUnits = RegisteredUnits.Where(unit => unit.CompareTag("BlueUnit") && !unit.IsDead && unit.TryGetComponent(out HumanoidUnit _)).ToList();
+        var vaildUnits = RegisteredUnits.Where(unit => unit.CompareTag("BlueUnit") && !unit.IsDead && unit.TryGetComponent(out HumanoidUnit _) && !unit.TryGetComponent(out TowerUnit _)).ToList();
 
         foreach (var unit in vaildUnits)
         {
@@ -272,6 +283,11 @@ public class GameManager : SingletonManager<GameManager>
         }
         else
         {
+            if (!ActiveUnit.TryGetComponent(out HumanoidUnit _))
+            {
+                return;
+            }
+
             GameObject go = new GameObject("MovementRay");
             ActiveRay = go.AddComponent<LineRenderer>();
             ActiveRay.material = new Material(Shader.Find("Sprites/Default"));
@@ -288,14 +304,19 @@ public class GameManager : SingletonManager<GameManager>
 
     private void DrawRectangle()
     {
-        if (HvoUtils.IsPointerDown())
+        if (HvoUtils.IsPointerOverUIElement())
         {
-            PointerDownPosition = HvoUtils.GetPointerPositoin();
-            PointerDownTime = Time.time;
-
-            StartPos = GetWorldPosition();
-            BoxRenderer.enabled = true;
+            return;
         }
+
+        if (HvoUtils.IsPointerDown())
+            {
+                PointerDownPosition = HvoUtils.GetPointerPositoin();
+                PointerDownTime = Time.time;
+
+                StartPos = GetWorldPosition();
+                BoxRenderer.enabled = true;
+            }
 
         if (HvoUtils.IsPointerPress())
         {
@@ -326,7 +347,6 @@ public class GameManager : SingletonManager<GameManager>
             float pointPosition = Vector2.Distance(PointerDownPosition, HvoUtils.GetPointerPositoin());
             float pointDuration = Time.time - PointerDownTime;
             m_IsDrag = pointPosition > DragDistance && pointDuration > DragDuration;
-            Debug.Log("Pointer Up.");
             if (m_IsDrag)
             {
                 IsDrawing = true;
@@ -421,18 +441,26 @@ public class GameManager : SingletonManager<GameManager>
 
     private void ConfirmPlacement()
     {
-        var buildintAction = m_PlacementProcess.BuildingAction;
+        var buildingAction = m_PlacementProcess.BuildingAction;
 
-        if (buildintAction == null)
+        if (buildingAction == null)
             return;
 
         if (m_PlacementProcess.CanPlaceBuilding(out Vector3 placePosition))
         {
-            new BuildingProcess(buildintAction, placePosition);
+            new BuildingProcess(buildingAction, placePosition);
 
             ClearActionBarUI();
             ClearPlacement();
         }
+        StartCoroutine(UpdateNodesCoroutine(placePosition,buildingAction));
+    }
+
+    private IEnumerator UpdateNodesCoroutine(Vector3 _placePosition,BuildingActionSO _buildingAction)
+    {
+        yield return null;
+        Vector3Int orientPosition = new Vector3Int(Mathf.FloorToInt(_placePosition.x + _buildingAction.BuildingOffset.x), Mathf.FloorToInt(_placePosition.y + _buildingAction.BuildingOffset.y), 0);
+        m_TilemapManager.UpdateNodesInArea(orientPosition,_buildingAction.BuildingSize.x,_buildingAction.BuildingSize.y);
     }
 
     private void CanclePlacement()
@@ -497,6 +525,7 @@ public class GameManager : SingletonManager<GameManager>
 
         if (placementProcess.CanPlaceBuilding(_placePosition))
         {
+            StartCoroutine(UpdateNodesCoroutine(_placePosition,_buildingAction));
             return true;
         }
         return false;

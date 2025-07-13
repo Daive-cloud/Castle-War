@@ -6,20 +6,25 @@ public class CameraController
 {
     private float PanSpeed;
     private CameraBounds CameraBounds;
+    private Joystick joyStick;
 
-    public CameraController(float _panSpeed, CameraBounds cameraBounds)
+    public CameraController(float _panSpeed, CameraBounds cameraBounds, Joystick _joystick)
     {
         PanSpeed = _panSpeed;
         CameraBounds = cameraBounds;
+        joyStick = _joystick;
     }
 
     public void Update()
     {
-        if(Input.GetMouseButton(1))
+        float hortInput = joyStick.Horizontal;
+        float vertInput = joyStick.Vertical;
+
+        if (Mathf.Abs(hortInput) > .1f || Mathf.Abs(vertInput) > .1f)
         {
-            Vector2 mouseDeltaPosition = new Vector2(Input.GetAxis("Mouse X"),Input.GetAxis("Mouse Y"));
-            Vector3 newPosition = Camera.main.transform.position + new Vector3(-mouseDeltaPosition.x * PanSpeed * Time.deltaTime,
-                                                                                      -mouseDeltaPosition.y * PanSpeed * Time.deltaTime,0);
+            Vector3 delta = new Vector3(hortInput * PanSpeed * Time.deltaTime, vertInput * PanSpeed * Time.deltaTime, 0);
+
+            Vector3 newPosition = Camera.main.transform.position + delta;
             Camera.main.transform.position = CameraBounds.GetClampedPosition(newPosition);
         }
     }

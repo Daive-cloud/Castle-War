@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -37,7 +38,7 @@ public class TilemapManager : SingletonManager<TilemapManager>
 
         foreach(var collider in colliders)
         {
-            if(collider.gameObject.tag == "BlueUnit" || collider.gameObject.tag == "RedUnit" || collider.gameObject.tag == "Tree")
+            if(collider.TryGetComponent(out Unit _)  || collider.gameObject.tag == "Tree")
             {
                 return true;
             }
@@ -47,16 +48,29 @@ public class TilemapManager : SingletonManager<TilemapManager>
 
     public bool CanWalkAtTile(Vector3Int _position)
     {
-        return WalkableTilemap.HasTile(_position) && !UnreachableTilemap.HasTile(_position);
+//        Debug.Log($"{_position}");
+        return WalkableTilemap.HasTile(_position) && !UnreachableTilemap.HasTile(_position) && !IsBlockedByBuilding(_position);
     }
 
+    private bool IsBlockedByBuilding(Vector3Int _tilePosition)
+    {
+        Vector3 worldPosition = WalkableTilemap.CellToWorld(_tilePosition) + WalkableTilemap.cellSize * .5f;
+        int buildingLayerMask = 1 << LayerMask.NameToLayer("Building");
+
+        Collider2D[] colliders = Physics2D.OverlapBoxAll(worldPosition, WalkableTilemap.cellSize * .9f, 0, buildingLayerMask);
+        return colliders.Length > 0;
+    }
+
+    public void UpdateNodesInArea(Vector3Int _startPosition,int _width,int _height) => m_PathFinding.UpdateNodesInArea(_startPosition,_width,_height);
+
+    public void UpdateNodesOverMap() => m_PathFinding.UpdateNodesOverMap();
 
     public void SetTile(Vector3Int _position)
     {
         var tile = ScriptableObject.CreateInstance<Tile>();
         tile.sprite = Resources.Load<Sprite>("Image/PlacementTile");
-        PlacementTilemap.SetTile(_position,tile);
-        PlacementTilemap.SetTileFlags(_position,TileFlags.None);
-        PlacementTilemap.SetColor(_position,Color.red);
+        PlacementTilemap.SetTile(_position, tile);
+        PlacementTilemap.SetTileFlags(_position, TileFlags.None);
+        PlacementTilemap.SetColor(_position, Color.red);
     }
 }

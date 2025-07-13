@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3312134027830524330}
   - component: {fileID: 305803844840052990}
   - component: {fileID: 4422456078981232560}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: House_Blue
   m_TagString: BlueUnit
   m_Icon: {fileID: 0}

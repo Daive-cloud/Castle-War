@@ -99,6 +99,17 @@ public class HumanoidUnit : Unit
     {
         if (!HasRegisteredTarget)
             return false;
+        
+        if (Target.TryGetComponent(out StructureUnit structure))
+        {
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, ObjectCheckRadius);
+            bool canBuilding = colliders.ToList().Contains(structure.GetComponent<CapsuleCollider2D>());
+            // foreach (var collider in colliders)
+            // {
+            //     Debug.Log($"{collider}");
+            // }
+            return canBuilding;
+        }
 
         var distance = Vector2.Distance(Target.transform.position,transform.position);
         return distance < ObjectCheckRadius;
@@ -122,6 +133,12 @@ public class HumanoidUnit : Unit
    protected bool CanAttackTarget()
     {
         var distance = Vector2.Distance(Target.transform.position, transform.position);
+
+        if (Target.TryGetComponent(out StructureUnit structure))
+        {
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(structure.transform.position, AttackCheckRadius);
+            return colliders.Length > 0;
+        }
         return distance < AttackCheckRadius;
     }
 
@@ -135,7 +152,11 @@ public class HumanoidUnit : Unit
 
     public void AnimationFinishTrigger_2()
     {
-        anim.SetBool("Attack",false);
+        anim.SetBool("Attack", false);
+        anim.SetBool("Attack_Up", false);
+        anim.SetBool("Attack_Top", false);
+        anim.SetBool("Attack_Bottom", false);
+        anim.SetBool("Attack_Down",false);
     }
 
     public void FindClosestEnemyInRange()

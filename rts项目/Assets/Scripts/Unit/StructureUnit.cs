@@ -88,6 +88,8 @@ public class StructureUnit : Unit
 
     private IEnumerator AfterDeath()
     {
+        yield return null;
+        TilemapManager.Get().UpdateNodesOverMap();
         yield return new WaitForSeconds(1.5f);
         Destroy(gameObject);
     }

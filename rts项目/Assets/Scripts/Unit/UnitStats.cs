@@ -23,7 +23,7 @@ public class UnitStats : MonoBehaviour
         CurrentHealth = MaxHealth;
     }
 
-    public void TakeDamage(UnitStats _stats)
+    public void TakeDamage(UnitStats _stat)
     {
       
         int damage = Damage;
@@ -32,12 +32,18 @@ public class UnitStats : MonoBehaviour
         {
             damage *= 2;
         }
-        damage -= _stats.Armor;
+        damage -= _stat.Armor;
 
-        GameObject newFont = Instantiate(DamageFont,_stats.transform.position + Vector3.up,Quaternion.identity);
+        var fx = _stat.GetComponent<Unit>().fx;
+        if (fx != null)
+        {
+            fx.Injured();
+        }
+        _stat.GetComponent<Unit>().ShowHealthBar();
+        GameObject newFont = Instantiate(DamageFont,_stat.transform.position + Vector3.up,Quaternion.identity);
         newFont.GetComponent<DamageFontUI>().SetDamageValue(damage);
    
-        DecreaseHealth(_stats,damage);
+        DecreaseHealth(_stat,damage);
     }
 
     private void DecreaseHealth(UnitStats _stats,int _damage)

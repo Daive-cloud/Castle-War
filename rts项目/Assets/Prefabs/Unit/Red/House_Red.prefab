@@ -5089,7 +5089,7 @@ GameObject:
   - component: {fileID: 4307045677720559117}
   - component: {fileID: 2049326169825445118}
   - component: {fileID: 1606490469610956515}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: House_Red
   m_TagString: RedUnit
   m_Icon: {fileID: 0}

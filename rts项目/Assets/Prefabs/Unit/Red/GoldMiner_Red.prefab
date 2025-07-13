@@ -10168,7 +10168,7 @@ GameObject:
   - component: {fileID: 3297100765846331129}
   - component: {fileID: 5474661704298022187}
   - component: {fileID: 5062743667534983981}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: GoldMiner_Red
   m_TagString: RedUnit
   m_Icon: {fileID: 0}
