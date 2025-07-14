@@ -241,7 +241,7 @@ MonoBehaviour:
   HealthBar: {fileID: 5084152870660121016}
   ObjectCheckRadius: 10
   AttackCheckRadius: 10
-  AttackFrequency: 1.5
+  AttackFrequency: 1.6
   Enemies: []
   Target: {fileID: 0}
   ArrowPrefab: {fileID: 8761480215644265606, guid: bae159d499668b64e826fbc7eefdd9d0, type: 3}

@@ -27,7 +27,7 @@ public class AI : MonoBehaviour
 
     private void Update()
     {
-        if (!IsPathVaild())
+        if (!IsPathVaild() || unit.IsDead)
             return;
 
         Node newNode = m_CurrentPath[m_CurrentNodeIndex];

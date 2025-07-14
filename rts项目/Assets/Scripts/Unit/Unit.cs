@@ -55,7 +55,7 @@ public class Unit : MonoBehaviour
         IsDead = true;
         m_GameManager.RemoveUnit(this);
         if (HealthBar != null)
-            HealthBar.SetActive(false);
+            HideHealthBar();
     }
 
     public void ShowHealthBar() => HealthBar.SetActive(true);

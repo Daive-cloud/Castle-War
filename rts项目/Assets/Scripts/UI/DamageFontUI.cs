@@ -1,22 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
+using DG.Tweening;
 public class DamageFontUI : MonoBehaviour
 {
     private TextMeshPro DamageFont => GetComponent<TextMeshPro>();
     private static int SortingOrder = 0;
-
-    [SerializeField] private AnimationCurve m_ScaleCurve;
-    [SerializeField] private float m_FontExistTime;
-
-    private float Timer;
-    private float FontSize;
-
-    private void Start()
+    public void SetFontValue(int _value, int _fontSize, Vector2 _startPos,Color _color,float _xOffset)
     {
-        FontSize = DamageFont.fontSize;
+        DamageFont.text = _value.ToString();
+        DamageFont.fontSize = _fontSize;
+        DamageFont.color = _color;
+
         DamageFont.sortingOrder = SortingOrder;
         SortingOrder++;
 
@@ -24,21 +18,25 @@ public class DamageFontUI : MonoBehaviour
         {
             SortingOrder = 0;
         }
+
+        float xOffset = Random.Range(-_xOffset, _xOffset);
+        float yOffset = Random.Range(1f,2f);
+        Vector2 targetPos = _startPos + new Vector2(xOffset, yOffset);
+        transform.position = targetPos;
+        PopupFont();
     }
 
-    private void Update()
+    private void PopupFont()
     {
-        Timer += Time.deltaTime;
+        Sequence seq = DOTween.Sequence();
 
-        DamageFont.fontSize = FontSize * m_ScaleCurve.Evaluate(Timer);
-        DamageFont.transform.position += Vector3.up * 2 * Time.deltaTime;
+        seq.Append(transform.DOScale(1.2f,1f).From(Vector2.zero)).SetEase(Ease.OutBack);
 
-        if(Timer >= m_FontExistTime)
-        {
-            Destroy(gameObject);
-        }
+        Vector2 endPos = transform.position + Vector3.up;
+
+        seq.Insert(1f,transform.DOMove(endPos,1f).SetEase(Ease.InQuad));
+        seq.Join(DamageFont.DOFade(0,2f));
+        seq.OnComplete(() => Destroy(gameObject));
     }
-
-    public void SetDamageValue(int _value) => DamageFont.text = _value.ToString();
 
 }

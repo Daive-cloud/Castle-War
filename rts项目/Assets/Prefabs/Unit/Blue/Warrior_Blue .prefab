@@ -327,7 +327,7 @@ MonoBehaviour:
   Damage: 25
   Armor: 15
   MaxHealth: 200
-  CritChance: 0
+  CritChance: 5
   CurrentHealth: 0
   DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
 --- !u!114 &5062274116919770976

@@ -26,7 +26,7 @@ public class WorkerUnit : HumanoidUnit
             if (HasRegisteredTarget)
                 MoveToDestination(Target.transform.position);
 
-            if(IsTargetDetected())
+            if(IsBuildingDetected())
             {
                 if(currentTask == WorkerTask.Building)
                 {

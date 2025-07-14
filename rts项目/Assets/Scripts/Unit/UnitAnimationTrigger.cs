@@ -10,18 +10,20 @@ public class UnitAnimationTrigger : MonoBehaviour
 
     private void AnimationFinishTrigger_2() => unit.AnimationFinishTrigger_2();
 
+    private void AnimationFinishTrigger_3() => unit.AnimationFinishTrigger_3();
+
     private void AttackTrigger()
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position,unit.AttackCheckRadius);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, unit.AttackCheckRadius);
 
-        if(colliders.Length > 0)
+        if (colliders.Length > 0)
         {
             AudioManager.Get().PlaySFX(0);
         }
 
-        foreach(var hit in colliders)
+        foreach (var hit in colliders)
         {
-            if(hit.TryGetComponent(out Unit enemy) && enemy.tag != unit.tag && !enemy.TryGetComponent(out TreeUnit _))
+            if (hit.TryGetComponent(out Unit enemy) && enemy.tag != unit.tag && !enemy.TryGetComponent(out TreeUnit _))
             {
                 unit.stats.TakeDamage(enemy.GetComponent<UnitStats>());
             }
@@ -33,5 +35,9 @@ public class UnitAnimationTrigger : MonoBehaviour
     private void DestroyUnit() => unit.DestroyUnit();
 
     private void ChopTree() => (unit as WorkerUnit).ChopTree();
+
+    private void ThrowGrenade() => (unit as DemolisherUnit).ThrowFirecraker();
+
+    private void TakeBomb() => (unit as BarrelUnit).TakeBomb();
 
 }

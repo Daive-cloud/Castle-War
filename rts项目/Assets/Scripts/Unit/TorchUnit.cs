@@ -2,17 +2,49 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TorchUnit : MonoBehaviour
+public class TorchUnit : HumanoidUnit
 {
-    // Start is called before the first frame update
-    void Start()
+   protected override void UpdateBehaviour()
     {
-        
+        if (Time.time - CheckTimer >= CheckFrequency)
+        {
+            FindClosestEnemyInRange();
+            CheckTimer = Time.time;
+            if (HasRegisteredTarget)
+            {
+                if (CanAttackTarget())
+                {
+                    ai.ClearPath();
+                    if (Time.time - AttackTimer >= AttackFrequency)
+                    {
+                        AttackTimer = Time.time;
+                        AttackEnemyInRange();
+                    }
+                }
+                else
+                {
+                    MoveToDestination(Target.transform.position);
+                }
+            }
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void AttackEnemyInRange()
     {
-        
+        if (Mathf.Abs(Target.transform.position.y - transform.position.y) > 1f)
+        {
+            if (transform.position.y - Target.transform.position.y > 1f)
+            {
+                anim.SetBool("Attack_Down", true);
+            }
+            else if (transform.position.y - Target.transform.position.y < -1f)
+            {
+                anim.SetBool("Attack_Up", true);
+            }
+        }
+        else
+        {
+            anim.SetBool("Attack", true);
+        }
     }
 }

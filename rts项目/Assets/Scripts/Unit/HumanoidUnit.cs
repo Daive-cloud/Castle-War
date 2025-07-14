@@ -13,7 +13,7 @@ public class HumanoidUnit : Unit
     private bool IsFacingRight = true;
 
     [Header("Detection Radius")]
-    [SerializeField] private float ObjectCheckRadius;
+    public float ObjectCheckRadius;
     public float AttackCheckRadius;
 
     [Header("Attack Info")]
@@ -95,7 +95,7 @@ public class HumanoidUnit : Unit
 
     public void UnassignTarget() => Target = null;
 
-    public bool IsTargetDetected()
+    public bool IsBuildingDetected()
     {
         if (!HasRegisteredTarget)
             return false;
@@ -103,12 +103,9 @@ public class HumanoidUnit : Unit
         if (Target.TryGetComponent(out StructureUnit structure))
         {
             Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, ObjectCheckRadius);
-            bool canBuilding = colliders.ToList().Contains(structure.GetComponent<CapsuleCollider2D>());
-            // foreach (var collider in colliders)
-            // {
-            //     Debug.Log($"{collider}");
-            // }
-            return canBuilding;
+            bool flag = colliders.ToList().Contains(structure.GetComponent<CapsuleCollider2D>());
+           
+            return flag;
         }
 
         var distance = Vector2.Distance(Target.transform.position,transform.position);
@@ -136,8 +133,9 @@ public class HumanoidUnit : Unit
 
         if (Target.TryGetComponent(out StructureUnit structure))
         {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(structure.transform.position, AttackCheckRadius);
-            return colliders.Length > 0;
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, AttackCheckRadius);
+            bool flag = colliders.ToList().Contains(Target.GetComponent<CapsuleCollider2D>());
+            return flag;
         }
         return distance < AttackCheckRadius;
     }
@@ -159,6 +157,11 @@ public class HumanoidUnit : Unit
         anim.SetBool("Attack_Down",false);
     }
 
+    public void AnimationFinishTrigger_3()
+    {
+        anim.SetBool("Attack",false);
+    }
+
     public void FindClosestEnemyInRange()
     {
         Enemies = m_GameManager.RegisteredUnits.Where(unit => unit != null && !unit.IsDead && unit.tag != this.tag && unit.tag != "Tree").ToList();
@@ -166,18 +169,18 @@ public class HumanoidUnit : Unit
         float closestDistance = int.MaxValue;
         Unit closestEnemy = null;
 
-        foreach(var enemy in Enemies)
+        foreach (var enemy in Enemies)
         {
-            float distance = Vector2.Distance(enemy.transform.position,transform.position);
+            float distance = Vector2.Distance(enemy.transform.position, transform.position);
 
-            if(distance < closestDistance)
+            if (distance < closestDistance)
             {
                 closestEnemy = enemy;
                 closestDistance = distance;
             }
         }
 
-        if(CanReachTarget(closestEnemy))
+        if (CanReachTarget(closestEnemy))
         {
             Target = closestEnemy;
         }

@@ -240,7 +240,7 @@ public class GameManager : SingletonManager<GameManager>
         // Debug.Log("Reset Units.");
         if (SelectedUnits.Count > 0)
         {
-            foreach (var unit in SelectedUnits)
+            foreach (var unit in SelectedUnits.Where(unit => !unit.IsDead && unit != null))
             {
                 unit.UnselectedUnit();
             }
@@ -283,7 +283,7 @@ public class GameManager : SingletonManager<GameManager>
         }
         else
         {
-            if (!ActiveUnit.TryGetComponent(out HumanoidUnit _))
+            if (ActiveUnit == null || ActiveUnit.IsDead || !ActiveUnit.TryGetComponent(out HumanoidUnit _))
             {
                 return;
             }

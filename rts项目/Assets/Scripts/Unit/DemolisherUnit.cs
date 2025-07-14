@@ -2,17 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DemolisherUnit : MonoBehaviour
+public class DemolisherUnit : HumanoidUnit
 {
-    // Start is called before the first frame update
-    void Start()
+    [Header("Firecraker")]
+    [SerializeField] private GameObject FirecrakerPrefab;
+
+    protected override void UpdateBehaviour()
     {
-        
+        if (Time.time - CheckTimer >= CheckFrequency)
+        {
+            FindClosestEnemyInRange();
+            CheckTimer = Time.time;
+            if (HasRegisteredTarget)
+            {
+                if (CanAttackTarget())
+                {
+                    ai.ClearPath();
+                    if (Time.time - AttackTimer >= AttackFrequency)
+                    {
+                        AttackTimer = Time.time;
+                        anim.SetBool("Attack", true);
+                    }
+                }
+                else
+                {
+                    MoveToDestination(Target.transform.position);
+                }
+            }
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ThrowFirecraker()
     {
-        
+        var grenade = Instantiate(FirecrakerPrefab);
+        grenade.GetComponent<GrenadeController>().ThrowAnimation(transform.position,Target.transform.position,this);
     }
 }
