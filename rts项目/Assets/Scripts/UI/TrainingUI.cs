@@ -1,13 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
+using UnityEngine.UI;
 using UnityEngine;
+using DG.Tweening;
 
 public enum TrainingUnitType
 {
     Warrior,
     Archer,
-    Worker
+    Worker,
+    Torch,
+    Demolisher,
+    Barrel
 }
 
 public class TrainingUI : MonoBehaviour
@@ -17,6 +21,9 @@ public class TrainingUI : MonoBehaviour
     [SerializeField] private GameObject WarriorSlot;
     [SerializeField] private GameObject ArcherSlot;
     [SerializeField] private GameObject WorkerSlot;
+    [SerializeField] private GameObject TorchSlot;
+    [SerializeField] private GameObject DemolisherSlot;
+    [SerializeField] private GameObject BarrelSlot;
 
     private Queue<GameObject> TrainingUnits;
     private Queue<GameObject> TrainingSlots;
@@ -24,7 +31,8 @@ public class TrainingUI : MonoBehaviour
     private Queue<StructureUnit> TrainingBarracks;
 
     private GameObject newSlot;
-    private float TrainingTimer;
+    private float trainingTimer;
+    private float fixedTimer;
     private bool IsTraining = false;
 
     private Vector3[] Destination = new Vector3[] { Vector3.up,Vector3.left,Vector3.right,Vector3.down};
@@ -51,10 +59,17 @@ public class TrainingUI : MonoBehaviour
     {
         IsTraining = true;
 
-        TrainingTimer = TrainingTime.Dequeue();
-        yield return new WaitForSeconds(TrainingTimer);
-
+        trainingTimer = TrainingTime.Dequeue();
+        fixedTimer = 0f;
         var slot = TrainingSlots.Dequeue();
+
+        while (fixedTimer <= trainingTimer)
+        {
+            yield return null;
+            slot.GetComponentInChildren<Slider>().value = (float)fixedTimer / trainingTimer;
+            fixedTimer += Time.deltaTime;
+        }
+        
         Destroy(slot);
         var barrack = TrainingBarracks.Dequeue();
         if(barrack == null || barrack.IsDead)
@@ -65,7 +80,17 @@ public class TrainingUI : MonoBehaviour
         var unit = TrainingUnits.Dequeue();
         GameObject newUnit = Instantiate(unit,barrack.transform.position,Quaternion.identity);
         var destination = Destination[Random.Range(0,Destination.Length-1)];
-        newUnit.GetComponent<HumanoidUnit>().MoveToDestination(barrack.transform.position + destination * 1.5f);
+        Vector2 targetPos = barrack.transform.position + destination * 2f;
+
+        if (newUnit.TryGetComponent(out BarrelUnit barrel))
+        {
+            barrel.SelectedUnit();
+            barrel.transform.DOMove(targetPos, 2f).OnComplete(() => barrel.UnselectedUnit());
+        }
+        else
+        {
+            newUnit.GetComponent<HumanoidUnit>().MoveToDestination(targetPos);
+        }
 
         IsTraining = false;
     }
@@ -84,6 +109,15 @@ public class TrainingUI : MonoBehaviour
                 break;
             case TrainingUnitType.Worker:
                 newSlot = Instantiate(WorkerSlot, PartForm);
+                break;
+            case TrainingUnitType.Torch:
+                newSlot = Instantiate(TorchSlot,PartForm);
+                break;
+            case TrainingUnitType.Demolisher:
+                newSlot = Instantiate(DemolisherSlot,PartForm);
+                break;
+            case TrainingUnitType.Barrel:
+                newSlot = Instantiate(BarrelSlot,PartForm);
                 break;
             default:
                 return;

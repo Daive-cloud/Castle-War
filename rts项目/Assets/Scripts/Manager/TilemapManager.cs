@@ -48,17 +48,28 @@ public class TilemapManager : SingletonManager<TilemapManager>
 
     public bool CanWalkAtTile(Vector3Int _position)
     {
-//        Debug.Log($"{_position}");
+//        Debug.Log($"CanWalkAtTile : {_position}");
         return WalkableTilemap.HasTile(_position) && !UnreachableTilemap.HasTile(_position) && !IsBlockedByBuilding(_position);
     }
 
     private bool IsBlockedByBuilding(Vector3Int _tilePosition)
     {
         Vector3 worldPosition = WalkableTilemap.CellToWorld(_tilePosition) + WalkableTilemap.cellSize * .5f;
-        int buildingLayerMask = 1 << LayerMask.NameToLayer("Building");
+        int buildingLayerMask = LayerMask.NameToLayer("Building");
 
-        Collider2D[] colliders = Physics2D.OverlapBoxAll(worldPosition, WalkableTilemap.cellSize * .9f, 0, buildingLayerMask);
-        return colliders.Length > 0;
+
+        Collider2D[] colliders = Physics2D.OverlapBoxAll(worldPosition, WalkableTilemap.cellSize * .95f, 0);
+//        Debug.Log($"collision count : {colliders.Length}.");
+        foreach (var collider in colliders)
+        {
+            if (collider == null) continue;
+
+            if (collider.gameObject.layer == buildingLayerMask)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void UpdateNodesInArea(Vector3Int _startPosition,int _width,int _height) => m_PathFinding.UpdateNodesInArea(_startPosition,_width,_height);

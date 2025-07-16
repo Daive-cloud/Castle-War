@@ -218,6 +218,7 @@ public class PathFinding
 
     public void UpdateNodesInArea(Vector3Int _startPosition, int _width, int _height)
     {
+        Debug.Log($"start position : {_startPosition}.");
         for (int i = 0; i < _width; i++)
         {
             for (int j = 0; j < _height; j++)
@@ -225,14 +226,13 @@ public class PathFinding
                 int gridX = _startPosition.x + i - m_GridOffset.x;
                 int gridY = _startPosition.y + j - m_GridOffset.y;
 
-
+                //                Debug.Log($"position : ({gridX},{gridY}");
                 if (gridX >= 0 && gridY >= 0 && gridX < m_Width && gridY < m_Height) // 这里要判断节点是否在地图范围内，后面的单位已经转移好了
                 {
-                    //Debug.Log($"({gridX} , {gridY})");
                     Node node = Grid[gridX, gridY];
                     Vector3Int cellPosition = new Vector3Int(node.ButtomX, node.ButtomY, 0);
                     node.IsWalkable = m_TilemapManager.CanWalkAtTile(cellPosition);
-                    //Debug.Log($"Is Walkable : {node.IsWalkable}.");
+                    //                    Debug.Log($"cellPosition : {cellPosition} , IsWalkable : {node.IsWalkable}");
                 }
             }
         }
@@ -247,7 +247,6 @@ public class PathFinding
                 Node node = m_Grid[i, j];
                 Vector3Int cellPosition = new Vector3Int(node.ButtomX, node.ButtomY, 0);
                 node.IsWalkable = m_TilemapManager.CanWalkAtTile(cellPosition);
-                Debug.Log($"Is Walkable : {node.IsWalkable}.");
             }
         }
     }

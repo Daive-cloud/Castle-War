@@ -91,9 +91,9 @@ public class HumanoidUnit : Unit
         Gizmos.DrawWireSphere(transform.position,AttackCheckRadius);
     }
 
-    public void AssignTarget(Unit _unit) => Target = _unit;
+    public virtual void AssignTarget(Unit _unit) => Target = _unit;
 
-    public void UnassignTarget() => Target = null;
+    public virtual void UnassignTarget() => Target = null;
 
     public bool IsBuildingDetected()
     {
@@ -125,6 +125,7 @@ public class HumanoidUnit : Unit
     {
         base.Death();
         anim.SetTrigger("Death");
+        UnassignTarget();
     }
 
    protected bool CanAttackTarget()

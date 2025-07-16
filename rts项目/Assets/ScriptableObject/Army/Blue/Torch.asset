@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42a34e44fbab21c4bbae0f236461a5d8, type: 3}
+  m_Name: Torch
+  m_EditorClassIdentifier: 
+  Icon: {fileID: -87914526, guid: 5e1b84209f8bc6f40af7a67c619ed09c, type: 3}
+  ID: 9db3003b-5c48-4665-a0e7-b6c63a0bb123
+  m_UnitPrefab: {fileID: 8879277551984428306, guid: b6fdd79a3c263ec4c8bedb3a0d5a6e5e, type: 3}
+  m_GoldCost: 150
+  m_MeatCost: 250
+  m_TrainingTime: 8
+  m_UnitType: 3

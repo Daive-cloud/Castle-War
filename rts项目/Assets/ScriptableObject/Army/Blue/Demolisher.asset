@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 42a34e44fbab21c4bbae0f236461a5d8, type: 3}
-  m_Name: Warrior
+  m_Name: Demolisher
   m_EditorClassIdentifier: 
-  Icon: {fileID: 1511150309, guid: 300fa2388b84f664586b13dc6e78c955, type: 3}
-  ID: 8dcf12d7-6884-4a2c-9d7f-56cc6aa97e8a
-  m_UnitPrefab: {fileID: 5708269229620098888, guid: 14bc3a759e7ab4e46acd902bc5292369, type: 3}
-  m_TrainingCost: 200
-  m_TrainingTime: 10
-  m_UnitType: 0
+  Icon: {fileID: -1900024874, guid: f05b4d1ddaa9d884d9379cd26f379533, type: 3}
+  ID: e1224968-faa2-4693-9ca4-41a81ba28e69
+  m_UnitPrefab: {fileID: 4533010710076404875, guid: b72e0318af12e8846a2b8c6b3748c4b7, type: 3}
+  m_GoldCost: 300
+  m_MeatCost: 600
+  m_TrainingTime: 20
+  m_UnitType: 4

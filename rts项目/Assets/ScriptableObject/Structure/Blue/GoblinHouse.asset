@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdb84294578037243bc5a3d40925b25b, type: 3}
+  m_Name: GoblinHouse
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: 8bed4267c94cd3947801c8e48a3b449f, type: 3}
+  ID: 834922f5-94cf-4c0e-9119-1f0cc1060426
+  m_FoundationSprite: {fileID: 21300000, guid: 81674510ef22d7a4181100f9a10f4352, type: 3}
+  m_CompletionSprite: {fileID: 21300000, guid: 8bed4267c94cd3947801c8e48a3b449f, type: 3}
+  m_StructurePrefab: {fileID: 6119535289690202396, guid: c917595c236321a458702029463fc88f, type: 3}
+  m_GoldCost: 250
+  m_WoodCost: 500
+  m_BuildingSize: {x: 2, y: 2, z: 0}
+  m_BuildingOffset: {x: -1, y: -1, z: 0}

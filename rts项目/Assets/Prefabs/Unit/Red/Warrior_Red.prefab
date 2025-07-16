@@ -613,7 +613,7 @@ MonoBehaviour:
   IsDead: 0
   HealthBar: {fileID: 5645473121234824631}
   ObjectCheckRadius: 5
-  AttackCheckRadius: 1.5
+  AttackCheckRadius: 1.3
   AttackFrequency: 1
   Enemies: []
   Target: {fileID: 0}
@@ -635,6 +635,7 @@ MonoBehaviour:
   CritChance: 0
   CurrentHealth: 0
   DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
+  damageType: 0
 --- !u!114 &299753566145407377
 MonoBehaviour:
   m_ObjectHideFlags: 0

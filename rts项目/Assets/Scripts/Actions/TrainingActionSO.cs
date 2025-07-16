@@ -6,14 +6,16 @@ using UnityEngine;
 public class TrainingActionSO : ActionSO
 {
     [SerializeField] private GameObject m_UnitPrefab;
-    [SerializeField] private int m_TrainingCost;
+    [SerializeField] private int m_GoldCost;
+    [SerializeField] private int m_MeatCost;
     [SerializeField] private float m_TrainingTime;
     [SerializeField] private TrainingUnitType m_UnitType;
 
     private GameManager m_GameManger;
 
     public GameObject UnitPrefab => m_UnitPrefab;
-    public int TrainingCost => m_TrainingCost;  
+    public int GoldCost => m_GoldCost;
+    public int MeatCost => m_MeatCost; 
     public float TrainingTime => m_TrainingTime;
     public TrainingUnitType UnitType => m_UnitType;
 

@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class StructureUnit : Unit
 {
+    private Animator anim => GetComponentInChildren<Animator>();
+
     [Header("Building Effect")]
     [SerializeField] private ParticleSystem BuildingEffect;
     [Header("Sturcture Unit")]
@@ -16,6 +19,7 @@ public class StructureUnit : Unit
     protected BuildingProcess m_BuildingProcess;
 
     public bool IsUnderConstruction => m_BuildingProcess != null;
+    public bool IsCompleted = false;
 
     private WorkerUnit ActiveWorker;
     private bool HasAssignedWorker => ActiveWorker != null;
@@ -24,15 +28,15 @@ public class StructureUnit : Unit
 
     protected override void UpdateBehaviour()
     {
-        if(Time.time - CheckTimer > CheckFrequency)
+        if (Time.time - CheckTimer > CheckFrequency)
         {
             CheckTimer = Time.time;
 
-            if(IsUnderConstruction && HasAssignedWorker)
+            if (IsUnderConstruction && HasAssignedWorker)
             {
                 ProcessValue += .05f;
 
-                if(ProcessValue >= 1f)
+                if (ProcessValue >= 1f)
                 {
                     CompleteConstruction();
                 }
@@ -47,8 +51,21 @@ public class StructureUnit : Unit
 
     public void AssignWorker(WorkerUnit _worker)
     {
-        ActiveWorker = _worker;
-        BuildingEffect.Play();
+        if (!HasAssignedWorker)
+        {
+            ActiveWorker = _worker;
+            BuildingEffect.Play();
+        }
+    }
+
+    public void RemoveWorker()
+    {
+        if (HasAssignedWorker)
+        {
+         ActiveWorker = null;
+        BuildingEffect.Stop();
+
+        }
     }
 
     public void UnassignWorker()
@@ -58,16 +75,23 @@ public class StructureUnit : Unit
 
     protected void CompleteConstruction()
     {
-        ActiveWorker.UnassignTarget();
+        ActiveWorker.Target = null;
+
         ActiveWorker.currentTask = WorkerTask.None;
         UnassignWorker();
         sr.sprite = m_BuildingProcess.BuildingAction.CompletionSprite;
         BuildingEffect.Stop();
+        IsCompleted = true;
         m_BuildingProcess = null;
 
-        if(TowerUnit != null)
+        if (TowerUnit != null)
         {
             TowerUnit.SetActive(true);
+        }
+
+        if (anim != null)
+        {
+            anim.enabled = true;
         }
 
     }
@@ -75,6 +99,11 @@ public class StructureUnit : Unit
     public override void Death()
     {
         base.Death();
+
+        if (anim != null)
+        {
+            anim.enabled = false;
+        }
 
         sr.sprite = DeathIcon;
         DeathEffect.Play();
@@ -90,8 +119,9 @@ public class StructureUnit : Unit
     {
         yield return null;
         TilemapManager.Get().UpdateNodesOverMap();
-        yield return new WaitForSeconds(1.5f);
-        Destroy(gameObject);
+        yield return new WaitForSeconds(1f);
+        sr.DOFade(0,3f).OnComplete(() => Destroy(gameObject));
+
     }
 
 }

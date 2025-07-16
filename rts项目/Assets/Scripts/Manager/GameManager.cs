@@ -53,12 +53,13 @@ public class GameManager : SingletonManager<GameManager>
     private PlacementProcess m_PlacementProcess;
     private TilemapManager m_TilemapManager;
     private CameraController m_CameraController;
+    private Coroutine recordUnWalkableNodes;
 
 
     private void Start()
     {
         m_TilemapManager = TilemapManager.Get();
-        m_CameraController = new(PanSpeed, CameraBounds,joyStick);
+        m_CameraController = new(PanSpeed, CameraBounds, joyStick);
         InitializeBoxRender();
     }
     private void Update()
@@ -147,8 +148,9 @@ public class GameManager : SingletonManager<GameManager>
 
     private void SelectNewUnit(Unit _unit,Vector2 _mousePosition)
     {
+        //Debug.Log("Select New Unit Part 0.");
         // 处理工人
-        if (ActiveUnit is WorkerUnit worker)
+        if (ActiveUnit is WorkerUnit worker && worker.currentTask == WorkerTask.None)
         {
             if (_unit.TryGetComponent(out StructureUnit structure) && structure.IsUnderConstruction)
             {
@@ -163,6 +165,7 @@ public class GameManager : SingletonManager<GameManager>
                 return;
             }
         }
+        //Debug.Log("Select New Unit Part 1.");
         // 处理攻击的情况
         bool flowControl = HandleUnitsAttack(_unit, _mousePosition);
         if (!flowControl)
@@ -170,8 +173,17 @@ public class GameManager : SingletonManager<GameManager>
             return;
         }
 
-        ResetSelectedUnits();
+        if (HasSelectUnits() || ActiveUnit == _unit)
+        {
+          ResetSelectedUnits();
+        }
+       // Debug.Log("Select New Unit Part 2.");
 
+        if ((_unit is StructureUnit house && !house.IsCompleted) || _unit.IsDead || IsDrawing)
+        {
+            return;
+        }
+      //  Debug.Log("Select New Unit Part 3.");
         ActiveUnit = _unit.CompareTag("BlueUnit") && !_unit.TryGetComponent(out TowerUnit _) ? _unit : null;
         ActiveUnit.SelectedUnit();
 
@@ -188,26 +200,29 @@ public class GameManager : SingletonManager<GameManager>
 
     private bool HandleUnitsAttack(Unit _unit, Vector2 _mousePosition)
     {
+        if (!HasSelectUnits())
+            return true;
+
         if (_unit.CompareTag("RedUnit") && !_unit.IsDead)
-        {
-            GenerateFollowRay(_mousePosition, Color.red);
-            if (SelectedUnits.Count > 0)
             {
-                foreach (var unit in SelectedUnits.Where(unit => !unit.TryGetComponent(out WorkerUnit _)))
+                GenerateFollowRay(_mousePosition, Color.red);
+                if (SelectedUnits.Count > 0)
                 {
-                    unit.GetComponent<HumanoidUnit>().AssignTarget(_unit);
-                }
-                return false;
-            }
-            else
-            {
-                if (ActiveUnit != null && (!ActiveUnit.TryGetComponent(out WorkerUnit _) || !ActiveUnit.TryGetComponent(out StructureUnit _)))
-                {
-                    (ActiveUnit as HumanoidUnit).AssignTarget(_unit);
+                    foreach (var unit in SelectedUnits.Where(unit => !unit.TryGetComponent(out WorkerUnit _)))
+                    {
+                        unit.GetComponent<HumanoidUnit>().AssignTarget(_unit);
+                    }
                     return false;
                 }
+                else
+                {
+                    if (ActiveUnit != null && (!ActiveUnit.TryGetComponent(out WorkerUnit _) || !ActiveUnit.TryGetComponent(out StructureUnit _)))
+                    {
+                        (ActiveUnit as HumanoidUnit).AssignTarget(_unit);
+                        return false;
+                    }
+                }
             }
-        }
 
         return true;
     }
@@ -237,7 +252,7 @@ public class GameManager : SingletonManager<GameManager>
 
     private void ResetSelectedUnits()
     {
-        // Debug.Log("Reset Units.");
+         //Debug.Log("Reset Units.");
         if (SelectedUnits.Count > 0)
         {
             foreach (var unit in SelectedUnits.Where(unit => !unit.IsDead && unit != null))
@@ -257,10 +272,13 @@ public class GameManager : SingletonManager<GameManager>
         ActionBar.HideActionBar();
 
     }
+
+    private bool HasSelectUnits() => ActiveUnit != null || SelectedUnits.Count > 0;
+
     #endregion
 
     #region Ray Methods
-    private void GenerateFollowRay(Vector2 _mousePosition,Color _color)
+    private void GenerateFollowRay(Vector2 _mousePosition, Color _color)
     {
         if (SelectedUnits.Count > 0)
         {
@@ -396,7 +414,6 @@ public class GameManager : SingletonManager<GameManager>
         ActionRays.Clear();
     }
 
-
     private IEnumerator HideRayAfterDelay(GameObject _ray)
     {
         yield return new WaitForSeconds(.3f);
@@ -416,49 +433,53 @@ public class GameManager : SingletonManager<GameManager>
         BoxRenderer.enabled = false;
     }
 
-
     #endregion
 
     #region Place Building Methods
     public void StartBuildingProcess(BuildingActionSO _action)
     {
-        if (WoodAmount >= _action.WoodCost && GoldAmount >= _action.GoldCost)
-        {
-            WoodAmount -= _action.WoodCost;
-            GoldAmount -= _action.GoldCost;
-            onResourcesChanged?.Invoke();
-        }
-        else
-        {
-            return;
-        }
-
         m_PlacementProcess = new(_action, m_TilemapManager);
 
         PlaceBuildingUI.ShowRectangle(_action.GoldCost, _action.WoodCost);
-        PlaceBuildingUI.RegisterHooks(ConfirmPlacement, CanclePlacement);
+        PlaceBuildingUI.RegisterHooks(() => ConfirmPlacement(_action), CanclePlacement);
     }
 
-    private void ConfirmPlacement()
+    private void ConfirmPlacement(BuildingActionSO _action)
     {
-        var buildingAction = m_PlacementProcess.BuildingAction;
-
-        if (buildingAction == null)
-            return;
-
-        if (m_PlacementProcess.CanPlaceBuilding(out Vector3 placePosition))
+        if (WoodAmount >= _action.WoodCost && GoldAmount >= _action.GoldCost)
         {
-            new BuildingProcess(buildingAction, placePosition);
+            var buildingAction = m_PlacementProcess.BuildingAction;
 
-            ClearActionBarUI();
-            ClearPlacement();
+            if (buildingAction == null)
+                return;
+
+            if (m_PlacementProcess.CanPlaceBuilding(out Vector3 placePosition))
+            {
+                new BuildingProcess(buildingAction, placePosition);
+
+                WoodAmount -= _action.WoodCost;
+                GoldAmount -= _action.GoldCost;
+                onResourcesChanged?.Invoke();
+
+                ClearActionBarUI();
+                ClearPlacement();
+                if (recordUnWalkableNodes != null)
+                {
+                    StopCoroutine(recordUnWalkableNodes);
+                }
+                recordUnWalkableNodes = StartCoroutine(UpdateNodesCoroutine(placePosition, buildingAction));
+                ResetSelectedUnits();
+            }
         }
-        StartCoroutine(UpdateNodesCoroutine(placePosition,buildingAction));
+
     }
 
     private IEnumerator UpdateNodesCoroutine(Vector3 _placePosition,BuildingActionSO _buildingAction)
     {
         yield return null;
+
+        yield return new WaitForFixedUpdate();
+
         Vector3Int orientPosition = new Vector3Int(Mathf.FloorToInt(_placePosition.x + _buildingAction.BuildingOffset.x), Mathf.FloorToInt(_placePosition.y + _buildingAction.BuildingOffset.y), 0);
         m_TilemapManager.UpdateNodesInArea(orientPosition,_buildingAction.BuildingSize.x,_buildingAction.BuildingSize.y);
     }
@@ -466,6 +487,7 @@ public class GameManager : SingletonManager<GameManager>
     private void CanclePlacement()
     {
         ClearPlacement();
+        ResetSelectedUnits();
     }
 
     #endregion
@@ -492,15 +514,15 @@ public class GameManager : SingletonManager<GameManager>
     #region Training Unit Methods
     public void StartTrainingProcess(TrainingActionSO _trainingAction)
     {
-        TrainingUnitUI.ShowRectangle(_trainingAction.TrainingCost);
+        TrainingUnitUI.ShowRectangle(_trainingAction.GoldCost,_trainingAction.MeatCost);
         TrainingUnitUI.RegisterHooks(() => ConfirmTraining(_trainingAction), CancleTraining);
     }
 
     private void ConfirmTraining(TrainingActionSO _trainingAction)
     {
-        if (GoldAmount >= _trainingAction.TrainingCost)
+        if (GoldAmount >= _trainingAction.GoldCost)
         {
-            GoldAmount -= _trainingAction.TrainingCost;
+            GoldAmount -= _trainingAction.GoldCost;
             onResourcesChanged();
         }
         else
@@ -511,7 +533,7 @@ public class GameManager : SingletonManager<GameManager>
         TrainingUI.RegisterTrainingUnit(_trainingAction.UnitType, _trainingAction.TrainingTime, ActiveUnit as StructureUnit, _trainingAction.UnitPrefab);
     }
 
-    private void CancleTraining()
+    public void CancleTraining()
     {
         TrainingUnitUI.HideRectangle();
         ClearActionBarUI();

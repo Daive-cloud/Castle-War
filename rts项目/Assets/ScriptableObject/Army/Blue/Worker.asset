@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 42a34e44fbab21c4bbae0f236461a5d8, type: 3}
-  m_Name: Archer
+  m_Name: Worker
   m_EditorClassIdentifier: 
-  Icon: {fileID: 817934937, guid: 13f1796599ff3f444b6cac5870dca775, type: 3}
-  ID: 0338b49b-68b7-4047-b8f8-51655c3922f7
-  m_UnitPrefab: {fileID: 4121930742748061984, guid: 0b0ebc8e472dccf4d92db2483f6d9c5d, type: 3}
-  m_TrainingCost: 250
-  m_TrainingTime: 12
-  m_UnitType: 1
+  Icon: {fileID: 1228714333, guid: a464a47dc226c63419698857bc0cf83f, type: 3}
+  ID: ffee1f69-776f-48dc-aa9c-3a1fa42ef656
+  m_UnitPrefab: {fileID: 3339719448614179751, guid: 13e34eef3755f8647a582c966db6e593, type: 3}
+  m_GoldCost: 100
+  m_MeatCost: 200
+  m_TrainingTime: 10
+  m_UnitType: 2

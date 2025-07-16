@@ -10,18 +10,19 @@ public class TrainingUnitUI : MonoBehaviour
 {
     [SerializeField] private Button ConfirmButton;
     [SerializeField] private Button CancleButton;
-
     [SerializeField] private TextMeshProUGUI GoldCost;
+    [SerializeField] private TextMeshProUGUI MeatCost;
 
     private void Start()
     {
         HideRectangle();
     }
 
-    public void ShowRectangle(int _goldCost)
+    public void ShowRectangle(int _goldCost, int _meatCost)
     {
         gameObject.SetActive(true);
         GoldCost.text = _goldCost.ToString();
+        MeatCost.text = _meatCost.ToString();
     }
 
     public void HideRectangle()

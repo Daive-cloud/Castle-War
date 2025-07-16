@@ -1347,7 +1347,7 @@ GameObject:
   - component: {fileID: 5535191040259524708}
   - component: {fileID: 4731384737000610463}
   m_Layer: 5
-  m_Name: WoodCost
+  m_Name: MeatCost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1400,10 +1400,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 200
+  m_text: '200
+
+'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b377b9f8f46c94d47b5a4cfcbe5b6cf4, type: 2}
-  m_sharedMaterial: {fileID: 9058712034734860755, guid: b377b9f8f46c94d47b5a4cfcbe5b6cf4, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2091,7 +2093,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 1
-  m_Spacing: 12
+  m_Spacing: 20
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -2330,7 +2332,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ConfirmButton: {fileID: 372335887924116075}
   CancleButton: {fileID: 155807462478718927}
-  GoldCost: {fileID: 0}
+  GoldCost: {fileID: 297308920859516458}
+  MeatCost: {fileID: 4731384737000610463}
 --- !u!1 &6565388305566469181
 GameObject:
   m_ObjectHideFlags: 0
@@ -3853,9 +3856,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PartForm: {fileID: 3965070083492175482}
-  WarriorSlot: {fileID: 7505165973588280431, guid: 004a481048e57ba4b96a92e91f2893f2, type: 3}
-  ArcherSlot: {fileID: 5494204874156532262, guid: 5df29177615492c48b38d3c2b290cd56, type: 3}
-  WorkerSlot: {fileID: 2935571021460826356, guid: 5e18217ee31c31c4caad0050c9a99ae0, type: 3}
+  WarriorSlot: {fileID: 5356376598459001811, guid: 004a481048e57ba4b96a92e91f2893f2, type: 3}
+  ArcherSlot: {fileID: 761152645245444516, guid: 5df29177615492c48b38d3c2b290cd56, type: 3}
+  WorkerSlot: {fileID: 4052234817204479075, guid: 5e18217ee31c31c4caad0050c9a99ae0, type: 3}
+  TorchSlot: {fileID: 5902023198081802281, guid: 31d700816b0d0f64487a5d99991bdee8, type: 3}
+  DemolisherSlot: {fileID: 3226410417912402847, guid: 622ff539b8677424bb4458e8ea1a050f, type: 3}
+  BarrelSlot: {fileID: 9123651829695290735, guid: 6ee593d273cdff84dabdb8050906cc1e, type: 3}
 --- !u!1 &9095926152360874373
 GameObject:
   m_ObjectHideFlags: 0

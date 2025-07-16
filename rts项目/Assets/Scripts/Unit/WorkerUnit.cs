@@ -11,7 +11,7 @@ public enum WorkerTask
 public class WorkerUnit : HumanoidUnit
 {
     public WorkerTask currentTask = WorkerTask.None;
-   
+
     protected override void Update()
     {
         base.Update();
@@ -19,30 +19,30 @@ public class WorkerUnit : HumanoidUnit
 
     protected override void UpdateBehaviour()
     {
-        if(Time.time - CheckTimer >= CheckFrequency )
+        if (Time.time - CheckTimer >= CheckFrequency)
         {
             CheckTimer = Time.time;
 
             if (HasRegisteredTarget)
                 MoveToDestination(Target.transform.position);
 
-            if(IsBuildingDetected())
+            if (IsBuildingDetected())
             {
-                if(currentTask == WorkerTask.Building)
+                if (currentTask == WorkerTask.Building)
                 {
-                    anim.SetBool("Build",true);
+                    anim.SetBool("Build", true);
                     StartBuildingProcess(Target as StructureUnit);
                 }
-                else if(currentTask == WorkerTask.Chopping)
+                else if (currentTask == WorkerTask.Chopping)
                 {
-                    anim.SetBool("Chop",true);
+                    anim.SetBool("Chop", true);
                 }
-                
+
             }
             else
             {
-                anim.SetBool("Build",false);
-                anim.SetBool("Chop",false);
+                anim.SetBool("Build", false);
+                anim.SetBool("Chop", false);
             }
 
         }
@@ -55,10 +55,21 @@ public class WorkerUnit : HumanoidUnit
 
     public void ChopTree()
     {
-        if(HasRegisteredTarget)
+        if (HasRegisteredTarget)
         {
             (Target as TreeUnit).Shake();
         }
+    }
+
+    public override void UnassignTarget()
+    {
+        if (Target != null && Target.TryGetComponent(out StructureUnit _))
+        {
+            Target.GetComponent<StructureUnit>().RemoveWorker();
+        }
+        currentTask = WorkerTask.None;
+        base.UnassignTarget();
+
     }
 
 

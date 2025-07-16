@@ -17,9 +17,13 @@ public class DemolisherUnit : HumanoidUnit
             {
                 if (CanAttackTarget())
                 {
-                    ai.ClearPath();
+                    if (ai != null)
+                    {
+                        ai.ClearPath();
+                    }
                     if (Time.time - AttackTimer >= AttackFrequency)
                     {
+                        FlipController(Target.transform.position);
                         AttackTimer = Time.time;
                         anim.SetBool("Attack", true);
                     }
