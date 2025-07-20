@@ -6,7 +6,7 @@ public class Unit : MonoBehaviour
 {
     public List<ActionSO> Actions = new List<ActionSO>();
     protected GameManager m_GameManager;
-   
+
     protected SpriteRenderer sr => GetComponentInChildren<SpriteRenderer>();
     public UnitStats stats => GetComponent<UnitStats>();
     public VFX fx => GetComponent<VFX>();
@@ -27,21 +27,23 @@ public class Unit : MonoBehaviour
         m_GameManager = GameManager.Get();
         m_GameManager.RegisterUnit(this);
 
-        HideHealthBar();
+        if(HealthBar != null)
+            HideHealthBar();
     }
 
     protected virtual void Update()
     {
-       UpdateBehaviour();
+        UpdateBehaviour();
     }
 
     protected virtual void UpdateBehaviour()
     {
-       
+
     }
 
     public virtual void SelectedUnit()
     {
+        PlaySelectedSound();
         ShowHealthBar();
     }
 
@@ -53,14 +55,24 @@ public class Unit : MonoBehaviour
     public virtual void Death()
     {
         IsDead = true;
+        PlayDeathSound();
         m_GameManager.RemoveUnit(this);
         if (HealthBar != null)
             HideHealthBar();
     }
 
     public void ShowHealthBar() => HealthBar.SetActive(true);
-    public void HideHealthBar() =>  HealthBar.SetActive(false);
-
+    public void HideHealthBar() => HealthBar.SetActive(false);
     public void DestroyUnit() => Destroy(gameObject);
+
+    public virtual void PlayDeathSound()
+    {
+
+    }
+
+    public virtual void PlaySelectedSound()
+    {
+
+    }
   
 }

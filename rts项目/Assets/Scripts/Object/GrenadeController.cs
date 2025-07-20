@@ -37,6 +37,7 @@ public class GrenadeController : MonoBehaviour
     private void OnHitTarget()
     {
         rotateTween.Kill();
+        AudioManager.Get().PlaySFX(8);
         anim.SetTrigger("Boom");
         DoDamage();
         Destroy(gameObject, 2f);
@@ -48,7 +49,14 @@ public class GrenadeController : MonoBehaviour
         var vaildUnits = colliders.ToList().Where(unit => unit != null && unit.TryGetComponent(out Unit _) && unit.tag != owner.tag);
         foreach (var unit in vaildUnits)
         {
-            owner.GetComponent<UnitStats>().TakeDamage(unit.GetComponent<UnitStats>());
+            if (unit.TryGetComponent(out BarrelUnit barrel))
+            {
+                owner.GetComponent<UnitStats>().TakeDamage(unit.GetComponent<UnitStats>(), owner.GetComponent<UnitStats>().Damage * 4);
+            }
+            else
+            {
+                owner.GetComponent<UnitStats>().TakeDamage(unit.GetComponent<UnitStats>());
+            }
         }
     }
     

@@ -321,7 +321,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Actions: []
-  CheckFrequency: 0.6
+  CheckFrequency: 0.4
   IsDead: 0
   HealthBar: {fileID: 825664103749088401}
   BuildingEffect: {fileID: 2582131711499884153}
@@ -5376,8 +5376,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -16.3, y: 83.05}
-  m_SizeDelta: {x: 86.4, y: 27.7}
+  m_AnchoredPosition: {x: 9.5, y: 83.05}
+  m_SizeDelta: {x: 114.1, y: 27.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6924788046901955126
 MonoBehaviour:
@@ -10866,9 +10866,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a501cb49a9332c46be75d5d585e78e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damage: 36
+  Damage: 72
   Armor: 5
-  MaxHealth: 80
+  MaxHealth: 250
   CritChance: 15
   CurrentHealth: 0
   DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}

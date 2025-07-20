@@ -71,8 +71,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -3.8, y: 83.05}
-  m_SizeDelta: {x: 123.3, y: 27.7}
+  m_AnchoredPosition: {x: 6.9, y: 35}
+  m_SizeDelta: {x: 78.5, y: 27.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7221007866918567793
 MonoBehaviour:
@@ -479,15 +479,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Actions: []
-  CheckFrequency: 0.5
+  CheckFrequency: 0.2
   IsDead: 0
   HealthBar: {fileID: 8161820467965094175}
-  ObjectCheckRadius: 1
+  ObjectCheckRadius: 1.4
   AttackCheckRadius: 0
   AttackFrequency: 0
   Enemies: []
   Target: {fileID: 0}
   currentTask: 0
+  TaskUI: {fileID: 0}
+  DefaultIcon: {fileID: 0}
+  BuildIcon: {fileID: 0}
+  ChopIcon: {fileID: 0}
+  KillIcon: {fileID: 0}
+  MiningIcon: {fileID: 0}
+  TransportIcon: {fileID: 0}
+  ResourceUI: {fileID: 0}
+  WoodIcon: {fileID: 0}
+  MeatIcon: {fileID: 0}
+  GoldIcon: {fileID: 0}
 --- !u!114 &4453409110273040702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -519,6 +530,7 @@ MonoBehaviour:
   CritChance: 0
   CurrentHealth: 0
   DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
+  damageType: 0
 --- !u!1 &8161820467965094175
 GameObject:
   m_ObjectHideFlags: 0
@@ -635,3 +647,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myTransform: {fileID: 985920747815743906}
+  levelUI: {fileID: 0}

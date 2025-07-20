@@ -18,7 +18,7 @@ public class UnitAnimationTrigger : MonoBehaviour
 
         if (colliders.Length > 0)
         {
-            AudioManager.Get().PlaySFX(0);
+            unit.PlayAttackSound();
         }
 
         foreach (var hit in colliders)
@@ -39,5 +39,7 @@ public class UnitAnimationTrigger : MonoBehaviour
     private void ThrowGrenade() => (unit as DemolisherUnit).ThrowFirecraker();
 
     private void TakeBomb() => (unit as BarrelUnit).TakeBomb();
+
+    private void PlayBuildingSound() => (unit as WorkerUnit).PlayBuildingSound();
 
 }

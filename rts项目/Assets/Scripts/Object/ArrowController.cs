@@ -40,6 +40,7 @@ public class ArrowController : MonoBehaviour
         if(Vector2.Distance(Target.transform.position,transform.position) < .1f)
         {
             Owner.stats.TakeDamage(Target.GetComponent<UnitStats>());
+            AudioManager.Get().PlaySFX(10);
             Destroy(gameObject);
         }
 

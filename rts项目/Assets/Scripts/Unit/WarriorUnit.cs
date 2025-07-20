@@ -47,6 +47,21 @@ public class WarriorUnit : HumanoidUnit
         {
             anim.SetBool("Attack", true);
         }
-        anim.SetInteger("comboCounter",ComboCounter);
+        anim.SetInteger("comboCounter", ComboCounter);
+    }
+
+    public override void PlayAttackSound()
+    {
+        AudioManager.Get().PlaySFX(0);
+    }
+
+    public override void PlaySelectedSound()
+    {
+        AudioManager.Get().PlaySFX(15);
+    }
+
+    public override void PlayDeathSound()
+    {
+        AudioManager.Get().PlaySFX(23);
     }
 }

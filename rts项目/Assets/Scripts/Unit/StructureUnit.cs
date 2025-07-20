@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System.Linq;
 
 public class StructureUnit : Unit
 {
@@ -21,8 +22,9 @@ public class StructureUnit : Unit
     public bool IsUnderConstruction => m_BuildingProcess != null;
     public bool IsCompleted = false;
 
-    private WorkerUnit ActiveWorker;
-    private bool HasAssignedWorker => ActiveWorker != null;
+    private List<WorkerUnit> RegisterdWorkers = new();
+    private bool HasAssignedWorker => RegisterdWorkers.Count > 0;
+    public int WorkerCount => RegisterdWorkers.Count;
 
     private float ProcessValue = 0f;
 
@@ -34,7 +36,7 @@ public class StructureUnit : Unit
 
             if (IsUnderConstruction && HasAssignedWorker)
             {
-                ProcessValue += .05f;
+                ProcessValue += .01f * WorkerCount;
 
                 if (ProcessValue >= 1f)
                 {
@@ -53,32 +55,40 @@ public class StructureUnit : Unit
     {
         if (!HasAssignedWorker)
         {
-            ActiveWorker = _worker;
             BuildingEffect.Play();
         }
+        if (!RegisterdWorkers.Contains(_worker))
+        {
+            RegisterdWorkers.Add(_worker);
+        }
+        
+    }
+
+    public void UnassignWorker(WorkerUnit _unit)
+    {
+         if (RegisterdWorkers.Contains(_unit))
+            {
+                RegisterdWorkers.Remove(_unit);
+                if (!HasAssignedWorker)
+                {
+                    BuildingEffect.Stop();
+                }
+            }
     }
 
     public void RemoveWorker()
     {
-        if (HasAssignedWorker)
-        {
-         ActiveWorker = null;
-        BuildingEffect.Stop();
-
-        }
-    }
-
-    public void UnassignWorker()
-    {
-        ActiveWorker = null;
+        RegisterdWorkers.Clear();
     }
 
     protected void CompleteConstruction()
     {
-        ActiveWorker.Target = null;
-
-        ActiveWorker.currentTask = WorkerTask.None;
-        UnassignWorker();
+        foreach (var unit in RegisterdWorkers)
+        {
+            unit.Target = null;
+            unit.UpdateWorkerTask(WorkerTask.None);
+        }
+        RemoveWorker();
         sr.sprite = m_BuildingProcess.BuildingAction.CompletionSprite;
         BuildingEffect.Stop();
         IsCompleted = true;

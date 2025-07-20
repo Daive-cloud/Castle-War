@@ -10,13 +10,13 @@ public class ArcherUnit : HumanoidUnit
     [SerializeField] private GameObject ArrowPrefab;
     protected override void UpdateBehaviour()
     {
-        if(Time.time - CheckTimer >= CheckFrequency)
+        if (Time.time - CheckTimer >= CheckFrequency)
         {
             FindClosestEnemyInRange();
             CheckTimer = Time.time;
-            if(HasRegisteredTarget)
+            if (HasRegisteredTarget)
             {
-                if(CanAttackTarget())
+                if (CanAttackTarget())
                 {
                     if (ai != null)
                     {
@@ -33,7 +33,7 @@ public class ArcherUnit : HumanoidUnit
                     MoveToDestination(Target.transform.position);
                 }
             }
-            
+
         }
     }
 
@@ -50,6 +50,7 @@ public class ArcherUnit : HumanoidUnit
 
     private void JudgeAngleToAttack(float angle)
     {
+        Debug.Log("Attack Target");
         if (angle < 90 && angle > 75)
         {
             anim.SetBool("Attack_Top", true);
@@ -68,7 +69,7 @@ public class ArcherUnit : HumanoidUnit
         }
         else if (angle < -75 && angle > -90)
         {
-            anim.SetBool("Attack_Buttom", true);
+            anim.SetBool("Attack_Bottom", true);
         }
     }
 
@@ -96,7 +97,17 @@ public class ArcherUnit : HumanoidUnit
 
             GameObject newArrow = Instantiate(ArrowPrefab, transform.position, rotation);
             newArrow.GetComponent<ArrowController>().RegisterArrow(this, Target);
-
+            AudioManager.Get().PlaySFX(9);
         }
+    }
+
+    public override void PlaySelectedSound()
+    {
+        AudioManager.Get().PlaySFX(16);
+    }
+
+    public override void PlayDeathSound()
+    {
+        AudioManager.Get().PlaySFX(24);
     }
 }

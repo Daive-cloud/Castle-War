@@ -5129,13 +5129,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Actions: []
-  CheckFrequency: 1
+  CheckFrequency: 0.6
   IsDead: 0
   HealthBar: {fileID: 938275525150697758}
   BuildingEffect: {fileID: 1028078615528716112}
   TowerUnit: {fileID: 0}
   DeathEffect: {fileID: 6099213095226271833}
   DeathIcon: {fileID: 21300000, guid: 82bf320113c26434f8d75a459acd9022, type: 3}
+  IsCompleted: 0
+  RegisterdWorkers: []
   ProductionImage: {fileID: 21300000, guid: 86b7ae19bc609574b84441a8439aa45e, type: 3}
   ProductionFrequency: 15
 --- !u!114 &8815279042860358055
@@ -5156,6 +5158,7 @@ MonoBehaviour:
   CritChance: 0
   CurrentHealth: 0
   DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
+  damageType: 0
 --- !u!1 &5584796423966337572
 GameObject:
   m_ObjectHideFlags: 0

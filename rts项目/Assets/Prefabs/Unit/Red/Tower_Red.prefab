@@ -35,8 +35,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -3.8, y: 83.05}
-  m_SizeDelta: {x: 123.3, y: 27.7}
+  m_AnchoredPosition: {x: 4.5, y: 83.05}
+  m_SizeDelta: {x: 127, y: 27.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4998490732844795451
 MonoBehaviour:
@@ -10037,7 +10037,7 @@ Transform:
   m_GameObject: {fileID: 3368513652825172553}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.06, y: 0.16, z: 0}
+  m_LocalPosition: {x: -0.027, y: 0.16, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10201,7 +10201,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -0.017, y: 1.361}
+  m_AnchoredPosition: {x: -0.017, y: 1.55}
   m_SizeDelta: {x: 1710.6982, y: 634}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &5593568618851714747
@@ -10293,13 +10293,14 @@ GameObject:
   - component: {fileID: 394481409015110543}
   - component: {fileID: 1633961314056755439}
   - component: {fileID: 4284194244020386869}
+  - component: {fileID: 8508594116184163856}
   m_Layer: 0
   m_Name: Tower_Archer
   m_TagString: RedUnit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7710354804665775156
 Transform:
   m_ObjectHideFlags: 0
@@ -10308,10 +10309,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5227425673329868018}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.06, y: 0.65, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.064, y: 0.76, z: 0}
+  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7982318848827103050}
   - {fileID: 8738269832950834965}
@@ -10368,8 +10369,8 @@ MonoBehaviour:
   CheckFrequency: 0.2
   IsDead: 0
   HealthBar: {fileID: 5775083861537928176}
-  ObjectCheckRadius: 13
-  AttackCheckRadius: 13
+  ObjectCheckRadius: 15
+  AttackCheckRadius: 15
   AttackFrequency: 1.5
   Enemies: []
   Target: {fileID: 0}
@@ -10399,12 +10400,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a501cb49a9332c46be75d5d585e78e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damage: 60
+  Damage: 100
   Armor: 5
-  MaxHealth: 120
+  MaxHealth: 300
   CritChance: 20
   CurrentHealth: 0
   DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
+  damageType: 0
+--- !u!114 &8508594116184163856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5227425673329868018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d30cfe185aa311e418bb9e050bc94e6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5414105103060590237
 GameObject:
   m_ObjectHideFlags: 0
@@ -10590,7 +10604,7 @@ RectTransform:
   m_Father: {fileID: 296805428591465040}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -0.000015258789, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -10810,6 +10824,7 @@ MonoBehaviour:
   TowerUnit: {fileID: 5227425673329868018}
   DeathEffect: {fileID: 7910163178302965829}
   DeathIcon: {fileID: 21300000, guid: bed9321ce7f892146919945762b0db13, type: 3}
+  IsCompleted: 0
 --- !u!114 &6795012890321885400
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10828,6 +10843,7 @@ MonoBehaviour:
   CritChance: 0
   CurrentHealth: 0
   DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
+  damageType: 0
 --- !u!1 &9179568081625732318
 GameObject:
   m_ObjectHideFlags: 0

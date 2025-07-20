@@ -1,38 +1,63 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
+using System.Collections;
 
 public class TreeUnit : Unit
 {
+    [SerializeField] private GameObject woodPrefab;
     private Animator anim => GetComponentInChildren<Animator>();
-    private int Durability;
+    private WorkerUnit worker;
+
+    public bool HasAssignedWorker => worker != null;
 
     protected override void Start()
     {
         base.Start();
-
-        Durability = Random.Range(3,6);
     }
 
     public void Shake()
     {
-        Durability--;
-
-        if (Durability <= 0)
-        {
-            Death();
-        }
+        worker.stats.TakeDamage(stats,10);
         anim.SetTrigger("Shake");
     }
 
     public override void Death()
     {
         base.Death();
-
+        AudioManager.Get().PlaySFX(30);
         anim.SetTrigger("Death");
+        worker.ResetAnimation();
+        StartCoroutine(WorkerCollectWood());
+        sr.DOFade(0,2f).OnComplete(() => Destroy(gameObject));
+    }
 
-        m_GameManager.WoodAmount += 100;
-        m_GameManager.onResourcesChanged?.Invoke();
+    public void AssignWorker(WorkerUnit _worker)
+    {
+        worker = _worker;
+    }
+
+    private IEnumerator WorkerCollectWood()
+    {
+        int woodAmount = Random.Range(3, 7);
+
+        for (int i = 0; i < woodAmount; i++)
+        {
+            float xOffset = Random.Range(-1.5f, 1.5f);
+            float yOffset = Random.Range(.1f, .2f);
+            var targetPos = transform.position + new Vector3(xOffset, yOffset, 0);
+            var newWood = Instantiate(woodPrefab, transform.position, Quaternion.identity);
+
+            Sequence sq = DOTween.Sequence();
+            sq.Append(newWood.transform.DOJump(targetPos, 1f, 1, 1f).SetEase(Ease.OutBack));
+            sq.Append(newWood.transform.DOMove(worker.transform.position, .5f).SetEase(Ease.Linear).OnComplete(() => Destroy(newWood.gameObject)));
+
+
+        }
+        
+        yield return new WaitForSeconds(1.5f);
+        AudioManager.Get().PlaySFX(32);
+        worker.TransportResource(woodAmount * 50,0,0);
+        worker.UpdateWorkerTask(WorkerTask.Trasporting);
     }
 
 }

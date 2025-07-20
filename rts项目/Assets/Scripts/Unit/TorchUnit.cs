@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TorchUnit : HumanoidUnit
 {
-   protected override void UpdateBehaviour()
+    protected override void UpdateBehaviour()
     {
         if (Time.time - CheckTimer >= CheckFrequency)
         {
@@ -46,5 +46,20 @@ public class TorchUnit : HumanoidUnit
         {
             anim.SetBool("Attack", true);
         }
+    }
+
+    public override void PlayAttackSound()
+    {
+        AudioManager.Get().PlaySFX(5);
+    }
+
+    public override void PlaySelectedSound()
+    {
+        AudioManager.Get().PlaySFX(17);
+    }
+
+    public override void PlayDeathSound()
+    {
+        AudioManager.Get().PlaySFX(21);
     }
 }

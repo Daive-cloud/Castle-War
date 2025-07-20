@@ -4959,6 +4959,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myTransform: {fileID: 5220913057906766481}
+  levelUI: {fileID: 0}
 --- !u!1 &1284510775371636400
 GameObject:
   m_ObjectHideFlags: 0
@@ -9916,7 +9917,7 @@ GameObject:
   - component: {fileID: 4198379288327813030}
   - component: {fileID: 8662740083850792201}
   - component: {fileID: 2310311685229292636}
-  - component: {fileID: 1109846134031482189}
+  - component: {fileID: 2541312367143893728}
   m_Layer: 3
   m_Name: Castle_Blue
   m_TagString: BlueUnit
@@ -9974,8 +9975,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.050096568, y: -0.5829986}
-  m_Size: {x: 3.7237313, y: 2.2389042}
+  m_Offset: {x: 0.050096583, y: -0.46906394}
+  m_Size: {x: 3.7237318, y: 2.466788}
   m_Direction: 1
 --- !u!114 &2310311685229292636
 MonoBehaviour:
@@ -9996,7 +9997,7 @@ MonoBehaviour:
   CurrentHealth: 0
   DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
   damageType: 0
---- !u!114 &1109846134031482189
+--- !u!114 &2541312367143893728
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10005,7 +10006,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5145310480760242148}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b09936d3fcd90444b8804cb020935a6, type: 3}
+  m_Script: {fileID: 11500000, guid: e2282b7b19eecaf4c8a27fdba97663c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Actions:
@@ -10015,14 +10016,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 45c3c745cbf893840a6a83df9b5e4480, type: 2}
   - {fileID: 11400000, guid: 46506a9bc2c336944809feae099b3b04, type: 2}
   - {fileID: 11400000, guid: 9fd4bbf7d5745804a91f6b1950840a01, type: 2}
-  CheckFrequency: 1
+  CheckFrequency: 0
   IsDead: 0
   HealthBar: {fileID: 1140425406005413779}
   BuildingEffect: {fileID: 1920154314995914153}
   TowerUnit: {fileID: 0}
   DeathEffect: {fileID: 4617180728561213998}
   DeathIcon: {fileID: 21300000, guid: 9ed651cc50cecc2478a503da03e1d9f1, type: 3}
-  IsCompleted: 0
+  IsCompleted: 1
 --- !u!1 &5615311392249113181
 GameObject:
   m_ObjectHideFlags: 0

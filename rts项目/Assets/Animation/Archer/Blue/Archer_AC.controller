@@ -59,7 +59,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Attack_Down
+    m_ConditionEvent: Attack_Bottom
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -1536910820775002614}
@@ -286,13 +286,13 @@ AnimatorController:
   m_Name: Archer_AC
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: Attack_Bottom
+  - m_Name: Attack_Down
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: Attack_Down
+  - m_Name: Attack_Bottom
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -375,7 +375,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: Attack_Down
+    m_ConditionEvent: Attack_Bottom
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1433236042583277661}
@@ -612,7 +612,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Attack_Bottom
+    m_ConditionEvent: Attack_Down
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -1212631002283229642}
@@ -637,7 +637,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: Attack_Bottom
+    m_ConditionEvent: Attack_Down
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1433236042583277661}

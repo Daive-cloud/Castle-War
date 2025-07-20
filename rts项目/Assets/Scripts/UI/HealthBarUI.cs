@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class HealthBarUI : MonoBehaviour
 {
     [SerializeField] private RectTransform myTransform;
+    [SerializeField] private RectTransform levelUI;
     private Slider slider => GetComponentInChildren<Slider>();
     private Unit unit => GetComponentInParent<Unit>();
 
@@ -18,7 +19,11 @@ public class HealthBarUI : MonoBehaviour
 
     private void Flip()
     {
-        myTransform.Rotate(0,180,0);
+        myTransform.Rotate(0, 180, 0);
+        if (levelUI != null)
+        {
+            levelUI.Rotate(0,180,0);
+        }
     }
 
     private void HealthChange()

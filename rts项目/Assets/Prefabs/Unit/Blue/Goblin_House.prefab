@@ -10170,7 +10170,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4f44040eb07e8944a9bea30a3dac7c1d, type: 2}
   - {fileID: 11400000, guid: bcf106dc938b9604c89aec17909317c1, type: 2}
   - {fileID: 11400000, guid: b7d86f04518273c48a7a48773ceeddf0, type: 2}
-  CheckFrequency: 0.5
+  CheckFrequency: 0.2
   IsDead: 0
   HealthBar: {fileID: 1353841381439952231}
   BuildingEffect: {fileID: 795940926196946998}
@@ -10178,6 +10178,7 @@ MonoBehaviour:
   DeathEffect: {fileID: 6705211564956042338}
   DeathIcon: {fileID: 21300000, guid: db2ba63bfb1d3f14ab2fd545d281fae1, type: 3}
   IsCompleted: 0
+  RegisterdWorkers: []
 --- !u!114 &482923271893440664
 MonoBehaviour:
   m_ObjectHideFlags: 0

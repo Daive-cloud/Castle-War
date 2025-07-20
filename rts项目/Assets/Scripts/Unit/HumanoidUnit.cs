@@ -8,9 +8,9 @@ public class HumanoidUnit : Unit
     protected AI ai => GetComponent<AI>();
     protected Animator anim => GetComponentInChildren<Animator>();
 
-    private float m_Velocity;
-    private Vector3 m_LastPosition;
-    private bool IsFacingRight = true;
+    protected float m_Velocity;
+    protected Vector3 m_LastPosition;
+    protected bool IsFacingRight = true;
 
     [Header("Detection Radius")]
     public float ObjectCheckRadius;
@@ -26,7 +26,7 @@ public class HumanoidUnit : Unit
     {
         get
         {
-            if(Target != null && Target.IsDead)
+            if (Target != null && Target.IsDead)
             {
                 Target = null;
                 return false;
@@ -63,16 +63,21 @@ public class HumanoidUnit : Unit
         FlipController(position);
     }
 
-    public void FlipController(Vector2 _mousePosition)
+    public void FlipController(Vector2 _position)
     {
-        if (_mousePosition.x < transform.position.x && IsFacingRight)
+        if (_position.x < transform.position.x && IsFacingRight && AvoidFlipFrequently(_position))
         {
             Flip();
         }
-        else if (_mousePosition.x > transform.position.x && !IsFacingRight)
+        else if (_position.x > transform.position.x && !IsFacingRight && AvoidFlipFrequently(_position))
         {
             Flip();
         }
+    }
+
+    private bool AvoidFlipFrequently(Vector2 _position)
+    {
+        return Mathf.Abs(_position.x - transform.position.x) > .2f;
     }
 
     protected void Flip()
@@ -85,32 +90,16 @@ public class HumanoidUnit : Unit
     protected void OnDrawGizmos()
     {
         Gizmos.color = Color.white;
-        Gizmos.DrawWireSphere(transform.position,ObjectCheckRadius);
+        Gizmos.DrawWireSphere(transform.position, ObjectCheckRadius);
 
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position,AttackCheckRadius);
+        Gizmos.DrawWireSphere(transform.position, AttackCheckRadius);
     }
 
     public virtual void AssignTarget(Unit _unit) => Target = _unit;
 
     public virtual void UnassignTarget() => Target = null;
 
-    public bool IsBuildingDetected()
-    {
-        if (!HasRegisteredTarget)
-            return false;
-        
-        if (Target.TryGetComponent(out StructureUnit structure))
-        {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, ObjectCheckRadius);
-            bool flag = colliders.ToList().Contains(structure.GetComponent<CapsuleCollider2D>());
-           
-            return flag;
-        }
-
-        var distance = Vector2.Distance(Target.transform.position,transform.position);
-        return distance < ObjectCheckRadius;
-    }
 
     public bool CanReachTarget(Unit _unit)
     {
@@ -128,7 +117,7 @@ public class HumanoidUnit : Unit
         UnassignTarget();
     }
 
-   protected bool CanAttackTarget()
+    protected bool CanAttackTarget()
     {
         var distance = Vector2.Distance(Target.transform.position, transform.position);
 
@@ -143,9 +132,9 @@ public class HumanoidUnit : Unit
 
     public void AnimationFinishTrigger()
     {
-        anim.SetBool("Attack",false);
-        anim.SetBool("Attack_Up",false);
-        anim.SetBool("Attack_Down",false);
+        anim.SetBool("Attack", false);
+        anim.SetBool("Attack_Up", false);
+        anim.SetBool("Attack_Down", false);
         ComboCounter++;
     }
 
@@ -155,12 +144,12 @@ public class HumanoidUnit : Unit
         anim.SetBool("Attack_Up", false);
         anim.SetBool("Attack_Top", false);
         anim.SetBool("Attack_Bottom", false);
-        anim.SetBool("Attack_Down",false);
+        anim.SetBool("Attack_Down", false);
     }
 
     public void AnimationFinishTrigger_3()
     {
-        anim.SetBool("Attack",false);
+        anim.SetBool("Attack", false);
     }
 
     public void FindClosestEnemyInRange()
@@ -209,6 +198,10 @@ public class HumanoidUnit : Unit
         Target = closestEnemy;
     }
 
+    public virtual void PlayAttackSound()
+    {
+
+    }
   
 
    

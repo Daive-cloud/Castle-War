@@ -38,7 +38,18 @@ public class DemolisherUnit : HumanoidUnit
 
     public void ThrowFirecraker()
     {
+        AudioManager.Get().PlaySFX(12);
         var grenade = Instantiate(FirecrakerPrefab);
-        grenade.GetComponent<GrenadeController>().ThrowAnimation(transform.position,Target.transform.position,this);
+        grenade.GetComponent<GrenadeController>().ThrowAnimation(transform.position, Target.transform.position, this);
+    }
+
+    public override void PlayDeathSound()
+    {
+        AudioManager.Get().PlaySFX(22);
+    }
+
+    public override void PlaySelectedSound()
+    {
+        AudioManager.Get().PlaySFX(14);
     }
 }

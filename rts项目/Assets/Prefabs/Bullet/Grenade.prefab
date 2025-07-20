@@ -74,7 +74,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1942013991
   m_SortingLayer: 1
-  m_SortingOrder: 1
+  m_SortingOrder: 32
   m_Sprite: {fileID: 1270657759, guid: 965c75522cf021047a2a3925dbfc29b4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -100,7 +100,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arcHeight: 3
   duration: 1
-  pointCount: 40
   blastRadius: 1.2
 --- !u!95 &834972437123884051
 Animator:

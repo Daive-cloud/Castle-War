@@ -17,6 +17,7 @@ public class BarrelUnit : HumanoidUnit
             CheckTimer = Time.time;
             if (HasRegisteredTarget)
             {
+                anim.SetTrigger("Select");
                 if (CanAttackTarget() && !IsDead)
                 {
                     ai.ClearPath();
@@ -47,6 +48,7 @@ public class BarrelUnit : HumanoidUnit
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, ObjectCheckRadius);
         var vaildUnits = colliders.ToList().Where(unit => unit != null && unit != this.GetComponent<CapsuleCollider2D>() && unit.TryGetComponent(out Unit _));
         int damage = stats.Damage;
+        AudioManager.Get().PlaySFX(8);
 
         foreach (var unit in vaildUnits)
         {
@@ -77,10 +79,15 @@ public class BarrelUnit : HumanoidUnit
 
                     Vector2 position = new Vector2(gridX, gridY);
 
-                    Instantiate(flamePrefab,position,Quaternion.identity);
+                    Instantiate(flamePrefab, position, Quaternion.identity);
+                    AudioManager.Get().PlaySFX(13);
                 }
             }
         }
+    }
 
+    public override void PlaySelectedSound()
+    {
+        AudioManager.Get().PlaySFX(26);
     }
 }

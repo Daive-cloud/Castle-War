@@ -54,6 +54,9 @@ MonoBehaviour:
   TrainingUnitUI: {fileID: 0}
   TrainingUI: {fileID: 0}
   GameOverUI: {fileID: 0}
+  WoodCollection: {fileID: 7712814376212877133, guid: e2c37426a4f9f3d448ee9f6917ce414a, type: 3}
+  MeatCollection: {fileID: 0}
+  GoldCollection: {fileID: 0}
   BoxRenderer: {fileID: 932357134978236810}
   RegisteredUnits: []
   PanSpeed: 100
