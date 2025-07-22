@@ -10,7 +10,6 @@ public class TilemapManager : SingletonManager<TilemapManager>
     public Tilemap PlacementTilemap;
     public Tilemap[] UnreachableTilemap;
     public Tilemap BuildingAreaTilemap;
-
     private PathFinding m_PathFinding;
 
     private void Start()

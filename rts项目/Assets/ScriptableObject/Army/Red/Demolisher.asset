@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42a34e44fbab21c4bbae0f236461a5d8, type: 3}
+  m_Name: Demolisher
+  m_EditorClassIdentifier: 
+  Icon: {fileID: -1900024874, guid: f05b4d1ddaa9d884d9379cd26f379533, type: 3}
+  ID: e1224968-faa2-4693-9ca4-41a81ba28e69
+  m_UnitPrefab: {fileID: 1249463809377659669, guid: 27ca2889b84e7324ba11cbf640affffe, type: 3}
+  m_GoldCost: 300
+  m_MeatCost: 600
+  m_TrainingTime: 28
+  m_UnitType: 4

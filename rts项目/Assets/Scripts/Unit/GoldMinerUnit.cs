@@ -1,36 +1,80 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class GoldMinerUnit : StructureUnit
 {
     [Header("Prodection Info")]
     [SerializeField] private Sprite ProductionImage;
+    [SerializeField] private Sprite OriginalImage;
     [SerializeField] private float ProductionFrequency;
-    private float ProductionTimer;
+    private Queue<WorkerUnit> WorkersInMiner = new();
+    private bool HasVaildWorker => WorkersInMiner.Count > 0;
+    private bool IsTakeMining = false;
+
     protected override void UpdateBehaviour()
     {
-        base.UpdateBehaviour();
-
-        if(!IsUnderConstruction && this.CompareTag("BlueUnit"))
+        if (Time.time - CheckTimer >= CheckFrequency)
         {
-            if(Time.time - ProductionTimer >= ProductionFrequency)
+            CheckTimer = Time.time;
+
+            if (IsUnderConstruction && HasAssignedWorker)
             {
-                ProductionTimer = Time.time;
-                StartCoroutine(ProduceGold());
+                ProcessValue += .01f * WorkerCount * HvoUtils.GetAccelerateBuildingParemter(this);
+
+                if (ProcessValue >= 1f)
+                {
+                    CompleteConstruction();
+                }
             }
+            if (!IsCompleted)
+            {
+                return;
+            }
+
+            if (HasVaildWorker)
+            {
+                sr.sprite = ProductionImage;
+                if (!IsTakeMining)
+                {
+                    StartCoroutine(TakeMiningProcess());
+                }
+            }
+            else
+            {
+                sr.sprite = OriginalImage;
+            }
+
         }
     }
 
-    private IEnumerator ProduceGold()
+    public void EnterMiner(WorkerUnit _worker)
     {
-        var originalSprite = sr.sprite;
-        sr.sprite = ProductionImage;
+        _worker.RecordLastGoldMiner(this);
+        _worker.gameObject.SetActive(false);
+        WorkersInMiner.Enqueue(_worker);
+    }
 
-        m_GameManager.GoldAmount += 150;
-        m_GameManager.onResourcesChanged?.Invoke();
+    private void LevelMiner(WorkerUnit _worker)
+    {
+        int goldAmount = Random.Range(3, 7);
 
-        yield return new WaitForSeconds(1f);
-        sr.sprite = originalSprite;
+        _worker.gameObject.SetActive(true);
+        AudioManager.Get().PlaySFX(32);
+        
+        _worker.TransportResource(0, 0, goldAmount *50);
+        _worker.UpdateWorkerTask(WorkerTask.Trasporting);
+    }
+
+    private IEnumerator TakeMiningProcess()
+    {
+        IsTakeMining = true;
+
+        yield return new WaitForSeconds(ProductionFrequency);
+        var worker = WorkersInMiner.Dequeue();
+        LevelMiner(worker);
+
+        IsTakeMining = false;
     }
 }

@@ -51,7 +51,7 @@ public class GrenadeController : MonoBehaviour
         {
             if (unit.TryGetComponent(out BarrelUnit barrel))
             {
-                owner.GetComponent<UnitStats>().TakeDamage(unit.GetComponent<UnitStats>(), owner.GetComponent<UnitStats>().Damage * 4);
+                owner.GetComponent<UnitStats>().TakeDamage(unit.GetComponent<UnitStats>(), owner.GetComponent<UnitStats>().Damage.GetValue() * 4);
             }
             else
             {

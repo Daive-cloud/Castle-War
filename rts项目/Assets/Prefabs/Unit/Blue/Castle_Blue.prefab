@@ -9990,13 +9990,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a501cb49a9332c46be75d5d585e78e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damage: 0
-  Armor: 0
-  MaxHealth: 1000
-  CritChance: 0
+  Damage:
+    baseValue: 0
+    modifiers: 
+  Armor:
+    baseValue: 20
+    modifiers: 
+  MaxHealth:
+    baseValue: 3000
+    modifiers: 
+  CritChance:
+    baseValue: 0
+    modifiers: 
   CurrentHealth: 0
   DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
   damageType: 0
+  LevelUpPrefab: {fileID: 0}
+  LevelUI: {fileID: 0}
+  ExpList: 40060000a00f0000
+  currentExp: 0
 --- !u!114 &2541312367143893728
 MonoBehaviour:
   m_ObjectHideFlags: 0

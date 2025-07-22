@@ -189,8 +189,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.8, y: -51.6}
-  m_SizeDelta: {x: 334.4, y: 301.3}
+  m_AnchoredPosition: {x: 0.8, y: -55.3}
+  m_SizeDelta: {x: 334.4, y: 308.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4465663010727832297
 CanvasRenderer:
@@ -513,6 +513,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 2.5
+  currentType: 0
 --- !u!114 &7462713272146701513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -525,13 +526,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a501cb49a9332c46be75d5d585e78e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damage: 0
-  Armor: 5
-  MaxHealth: 80
-  CritChance: 0
+  Damage:
+    baseValue: 0
+    modifiers: 
+  Armor:
+    baseValue: 5
+    modifiers: 
+  MaxHealth:
+    baseValue: 120
+    modifiers: 
+  CritChance:
+    baseValue: 0
+    modifiers: 
   CurrentHealth: 0
   DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
   damageType: 0
+  LevelUpPrefab: {fileID: 1251873176143866736, guid: 171ed8bd240910b478af0d69d36e61f9, type: 3}
+  LevelUI: {fileID: 0}
+  ExpList: c8000000f4010000
+  currentExp: 0
 --- !u!114 &8036106479385903509
 MonoBehaviour:
   m_ObjectHideFlags: 0

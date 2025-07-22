@@ -114,14 +114,13 @@ public class HumanoidUnit : Unit
     {
         base.Death();
         anim.SetTrigger("Death");
-        UnassignTarget();
     }
 
     protected bool CanAttackTarget()
     {
         var distance = Vector2.Distance(Target.transform.position, transform.position);
 
-        if (Target.TryGetComponent(out StructureUnit structure))
+        if (Target.TryGetComponent(out StructureUnit _))
         {
             Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, AttackCheckRadius);
             bool flag = colliders.ToList().Contains(Target.GetComponent<CapsuleCollider2D>());
@@ -154,7 +153,7 @@ public class HumanoidUnit : Unit
 
     public void FindClosestEnemyInRange()
     {
-        Enemies = m_GameManager.RegisteredUnits.Where(unit => unit != null && !unit.IsDead && unit.tag != this.tag && unit.tag != "Tree").ToList();
+        Enemies = m_GameManager.RegisteredUnits.Where(unit => unit != null && !unit.IsDead && unit.tag != this.tag && unit.tag != "Tree" && unit.tag != "Sheep").ToList();
 
         float closestDistance = int.MaxValue;
         Unit closestEnemy = null;
@@ -179,7 +178,7 @@ public class HumanoidUnit : Unit
     public void FindClosestEnemyWithoutRange()
     {
         Enemies.Clear();
-        Enemies = m_GameManager.RegisteredUnits.Where(unit => unit != null && unit.gameObject != null && !unit.IsDead && unit.tag != this.tag && unit.tag != "Tree").ToList();
+        Enemies = m_GameManager.RegisteredUnits.Where(unit => unit != null && !unit.IsDead && unit.tag != this.tag && unit.tag != "Tree" && unit.tag != "Sheep" && unit.gameObject.activeSelf).ToList();
 
         float closestDistance = int.MaxValue;
         Unit closestEnemy = null;
@@ -202,8 +201,5 @@ public class HumanoidUnit : Unit
     {
 
     }
-  
-
-   
 
 }

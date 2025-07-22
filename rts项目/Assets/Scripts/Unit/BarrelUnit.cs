@@ -47,7 +47,7 @@ public class BarrelUnit : HumanoidUnit
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, ObjectCheckRadius);
         var vaildUnits = colliders.ToList().Where(unit => unit != null && unit != this.GetComponent<CapsuleCollider2D>() && unit.TryGetComponent(out Unit _));
-        int damage = stats.Damage;
+        int damage = stats.Damage.GetValue();
         AudioManager.Get().PlaySFX(8);
 
         foreach (var unit in vaildUnits)

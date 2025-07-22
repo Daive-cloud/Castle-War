@@ -9,15 +9,16 @@ public class SelectSourceUI : MonoBehaviour
     public TextMeshProUGUI ResourcesFont;
 
     private Slider slider => GetComponentInChildren<Slider>();
-    private const int minAmount = 2000;
-    private const int maxAmount = 10000;
+    [SerializeField] private int minAmount = 2000;
+    [SerializeField] private int maxAmount = 10000;
 
     public void AdjustResource()
     {
         float temp = slider.value;
 
         int number = Mathf.RoundToInt(maxAmount * temp + minAmount * (1 - temp));
-        number = number / 10 * 10;
+        if(number > 10)
+            number = number / 50 * 50;
         ResourcesFont.text = number.ToString();
     }
 }

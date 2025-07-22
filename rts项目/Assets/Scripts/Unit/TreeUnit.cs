@@ -1,19 +1,18 @@
 using UnityEngine;
 using DG.Tweening;
 using System.Collections;
+using IUnit;
 
-public class TreeUnit : Unit
+public class TreeUnit : Unit , IResouceUnit
 {
     [SerializeField] private GameObject woodPrefab;
     private Animator anim => GetComponentInChildren<Animator>();
     private WorkerUnit worker;
 
-    public bool HasAssignedWorker => worker != null;
+    public bool HasAssignedWorker => worker != null; // 隐式接口实现
 
-    protected override void Start()
-    {
-        base.Start();
-    }
+    bool IResouceUnit.IsDead => IsDead;
+
 
     public void Shake()
     {
@@ -26,7 +25,8 @@ public class TreeUnit : Unit
         base.Death();
         AudioManager.Get().PlaySFX(30);
         anim.SetTrigger("Death");
-        worker.ResetAnimation();
+        if(worker != null)
+            worker.ResetAnimation();
         StartCoroutine(WorkerCollectWood());
         sr.DOFade(0,2f).OnComplete(() => Destroy(gameObject));
     }
@@ -49,7 +49,10 @@ public class TreeUnit : Unit
 
             Sequence sq = DOTween.Sequence();
             sq.Append(newWood.transform.DOJump(targetPos, 1f, 1, 1f).SetEase(Ease.OutBack));
-            sq.Append(newWood.transform.DOMove(worker.transform.position, .5f).SetEase(Ease.Linear).OnComplete(() => Destroy(newWood.gameObject)));
+            if (worker != null)
+                sq.Append(newWood.transform.DOMove(worker.transform.position, .5f).SetEase(Ease.Linear).OnComplete(() => Destroy(newWood.gameObject)));
+            else
+                sq.Append(newWood.GetComponent<SpriteRenderer>().DOFade(0,1f).OnComplete(() => Destroy(newWood.gameObject)));
 
 
         }

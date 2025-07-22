@@ -62,7 +62,7 @@ public class TrainingUI : MonoBehaviour
         float maxTime = TrainingTime.Dequeue();
 
         trainingTimer = HvoUtils.ComputeTrainingTime(barrackCount,maxTime,maxTime/4);
-        Debug.Log($"Actual Training Time : {trainingTimer}.");
+//        Debug.Log($"Actual Training Time : {trainingTimer}.");
         fixedTimer = 0f;
         var slot = TrainingSlots.Dequeue();
 
@@ -83,7 +83,7 @@ public class TrainingUI : MonoBehaviour
         var unit = TrainingUnits.Dequeue();
         GameObject newUnit = Instantiate(unit, barrack.transform.position, Quaternion.identity);
 
-        Vector2 targetPos = MoveToVaildPosition(barrack.transform.position);
+        Vector2 targetPos = HvoUtils.MoveToVaildPosition(barrack.transform.position);
 
         if (newUnit.TryGetComponent(out BarrelUnit barrel))
         {
@@ -131,26 +131,5 @@ public class TrainingUI : MonoBehaviour
         TrainingBarracks.Enqueue(_barrack);
     }
 
-    private Vector2 MoveToVaildPosition(Vector2 _originPos)
-    {
-        List<Vector2> vaildPos = new();
-
-        for (int i = -2; i <= 2; i++)
-        {
-            for (int j = -2; j <= 2; j++)
-            {
-                if (i == 0 && j == 0) continue;
-
-                int gridX = Mathf.RoundToInt(_originPos.x + i);
-                int gridY = Mathf.RoundToInt(_originPos.y + j);
-                Vector3Int targetPos = new Vector3Int(gridX, gridY, 0);
-                if (TilemapManager.Get().CanWalkAtTile(targetPos))
-                {
-                    vaildPos.Add(new Vector2(targetPos.x,targetPos.y));
-                }
-            }
-        }
-
-        return vaildPos[Random.Range(0,vaildPos.Count -1)];
-    }
+   
 }

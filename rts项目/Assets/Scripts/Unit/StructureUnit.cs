@@ -22,21 +22,23 @@ public class StructureUnit : Unit
     public bool IsUnderConstruction => m_BuildingProcess != null;
     public bool IsCompleted = false;
 
-    private List<WorkerUnit> RegisterdWorkers = new();
-    private bool HasAssignedWorker => RegisterdWorkers.Count > 0;
+    public List<WorkerUnit> RegisterdWorkers = new();
+    public bool HasAssignedWorker => RegisterdWorkers.Count > 0;
     public int WorkerCount => RegisterdWorkers.Count;
 
-    private float ProcessValue = 0f;
+    protected float ProcessValue = 0f;
 
     protected override void UpdateBehaviour()
     {
         if (Time.time - CheckTimer > CheckFrequency)
         {
             CheckTimer = Time.time;
-
+            
             if (IsUnderConstruction && HasAssignedWorker)
             {
-                ProcessValue += .01f * WorkerCount;
+                float paramter = HvoUtils.GetAccelerateBuildingParemter(this);
+//                Debug.Log($"paramter : {paramter}.");
+                ProcessValue += .01f * WorkerCount * HvoUtils.GetAccelerateBuildingParemter(this);
 
                 if (ProcessValue >= 1f)
                 {

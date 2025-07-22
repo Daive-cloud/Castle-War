@@ -9992,6 +9992,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myTransform: {fileID: 7069334434104980427}
+  levelUI: {fileID: 0}
 --- !u!1 &7169434099323782173
 GameObject:
   m_ObjectHideFlags: 0
@@ -10249,7 +10250,9 @@ MonoBehaviour:
   TowerUnit: {fileID: 0}
   DeathEffect: {fileID: 7148586462257399840}
   DeathIcon: {fileID: 21300000, guid: 82bf320113c26434f8d75a459acd9022, type: 3}
+  IsCompleted: 0
   ProductionImage: {fileID: 21300000, guid: 86b7ae19bc609574b84441a8439aa45e, type: 3}
+  OriginalImage: {fileID: 21300000, guid: 476b5ed1647782f40ba8fbc1df48e783, type: 3}
   ProductionFrequency: 15
 --- !u!114 &5062743667534983981
 MonoBehaviour:
@@ -10263,9 +10266,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a501cb49a9332c46be75d5d585e78e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damage: 0
-  Armor: 0
-  MaxHealth: 800
-  CritChance: 0
+  Damage:
+    baseValue: 0
+    modifiers: 
+  Armor:
+    baseValue: 25
+    modifiers: 
+  MaxHealth:
+    baseValue: 2000
+    modifiers: 
+  CritChance:
+    baseValue: 0
+    modifiers: 
   CurrentHealth: 0
   DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
+  damageType: 0
+  LevelUpPrefab: {fileID: 0}
+  LevelUI: {fileID: 0}
+  ExpList: e8030000b80b0000
+  currentExp: 0

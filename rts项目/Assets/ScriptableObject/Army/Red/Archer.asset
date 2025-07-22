@@ -15,6 +15,7 @@ MonoBehaviour:
   Icon: {fileID: -842482007, guid: 900d620099612a141adf8a0748540740, type: 3}
   ID: 447febd7-987d-48ba-aba8-b18907fdede2
   m_UnitPrefab: {fileID: 6017765085285212632, guid: d05f4e2d133ac8e4cad25ed4a4936fd8, type: 3}
-  m_TrainingCost: 250
-  m_TrainingTime: 12
+  m_GoldCost: 0
+  m_MeatCost: 0
+  m_TrainingTime: 24
   m_UnitType: 1

@@ -70,8 +70,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.029253006, y: -0.06825769}
-  m_Size: {x: 1.2605867, y: 1.9816117}
+  m_Offset: {x: -0.026803255, y: -0.06825769}
+  m_Size: {x: 1.5713687, y: 1.9816117}
   m_Direction: 0
 --- !u!114 &305803844840052990
 MonoBehaviour:
@@ -85,13 +85,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a501cb49a9332c46be75d5d585e78e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damage: 0
-  Armor: 0
-  MaxHealth: 800
-  CritChance: 0
+  Damage:
+    baseValue: 0
+    modifiers: 
+  Armor:
+    baseValue: 10
+    modifiers: 
+  MaxHealth:
+    baseValue: 1000
+    modifiers: 
+  CritChance:
+    baseValue: 0
+    modifiers: 
   CurrentHealth: 0
   DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
   damageType: 0
+  LevelUpPrefab: {fileID: 0}
+  LevelUI: {fileID: 0}
+  ExpList: 58020000d0070000
+  currentExp: 0
 --- !u!114 &4422456078981232560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,7 +128,6 @@ MonoBehaviour:
   DeathEffect: {fileID: 7184285826284919286}
   DeathIcon: {fileID: 21300000, guid: f6c89f9cf2c27774fa20dfb8e18fee64, type: 3}
   IsCompleted: 0
-  RegisterdWorkers: []
 --- !u!1 &1479778514611912485
 GameObject:
   m_ObjectHideFlags: 0
@@ -5240,6 +5251,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myTransform: {fileID: 420618240942695662}
+  levelUI: {fileID: 0}
 --- !u!1 &4803586940784978134
 GameObject:
   m_ObjectHideFlags: 0

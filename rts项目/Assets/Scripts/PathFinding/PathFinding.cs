@@ -218,7 +218,7 @@ public class PathFinding
 
     public void UpdateNodesInArea(Vector3Int _startPosition, int _width, int _height)
     {
-        Debug.Log($"start position : {_startPosition}.");
+//        Debug.Log($"start position : {_startPosition}.");
         for (int i = 0; i < _width; i++)
         {
             for (int j = 0; j < _height; j++)

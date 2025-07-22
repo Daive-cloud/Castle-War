@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdb84294578037243bc5a3d40925b25b, type: 3}
+  m_Name: BombTower
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 1248794936, guid: d97080dbf05e204479ffed0db5e61641, type: 3}
+  ID: 2666e9fd-019e-45aa-9fb2-dee291f8a1e0
+  m_FoundationSprite: {fileID: 21300000, guid: 5660f017225e65642be426aee018c18d, type: 3}
+  m_CompletionSprite: {fileID: -901906181, guid: 9a9d57a2c05ef03498d0ad19ffc10d85, type: 3}
+  m_StructurePrefab: {fileID: 2199559971102939238, guid: dd4022b7c81e7e04f9adf104e8070b47, type: 3}
+  m_GoldCost: 1000
+  m_WoodCost: 1000
+  m_BuildingSize: {x: 2, y: 3, z: 0}
+  m_BuildingOffset: {x: -1, y: -1, z: 0}

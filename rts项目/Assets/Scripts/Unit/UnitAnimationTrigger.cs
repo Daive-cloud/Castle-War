@@ -20,6 +20,8 @@ public class UnitAnimationTrigger : MonoBehaviour
         {
             unit.PlayAttackSound();
         }
+        if(!unit.IsDead && unit.Target != null)
+            unit.FlipController(unit.Target.transform.position);
 
         foreach (var hit in colliders)
         {
@@ -34,7 +36,9 @@ public class UnitAnimationTrigger : MonoBehaviour
 
     private void DestroyUnit() => unit.DestroyUnit();
 
-    private void ChopTree() => (unit as WorkerUnit).ChopTree();
+    private void DestroyUnitWithDelay() => Destroy(unit.gameObject,5f);
+
+    private void UsingAxe() => (unit as WorkerUnit).UsingAxe();
 
     private void ThrowGrenade() => (unit as DemolisherUnit).ThrowFirecraker();
 

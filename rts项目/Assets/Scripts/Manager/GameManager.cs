@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using TMPro;
 using DG.Tweening;
+using IUnit;
 
 public class GameManager : SingletonManager<GameManager> 
 {
@@ -22,7 +23,10 @@ public class GameManager : SingletonManager<GameManager>
     [SerializeField] private PlaceBuildingUI PlaceBuildingUI;
     [SerializeField] private TrainingUnitUI TrainingUnitUI;
     [SerializeField] private TrainingUI TrainingUI;
-    [SerializeField] private Image GameOverUI;
+    [SerializeField] private Image WiningUI;
+    [SerializeField] private Image FaliureUI;
+
+    [Header("Resource UI")]
     [SerializeField] private GameObject WoodCollection;
     [SerializeField] private GameObject MeatCollection;
     [SerializeField] private GameObject GoldCollection;
@@ -162,40 +166,14 @@ public class GameManager : SingletonManager<GameManager>
     {
         //Debug.Log("Select New Unit Part 0.");
         // 处理工人
-        if (SelectedUnits.Count > 0)
+        bool flowControl = HandleWorkerTask(_unit);
+        if (!flowControl)
         {
-            if (_unit.TryGetComponent(out StructureUnit structure) && structure.IsUnderConstruction)
-            {
-                foreach (var unit in SelectedUnits.Where(unit => unit.TryGetComponent(out WorkerUnit worker) && worker.currentTask == WorkerTask.None))
-                {
-                    unit.GetComponent<WorkerUnit>().AssignTarget(structure);
-                    unit.GetComponent<WorkerUnit>().UpdateWorkerTask( WorkerTask.Building);
-                }
-                return;
-            }
-        }
-        else
-        {
-            if (ActiveUnit is WorkerUnit worker && worker.currentTask == WorkerTask.None)
-            {
-                if (_unit.TryGetComponent(out StructureUnit structure) && structure.IsUnderConstruction)
-                {
-                    worker.AssignTarget(structure);
-                    worker.UpdateWorkerTask(WorkerTask.Building);
-                    return;
-                }
-                else if (_unit.TryGetComponent(out TreeUnit tree) && !tree.IsDead)
-                {
-                    tree.AssignWorker(worker);
-                    worker.AssignTarget(tree);
-                    worker.UpdateWorkerTask(WorkerTask.Chopping);
-                    return;
-                }
-            }
+            return;
         }
         //Debug.Log("Select New Unit Part 1.");
         // 处理攻击的情况
-        bool flowControl = HandleUnitsAttack(_unit, _mousePosition);
+        flowControl = HandleUnitsAttack(_unit, _mousePosition);
         if (!flowControl)
         {
             return;
@@ -203,18 +181,18 @@ public class GameManager : SingletonManager<GameManager>
 
         if (HasSelectUnits() || ActiveUnit == _unit)
         {
-          ResetSelectedUnits();
+            ResetSelectedUnits();
         }
-       // Debug.Log("Select New Unit Part 2.");
+        // Debug.Log("Select New Unit Part 2.");
 
         if ((_unit is StructureUnit house && !house.IsCompleted) || _unit.IsDead || IsDrawing)
         {
             return;
         }
-      //  Debug.Log("Select New Unit Part 3.");
+        //  Debug.Log("Select New Unit Part 3.");
         ActiveUnit = _unit.CompareTag("BlueUnit") && !_unit.TryGetComponent(out TowerUnit _) ? _unit : null;
 
-        if (ActiveUnit != null )
+        if (ActiveUnit != null)
         {
             ActiveUnit.SelectedUnit();
             if (ActiveUnit.Actions.Count > 0)
@@ -228,6 +206,71 @@ public class GameManager : SingletonManager<GameManager>
         }
     }
 
+    private bool HandleWorkerTask(Unit _unit)
+    {
+        if (SelectedUnits.Count > 0)
+        {
+            var vaildWorkers = SelectedUnits.Where(unit => unit.TryGetComponent(out WorkerUnit worker) && worker.currentTask == WorkerTask.None).ToList();
+            if (vaildWorkers.Count == 0)
+            {
+                return true;
+            }
+
+            if (_unit.TryGetComponent(out StructureUnit structure) && structure.IsUnderConstruction)
+                {
+                    foreach (var unit in vaildWorkers)
+                    {
+                        unit.GetComponent<WorkerUnit>().AssignTarget(structure);
+                        unit.GetComponent<WorkerUnit>().UpdateWorkerTask(WorkerTask.Building);
+                    }
+                    return false;
+                }
+                else if (_unit.TryGetComponent(out GoldMinerUnit miner) && !miner.IsDead && miner.IsCompleted)
+                {
+                    foreach (var unit in vaildWorkers)
+                    {
+                        unit.GetComponent<WorkerUnit>().AssignTarget(miner);
+                        unit.GetComponent<WorkerUnit>().UpdateWorkerTask(WorkerTask.Mining);
+                    }
+                    return false;
+                }
+        }
+        else
+        {
+            if (ActiveUnit is WorkerUnit worker && worker.currentTask == WorkerTask.None)
+            {
+                if (_unit.TryGetComponent(out StructureUnit structure) && structure.IsUnderConstruction)
+                {
+                    worker.AssignTarget(structure);
+                    worker.UpdateWorkerTask(WorkerTask.Building);
+                    return false;
+                }
+                else if (_unit.TryGetComponent(out TreeUnit tree) && !tree.IsDead)
+                {
+                    tree.AssignWorker(worker);
+                    worker.AssignTarget(tree);
+                    worker.UpdateWorkerTask(WorkerTask.Chopping);
+                    return false;
+                }
+                else if (_unit.TryGetComponent(out SheepUnit sheep) && !sheep.IsDead)
+                {
+                    sheep.AssignTarget(worker);
+                    worker.AssignTarget(sheep);
+                    worker.UpdateWorkerTask(WorkerTask.Killing);
+                    return false;
+                }
+                else if (_unit.TryGetComponent(out GoldMinerUnit miner) && !miner.IsDead && miner.IsCompleted)
+                {
+                    worker.AssignTarget(miner);
+                    worker.UpdateWorkerTask(WorkerTask.Mining);
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     private bool HandleUnitsAttack(Unit _unit, Vector2 _mousePosition)
     {
         if (!HasSelectUnits())
@@ -235,6 +278,7 @@ public class GameManager : SingletonManager<GameManager>
 
         if (_unit.CompareTag("RedUnit") && !_unit.IsDead)
             {
+            Debug.Log("Attack Target");
                 GenerateFollowRay(_mousePosition, Color.red);
                 if (SelectedUnits.Count > 0)
                 {
@@ -521,6 +565,18 @@ public class GameManager : SingletonManager<GameManager>
         AudioManager.Get().PlaySFX(28);
     }
 
+    public bool CanEnemyPlaceBuilding(BuildingActionSO _buildingAction, Vector3 _placePosition)
+    {
+        var placementProcess = new PlacementProcess(_buildingAction, m_TilemapManager, true);
+
+        if (placementProcess.CanPlaceBuilding(_placePosition))
+        {
+            StartCoroutine(UpdateNodesCoroutine(_placePosition,_buildingAction));
+            return true;
+        }
+        return false;
+    }
+
     #endregion
 
     #region UI Methods
@@ -539,17 +595,37 @@ public class GameManager : SingletonManager<GameManager>
         }
     }
 
-    public void CollectWood(int _woodCount, Vector3 _startPos)
+    public void CollectResource(ResourceType _type, int _amount, Vector3 _startPos)
     {
         AudioManager.Get().PlaySFX(31);
-        var newImage = Instantiate(WoodCollection, _startPos, Quaternion.identity);
-        string sb = "+ " + _woodCount.ToString();
+        GameObject newImage = null;
+        string sb = "+ " + _amount.ToString();
+
+        switch (_type)
+        {
+            case ResourceType.wood:
+                newImage = Instantiate(WoodCollection, _startPos, Quaternion.identity);
+                WoodAmount += _amount;
+                break;
+            case ResourceType.meat:
+                newImage = Instantiate(MeatCollection, _startPos, Quaternion.identity);
+                MeatAmount += _amount;
+                break;
+            case ResourceType.gold:
+                newImage = Instantiate(GoldCollection, _startPos, Quaternion.identity);
+                GoldAmount += _amount;
+                break;
+            default:
+                return;
+        }
         newImage.GetComponentInChildren<TextMeshProUGUI>().text = sb;
         newImage.transform.DOMove(_startPos + new Vector3(0, 2f, 0), 1.2f).SetEase(Ease.Linear).OnComplete(() => Destroy(newImage.gameObject));
 
-        WoodAmount += _woodCount;
         onResourcesChanged?.Invoke();
     }
+    public void CollectWood(int _woodCount, Vector3 _startPos) => CollectResource(ResourceType.wood,_woodCount,_startPos);
+    public void CollectMeat(int _meatCount,Vector3 _startPos) => CollectResource(ResourceType.meat,_meatCount,_startPos);
+    public void CollectGold(int _goldCount, Vector3 _startPos) => CollectResource(ResourceType.gold,_goldCount,_startPos);
 
     #endregion
 
@@ -562,9 +638,10 @@ public class GameManager : SingletonManager<GameManager>
 
     private void ConfirmTraining(TrainingActionSO _trainingAction)
     {
-        if (GoldAmount >= _trainingAction.GoldCost)
+        if (GoldAmount >= _trainingAction.GoldCost && MeatAmount >= _trainingAction.MeatCost)
         {
             GoldAmount -= _trainingAction.GoldCost;
+            MeatAmount -= _trainingAction.MeatCost;
             onResourcesChanged();
         }
         else
@@ -584,18 +661,6 @@ public class GameManager : SingletonManager<GameManager>
 
     #endregion
 
-    public bool CanEnemyPlaceBuilding(BuildingActionSO _buildingAction, Vector3 _placePosition)
-    {
-        var placementProcess = new PlacementProcess(_buildingAction, m_TilemapManager, true);
-
-        if (placementProcess.CanPlaceBuilding(_placePosition))
-        {
-            StartCoroutine(UpdateNodesCoroutine(_placePosition,_buildingAction));
-            return true;
-        }
-        return false;
-    }
-
     public void RegisterUnit(Unit _unit)
     {
         RegisteredUnits.Add(_unit);
@@ -610,14 +675,14 @@ public class GameManager : SingletonManager<GameManager>
 
         if (!HasActiveBlueBuilding)
         {
-            GameOverUI.gameObject.SetActive(true);
+            FaliureUI.gameObject.SetActive(true);
             RegisteredUnits.Where(unit => !unit.IsDead && unit.CompareTag("BlueUnit")).ToList().ForEach(unit => unit.Death());
             StartCoroutine(GameOver());
         }
 
         if (!HasActiveRedBuilding)
         {
-            GameOverUI.gameObject.SetActive(true);
+            WiningUI.gameObject.SetActive(true);
             RegisteredUnits.Where(unit => unit.CompareTag("RedUnit")).ToList().ForEach(unit => unit.Death());
             StartCoroutine(GameOver());
         }

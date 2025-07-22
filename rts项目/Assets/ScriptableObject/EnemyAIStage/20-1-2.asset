@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d945a1c1971090846b70a24d82a49bc0, type: 3}
   m_Name: 20-1-2
   m_EditorClassIdentifier: 
-  StageExistWindow: 20
+  StageExistWindow: 30
   BuildingAction: {fileID: 11400000, guid: 36a3b6e7fbaa8674b908305721fd32f3, type: 2}
   TrainingActions:
   - {fileID: 11400000, guid: 561e27d6d9b54014386da8f24a854f0b, type: 2}
