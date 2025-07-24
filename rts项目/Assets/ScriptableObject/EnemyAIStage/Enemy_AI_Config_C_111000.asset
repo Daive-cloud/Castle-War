@@ -10,11 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d945a1c1971090846b70a24d82a49bc0, type: 3}
-  m_Name: 30-3-23
+  m_Name: Enemy_AI_Config_C_111000
   m_EditorClassIdentifier: 
-  StageExistWindow: 60
-  BuildingAction: {fileID: 11400000, guid: e6073f4aaf7bcd54b9f25ed2fa8a1024, type: 2}
+  BuildingAction: {fileID: 11400000, guid: f3ccc01ad7666f74d9b7888c57599dc8, type: 2}
   TrainingActions:
-  - {fileID: 11400000, guid: 561e27d6d9b54014386da8f24a854f0b, type: 2}
-  - {fileID: 11400000, guid: 561e27d6d9b54014386da8f24a854f0b, type: 2}
   - {fileID: 11400000, guid: bc79821a61e4dc34c87afd69ad454d18, type: 2}
+  - {fileID: 11400000, guid: a8cd34c489cf7e5469a75b2dad83aa76, type: 2}
+  - {fileID: 11400000, guid: 1ebb7b371f434ad489da979cb4a7c950, type: 2}

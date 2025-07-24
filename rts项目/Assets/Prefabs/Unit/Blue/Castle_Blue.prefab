@@ -10028,14 +10028,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 45c3c745cbf893840a6a83df9b5e4480, type: 2}
   - {fileID: 11400000, guid: 46506a9bc2c336944809feae099b3b04, type: 2}
   - {fileID: 11400000, guid: 9fd4bbf7d5745804a91f6b1950840a01, type: 2}
-  CheckFrequency: 0
+  CheckFrequency: 1
   IsDead: 0
   HealthBar: {fileID: 1140425406005413779}
   BuildingEffect: {fileID: 1920154314995914153}
   TowerUnit: {fileID: 0}
   DeathEffect: {fileID: 4617180728561213998}
   DeathIcon: {fileID: 21300000, guid: 9ed651cc50cecc2478a503da03e1d9f1, type: 3}
-  IsCompleted: 1
+  IsCompleted: 0
+  RegisterdWorkers: []
+  goldImagePrefab: {fileID: 6661404953953515677, guid: 70846c44010437b49a074f22416a5d5a, type: 3}
+  ProductionFrequency: 60
 --- !u!1 &5615311392249113181
 GameObject:
   m_ObjectHideFlags: 0

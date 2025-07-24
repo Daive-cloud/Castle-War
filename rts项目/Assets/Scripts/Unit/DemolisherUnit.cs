@@ -40,7 +40,10 @@ public class DemolisherUnit : HumanoidUnit
     {
         AudioManager.Get().PlaySFX(12);
         var grenade = Instantiate(FirecrakerPrefab);
-        grenade.GetComponent<GrenadeController>().ThrowAnimation(transform.position, Target.transform.position, this);
+        if (Target != null)
+            grenade.GetComponent<GrenadeController>().ThrowAnimation(transform.position, Target.transform.position, this);
+        else
+            Destroy(grenade.gameObject);
     }
 
     public override void PlayDeathSound()

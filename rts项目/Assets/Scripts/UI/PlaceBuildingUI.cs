@@ -22,11 +22,15 @@ public class PlaceBuildingUI : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void ShowRectangle(int _goldCost,int _woodCost)
+    public void ShowRectangle(int _goldCost, int _woodCost)
     {
         gameObject.SetActive(true);
         goldCost.text = _goldCost.ToString();
         woodCost.text = _woodCost.ToString();
+
+        var manager = GameManager.Get();
+        goldCost.color = manager.GoldAmount >= _goldCost ? Color.black : Color.red;
+        woodCost.color = manager.WoodAmount >= _woodCost ? Color.black : Color.red;
     }
 
     public void RegisterHooks(UnityAction _confirmMethod,UnityAction _cancleAction)

@@ -17,7 +17,7 @@ MonoBehaviour:
   m_FoundationSprite: {fileID: 21300000, guid: 82bf320113c26434f8d75a459acd9022, type: 3}
   m_CompletionSprite: {fileID: 21300000, guid: 476b5ed1647782f40ba8fbc1df48e783, type: 3}
   m_StructurePrefab: {fileID: 3550065581741646194, guid: d06a9e06f73d1554d82c54cb2c5ed9b5, type: 3}
-  m_GoldCost: 500
-  m_WoodCost: 800
+  m_GoldCost: 2000
+  m_WoodCost: 2500
   m_BuildingSize: {x: 3, y: 2, z: 0}
   m_BuildingOffset: {x: -1, y: -1, z: 0}

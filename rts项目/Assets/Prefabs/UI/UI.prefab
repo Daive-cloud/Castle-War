@@ -2208,7 +2208,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7796662724172583646
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2408,8 +2408,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ConfirmButton: {fileID: 372335887924116075}
   CancleButton: {fileID: 155807462478718927}
-  GoldCost: {fileID: 297308920859516458}
-  MeatCost: {fileID: 4731384737000610463}
+  goldCost: {fileID: 297308920859516458}
+  meatCost: {fileID: 4731384737000610463}
 --- !u!1 &6565388305566469181
 GameObject:
   m_ObjectHideFlags: 0
@@ -4090,7 +4090,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2762020972097617387
 RectTransform:
   m_ObjectHideFlags: 0

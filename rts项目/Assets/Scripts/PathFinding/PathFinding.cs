@@ -124,6 +124,58 @@ public class PathFinding
         return unfinishedPath;
     }
 
+    public bool CanReachDestination(Vector3 _startPosition, Vector3 _endPosition)
+    {
+        Node startNode = FindNode(_startPosition);
+        Node endNode = FindNode(_endPosition);
+
+        if (startNode == null || endNode == null)
+        {
+            ResetNode();
+            return false;
+        }
+
+        OpenList.Add(startNode);
+
+        while (OpenList.Count > 0)
+        {
+            Node currentNode = FindLowestFCostNode();
+
+            if (currentNode == endNode)
+            {
+                var path = RetracePath(startNode, endNode);
+                ResetNode();
+                return true;
+            }
+
+            OpenList.Remove(currentNode);
+            CloseList.Add(currentNode);
+
+            List<Node> neighbors = FindNodeNeighbors(currentNode);
+
+            foreach (var node in neighbors)
+            {
+                if (!CloseList.Contains(node))
+                {
+                    int tentativeGCost = FindDistanceBetweenTwoNodes(currentNode, node) + currentNode.gCost;
+
+                    if (!OpenList.Contains(node) || tentativeGCost < node.gCost)
+                    {
+                        node.parent = currentNode;
+                        node.gCost = tentativeGCost;
+                        int distance = FindDistanceBetweenTwoNodes(node, endNode);
+                        node.hCost = distance;
+                        node.fCost = node.gCost + node.hCost;
+                        OpenList.Add(node);
+                    }
+
+                }
+            }
+        }
+
+        return false;
+    }
+
     private void ResetNode() // ���ÿ����б��͹ر��б��е�ֵ
     {
         foreach (var node in OpenList)
@@ -240,6 +292,7 @@ public class PathFinding
 
     public void UpdateNodesOverMap()
     {
+        Debug.Log("UpdateMapArea.");
         for (int i = 0; i < m_Width; i++)
         {
             for (int j = 0; j < m_Height; j++)

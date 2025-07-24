@@ -20,8 +20,7 @@ public class ChooseMapUI : MonoBehaviour
     [Header("Reference Part")]
     public LevelUI levelUI;
     public PlayerPositionUI positionUI;
-    private MapSO currentSelectedMap;
-
+    public MapSO currentSelectedMap { get; private set; }
     public void Start()
     {
         GenerateMapScroll();
@@ -77,6 +76,9 @@ public class ChooseMapUI : MonoBehaviour
         ApplyLevelUIUpdate();
         // ApplyPositionUIUpdate();
         levelUI.CloseMapChooseUI();
+
+        levelUI.MapIndex = Maps.IndexOf(currentSelectedMap);
+//        Debug.Log($"Map Select index : {levelUI.MapIndex}" );
     }
 
     public void ApplyPositionUIUpdate()
@@ -85,7 +87,6 @@ public class ChooseMapUI : MonoBehaviour
         //Debug.Log($"Position Drop Count In MapUI: {levelUI.PositionDropParent.childCount}.");
         foreach (Transform child in levelUI.PositionDropParent)
         {
-            
             positionUI.PositionDrops.Add(child.gameObject.GetComponent<TMP_Dropdown>());
         }
 

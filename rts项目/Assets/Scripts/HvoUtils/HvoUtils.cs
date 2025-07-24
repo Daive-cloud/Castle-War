@@ -56,7 +56,7 @@ public class HvoUtils
     {
         if (!_unit.CompareTag("BlueUnit"))
         {
-            return 3f;
+            return 1f;
         }
         return 1f;
     }

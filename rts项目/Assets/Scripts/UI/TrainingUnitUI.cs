@@ -10,8 +10,8 @@ public class TrainingUnitUI : MonoBehaviour
 {
     [SerializeField] private Button ConfirmButton;
     [SerializeField] private Button CancleButton;
-    [SerializeField] private TextMeshProUGUI GoldCost;
-    [SerializeField] private TextMeshProUGUI MeatCost;
+    [SerializeField] private TextMeshProUGUI goldCost;
+    [SerializeField] private TextMeshProUGUI meatCost;
 
     private void Start()
     {
@@ -21,8 +21,12 @@ public class TrainingUnitUI : MonoBehaviour
     public void ShowRectangle(int _goldCost, int _meatCost)
     {
         gameObject.SetActive(true);
-        GoldCost.text = _goldCost.ToString();
-        MeatCost.text = _meatCost.ToString();
+        goldCost.text = _goldCost.ToString();
+        meatCost.text = _meatCost.ToString();
+
+        var manager = GameManager.Get();
+        goldCost.color = manager.GoldAmount >= _goldCost ? Color.black : Color.red;
+        meatCost.color = manager.MeatAmount >= _meatCost ? Color.black : Color.red;
     }
 
     public void HideRectangle()

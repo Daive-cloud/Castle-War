@@ -25,7 +25,7 @@ public class PlayerPositionUI : MonoBehaviour
             drop.AddOptions(newDropList);
 
             drop.value = 0;
-            drop.onValueChanged.AddListener((index) => OnPositionSelected(drop, index));
+            drop.onValueChanged.AddListener((index) =>  OnPositionSelected(drop, index) );
         }
     }
 
@@ -60,7 +60,7 @@ public class PlayerPositionUI : MonoBehaviour
                 drop.value = 0;
             }
 
-            drop.onValueChanged.AddListener((index) => OnPositionSelected(drop, index));
+            drop.onValueChanged.AddListener((index) => { OnPositionSelected(drop, index);AudioManager.Get().PlaySFX(4); });
 
         }
     }

@@ -809,7 +809,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43ea855d5e2c5d6499361130c6e5779d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 3
+  moveSpeed: 2
   currentType: 0
 --- !u!114 &8316723501989524383
 MonoBehaviour:
@@ -828,7 +828,7 @@ MonoBehaviour:
   IsDead: 0
   HealthBar: {fileID: 5301079095011172352}
   ObjectCheckRadius: 5
-  AttackCheckRadius: 1.3
+  AttackCheckRadius: 1.5
   AttackFrequency: 1
   Enemies: []
   Target: {fileID: 0}

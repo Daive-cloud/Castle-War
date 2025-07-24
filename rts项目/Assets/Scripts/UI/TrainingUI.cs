@@ -94,7 +94,7 @@ public class TrainingUI : MonoBehaviour
         {
             newUnit.GetComponent<HumanoidUnit>().MoveToDestination(targetPos);
         }
-
+        AudioManager.Get().PlaySFX(38);
         IsTraining = false;
     }
 

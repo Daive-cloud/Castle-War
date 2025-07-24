@@ -10,7 +10,7 @@ using TMPro;
 using DG.Tweening;
 using IUnit;
 
-public class GameManager : SingletonManager<GameManager> 
+public class GameManager : SingletonManager<GameManager>
 {
     [Header("Selected Units")]
     public Unit ActiveUnit;
@@ -69,6 +69,8 @@ public class GameManager : SingletonManager<GameManager>
         m_TilemapManager = TilemapManager.Get();
         m_CameraController = new(PanSpeed, CameraBounds, joyStick);
         InitializeBoxRender();
+
+        InitializeGame();
     }
     private void Update()
     {
@@ -91,7 +93,7 @@ public class GameManager : SingletonManager<GameManager>
     {
         if (HvoUtils.IsCancleSelect() && !HvoUtils.IsPointerOverUIElement())
         {
-           // Debug.Log("Cancle Selected.");
+            // Debug.Log("Cancle Selected.");
             ResetSelectedUnits();
             return false;
         }
@@ -120,7 +122,7 @@ public class GameManager : SingletonManager<GameManager>
         {
             if (collider.TryGetComponent(out Unit unit))
             {
-                SelectNewUnit(unit,_mousePosition);
+                SelectNewUnit(unit, _mousePosition);
                 return;
             }
         }
@@ -162,7 +164,7 @@ public class GameManager : SingletonManager<GameManager>
         IsDrawing = false;
     }
 
-    private void SelectNewUnit(Unit _unit,Vector2 _mousePosition)
+    private void SelectNewUnit(Unit _unit, Vector2 _mousePosition)
     {
         //Debug.Log("Select New Unit Part 0.");
         // 处理工人
@@ -217,23 +219,23 @@ public class GameManager : SingletonManager<GameManager>
             }
 
             if (_unit.TryGetComponent(out StructureUnit structure) && structure.IsUnderConstruction)
+            {
+                foreach (var unit in vaildWorkers)
                 {
-                    foreach (var unit in vaildWorkers)
-                    {
-                        unit.GetComponent<WorkerUnit>().AssignTarget(structure);
-                        unit.GetComponent<WorkerUnit>().UpdateWorkerTask(WorkerTask.Building);
-                    }
-                    return false;
+                    unit.GetComponent<WorkerUnit>().AssignTarget(structure);
+                    unit.GetComponent<WorkerUnit>().UpdateWorkerTask(WorkerTask.Building);
                 }
-                else if (_unit.TryGetComponent(out GoldMinerUnit miner) && !miner.IsDead && miner.IsCompleted)
+                return false;
+            }
+            else if (_unit.TryGetComponent(out GoldMinerUnit miner) && !miner.IsDead && miner.IsCompleted)
+            {
+                foreach (var unit in vaildWorkers)
                 {
-                    foreach (var unit in vaildWorkers)
-                    {
-                        unit.GetComponent<WorkerUnit>().AssignTarget(miner);
-                        unit.GetComponent<WorkerUnit>().UpdateWorkerTask(WorkerTask.Mining);
-                    }
-                    return false;
+                    unit.GetComponent<WorkerUnit>().AssignTarget(miner);
+                    unit.GetComponent<WorkerUnit>().UpdateWorkerTask(WorkerTask.Mining);
                 }
+                return false;
+            }
         }
         else
         {
@@ -277,26 +279,26 @@ public class GameManager : SingletonManager<GameManager>
             return true;
 
         if (_unit.CompareTag("RedUnit") && !_unit.IsDead)
-            {
+        {
             Debug.Log("Attack Target");
-                GenerateFollowRay(_mousePosition, Color.red);
-                if (SelectedUnits.Count > 0)
+            GenerateFollowRay(_mousePosition, Color.red);
+            if (SelectedUnits.Count > 0)
+            {
+                foreach (var unit in SelectedUnits.Where(unit => unit != null && !unit.TryGetComponent(out WorkerUnit _) && !unit.IsDead))
                 {
-                    foreach (var unit in SelectedUnits.Where(unit => unit != null && !unit.TryGetComponent(out WorkerUnit _) && !unit.IsDead))
-                    {
-                        unit.GetComponent<HumanoidUnit>().AssignTarget(_unit);
-                    }
+                    unit.GetComponent<HumanoidUnit>().AssignTarget(_unit);
+                }
+                return false;
+            }
+            else
+            {
+                if (ActiveUnit != null && (!ActiveUnit.TryGetComponent(out WorkerUnit _) || !ActiveUnit.TryGetComponent(out StructureUnit _)))
+                {
+                    (ActiveUnit as HumanoidUnit).AssignTarget(_unit);
                     return false;
                 }
-                else
-                {
-                    if (ActiveUnit != null && (!ActiveUnit.TryGetComponent(out WorkerUnit _) || !ActiveUnit.TryGetComponent(out StructureUnit _)))
-                    {
-                        (ActiveUnit as HumanoidUnit).AssignTarget(_unit);
-                        return false;
-                    }
-                }
             }
+        }
 
         return true;
     }
@@ -326,7 +328,7 @@ public class GameManager : SingletonManager<GameManager>
 
     private void ResetSelectedUnits()
     {
-         //Debug.Log("Reset Units.");
+        //Debug.Log("Reset Units.");
         if (SelectedUnits.Count > 0)
         {
             foreach (var unit in SelectedUnits.Where(unit => !unit.IsDead && unit != null))
@@ -402,13 +404,13 @@ public class GameManager : SingletonManager<GameManager>
         }
 
         if (HvoUtils.IsPointerDown())
-            {
-                PointerDownPosition = HvoUtils.GetPointerPositoin();
-                PointerDownTime = Time.time;
+        {
+            PointerDownPosition = HvoUtils.GetPointerPositoin();
+            PointerDownTime = Time.time;
 
-                StartPos = GetWorldPosition();
-                BoxRenderer.enabled = true;
-            }
+            StartPos = GetWorldPosition();
+            BoxRenderer.enabled = true;
+        }
 
         if (HvoUtils.IsPointerPress())
         {
@@ -512,8 +514,9 @@ public class GameManager : SingletonManager<GameManager>
     #region Place Building Methods
     public void StartBuildingProcess(BuildingActionSO _action)
     {
-        m_PlacementProcess = new(_action, m_TilemapManager);
+        ClearPlacement();
 
+        m_PlacementProcess = new(_action, m_TilemapManager);
         PlaceBuildingUI.ShowRectangle(_action.GoldCost, _action.WoodCost);
         PlaceBuildingUI.RegisterHooks(() => ConfirmPlacement(_action), CanclePlacement);
     }
@@ -548,14 +551,14 @@ public class GameManager : SingletonManager<GameManager>
 
     }
 
-    private IEnumerator UpdateNodesCoroutine(Vector3 _placePosition,BuildingActionSO _buildingAction)
+    private IEnumerator UpdateNodesCoroutine(Vector3 _placePosition, BuildingActionSO _buildingAction)
     {
         yield return null;
 
         yield return new WaitForFixedUpdate();
 
         Vector3Int orientPosition = new Vector3Int(Mathf.FloorToInt(_placePosition.x + _buildingAction.BuildingOffset.x), Mathf.FloorToInt(_placePosition.y + _buildingAction.BuildingOffset.y), 0);
-        m_TilemapManager.UpdateNodesInArea(orientPosition,_buildingAction.BuildingSize.x,_buildingAction.BuildingSize.y);
+        m_TilemapManager.UpdateNodesInArea(orientPosition, _buildingAction.BuildingSize.x, _buildingAction.BuildingSize.y);
     }
 
     private void CanclePlacement()
@@ -571,7 +574,7 @@ public class GameManager : SingletonManager<GameManager>
 
         if (placementProcess.CanPlaceBuilding(_placePosition))
         {
-            StartCoroutine(UpdateNodesCoroutine(_placePosition,_buildingAction));
+            StartCoroutine(UpdateNodesCoroutine(_placePosition, _buildingAction));
             return true;
         }
         return false;
@@ -623,9 +626,9 @@ public class GameManager : SingletonManager<GameManager>
 
         onResourcesChanged?.Invoke();
     }
-    public void CollectWood(int _woodCount, Vector3 _startPos) => CollectResource(ResourceType.wood,_woodCount,_startPos);
-    public void CollectMeat(int _meatCount,Vector3 _startPos) => CollectResource(ResourceType.meat,_meatCount,_startPos);
-    public void CollectGold(int _goldCount, Vector3 _startPos) => CollectResource(ResourceType.gold,_goldCount,_startPos);
+    public void CollectWood(int _woodCount, Vector3 _startPos) => CollectResource(ResourceType.wood, _woodCount, _startPos);
+    public void CollectMeat(int _meatCount, Vector3 _startPos) => CollectResource(ResourceType.meat, _meatCount, _startPos);
+    public void CollectGold(int _goldCount, Vector3 _startPos) => CollectResource(ResourceType.gold, _goldCount, _startPos);
 
     #endregion
 
@@ -695,4 +698,13 @@ public class GameManager : SingletonManager<GameManager>
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 
+    public void InitializeGame()
+    {
+        var manager = SettingsManager.Get();
+        WoodAmount = manager.woodAmount;
+        MeatAmount = manager.meatAmount;
+        GoldAmount = manager.goldAmount;
+
+        onResourcesChanged?.Invoke();
+    }
 }

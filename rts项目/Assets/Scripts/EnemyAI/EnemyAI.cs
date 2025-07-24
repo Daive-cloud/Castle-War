@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 public class EnemyAI : MonoBehaviour
 {
-    public StructureUnit MainCastle;
+    public StructureUnit MainCastle => FindObjectsOfType<CastleUnit>().Where(unit => !unit.IsDead && unit.CompareTag("RedUnit") && unit.IsCompleted).FirstOrDefault();
     public List<WorkerUnit> Workers;
     public List<HumanoidUnit> ActiveArmy;
     private GameManager m_GameManger;
@@ -21,6 +21,8 @@ public class EnemyAI : MonoBehaviour
     private StructureUnit currentStageStructure;
     private float EnemyCheckTimer;
     private float EnemyRefillTimer;
+    private float limitedCheckFrequency = 60f;
+    private float lastCheckTimer;
 
     private void Start()
     {
@@ -40,13 +42,13 @@ public class EnemyAI : MonoBehaviour
         if (Time.time - EnemyCheckTimer >= EnemyCheckFrequency)
         {
             EnemyCheckTimer = Time.time;
-            
+//            Debug.Log($"CurrentStageBuilding : {currentStageStructure}");
             // 判断能否进入下一个阶段
-            if (currentStageStructure != null && currentStageStructure.IsCompleted)
+            if ((currentStageStructure != null && currentStageStructure.IsCompleted) || ExceedTimer())
             {
                 EnterNextStage();
             }
-            if (!currentStageStructure.HasAssignedWorker)
+            if (currentStageStructure != null && !currentStageStructure.IsCompleted && !currentStageStructure.HasAssignedWorker)
             {
                 CommandWorkersToBuild(currentStageStructure);
             }
@@ -78,6 +80,7 @@ public class EnemyAI : MonoBehaviour
 
     private void EnterNextStage()
     {
+        lastCheckTimer = Time.time;
         EnemyPlaceBuilding(currentStage.BuildingAction);
         foreach (var action in currentStage.TrainingActions)
         {
@@ -94,12 +97,12 @@ public class EnemyAI : MonoBehaviour
 
         foreach (var unit in allUnits)
         {
-            if (unit.TryGetComponent<WorkerUnit>(out var worker) && worker.currentTask == WorkerTask.None)
+            if (unit.TryGetComponent<WorkerUnit>(out var worker))
             {
                 Workers.Add(worker);
             }
         }
-        ActiveArmy = allUnits.Where(unit => !unit.TryGetComponent(out WorkerUnit _)).ToList();
+        ActiveArmy = allUnits.Where(unit => !unit.TryGetComponent(out WorkerUnit _)).ToList(); // see you tomorow
     }
 
     private IEnumerator StartTrainingProcess()
@@ -108,7 +111,7 @@ public class EnemyAI : MonoBehaviour
         var trainingAction = m_TrainingActions.Dequeue();
         float time = trainingAction.TrainingTime;
         float actualTime = HvoUtils.ComputeTrainingTime(FindBarracksCount, time, time / 4);
-//        Debug.Log($"Actual Training Time : {actualTime}.");
+        //        Debug.Log($"Actual Training Time : {actualTime}.");
 
         yield return new WaitForSeconds(actualTime);
         var unit = trainingAction.UnitPrefab;
@@ -117,29 +120,35 @@ public class EnemyAI : MonoBehaviour
 
         var targetPos = HvoUtils.MoveToVaildPosition(barrack.transform.position);
         newUnit.GetComponent<HumanoidUnit>().MoveToDestination(targetPos);
+        if (newUnit.TryGetComponent(out BarrelUnit barrel))
+        {
+            barrel.SelectedUnit();
+        }
 
         // if (newUnit.TryGetComponent(out WorkerUnit worker))
-        // {
-        //     var task = Random.Range(0, 100) <= 20 ? WorkerTask.Chopping : WorkerTask.Mining;
-        // }
+            // {
+            //     var task = Random.Range(0, 100) <= 20 ? WorkerTask.Chopping : WorkerTask.Mining;
+            // }
 
-        IsTraining = false;
+            IsTraining = false;
     }
 
     private bool IsQueueVaild() => m_TrainingBarracks.Count > 0 && m_TrainingActions.Count > 0;
 
     private void EnemyPlaceBuilding(BuildingActionSO _buildingAction)
     {
+        //        Debug.Log($"Main Castle : {MainCastle}");
         if (MainCastle == null || MainCastle.IsDead)
         {
+            Debug.Log("Not Found Castle.");
             return;
         }
 
         m_PlacementGrid = new();
 
-        for (int i = -7; i <= 7; i++)
+        for (int i = -6; i <= 6; i++)
         {
-            for (int j = -7; j <= 7; j++)
+            for (int j = -6; j <= 6; j++)
             {
                 var placePosition = MainCastle.transform.position + new Vector3(i, j, 0);
 
@@ -151,19 +160,28 @@ public class EnemyAI : MonoBehaviour
         }
         if (m_PlacementGrid.Count == 0)
         {
+            EnterNextStage();
             return;
         }
 
         var finalPosition = m_PlacementGrid[Random.Range(0, m_PlacementGrid.Count - 1)];
+        var workerPos = Workers[0].transform.position;
+        if (!TilemapManager.Get().CanReachDestination(workerPos, finalPosition))
+        {
+            EnterNextStage();
+            return;
+        }
 
         new BuildingProcess(_buildingAction, finalPosition, out var structure);
         //      Debug.Log($"Place Sturcture : {structure}");
         currentStageStructure = structure;
-        CommandWorkersToBuild(structure);
+        StartCoroutine(CommandWorkersToBuild(structure));
     }
 
-    private void CommandWorkersToBuild(StructureUnit structure)
+    private IEnumerator CommandWorkersToBuild(StructureUnit structure)
     {
+        yield return new WaitForSeconds(1.2f);
+
         foreach (var unit in Workers)
         {
             unit.AssignTarget(structure);
@@ -186,6 +204,7 @@ public class EnemyAI : MonoBehaviour
 
     private int FindBarracksCount => FindObjectsOfType<BarrackUnit>().Where(unit => unit.CompareTag("RedUnit") && unit.IsCompleted && !unit.IsDead).ToList().Count;
 
-    private void GetRandomStage() => currentStage = EnemyAIStages[Random.Range(0,EnemyAIStages.Count - 1)];
-    
+    private void GetRandomStage() => currentStage = EnemyAIStages[Random.Range(0, EnemyAIStages.Count - 1)];
+
+    private bool ExceedTimer() => Time.time - lastCheckTimer >= limitedCheckFrequency;
 }

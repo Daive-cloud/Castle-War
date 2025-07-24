@@ -55,13 +55,13 @@ public class MainUI : MonoBehaviour
 
     public void ShowWarning()
     {
-        AudioManager.Get().PlayBGM(1);
+      //  AudioManager.Get().PlayBGM(1);
         Warning.gameObject.SetActive(true);
     }
 
     public void CloseWarning()
     {
-        AudioManager.Get().PlayBGM(2);
+       // AudioManager.Get().PlayBGM(2);
         Warning.gameObject.SetActive(false);
     }
 }

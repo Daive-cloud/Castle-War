@@ -70,8 +70,10 @@ public class GoldMinerUnit : StructureUnit
     private IEnumerator TakeMiningProcess()
     {
         IsTakeMining = true;
+        float time = Mathf.Clamp(ProductionFrequency - FindCastleCount(),ProductionFrequency * .5f,ProductionFrequency);
 
-        yield return new WaitForSeconds(ProductionFrequency);
+        Debug.Log($"Enter Time : {time}");
+        yield return new WaitForSeconds(time);
         var worker = WorkersInMiner.Dequeue();
         LevelMiner(worker);
 

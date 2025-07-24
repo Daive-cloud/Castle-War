@@ -828,7 +828,7 @@ MonoBehaviour:
   IsDead: 0
   HealthBar: {fileID: 520575257825831761}
   ObjectCheckRadius: 4
-  AttackCheckRadius: 1.2
+  AttackCheckRadius: 1.35
   AttackFrequency: 0.6
   Enemies: []
   Target: {fileID: 0}

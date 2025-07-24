@@ -33,17 +33,20 @@ public class StructureUnit : Unit
         if (Time.time - CheckTimer > CheckFrequency)
         {
             CheckTimer = Time.time;
-            
+
             if (IsUnderConstruction && HasAssignedWorker)
             {
-                float paramter = HvoUtils.GetAccelerateBuildingParemter(this);
-//                Debug.Log($"paramter : {paramter}.");
                 ProcessValue += .01f * WorkerCount * HvoUtils.GetAccelerateBuildingParemter(this);
 
                 if (ProcessValue >= 1f)
                 {
                     CompleteConstruction();
                 }
+            }
+
+            if (!IsCompleted)
+            {
+                return;
             }
         }
     }
@@ -63,19 +66,19 @@ public class StructureUnit : Unit
         {
             RegisterdWorkers.Add(_worker);
         }
-        
+
     }
 
     public void UnassignWorker(WorkerUnit _unit)
     {
-         if (RegisterdWorkers.Contains(_unit))
+        if (RegisterdWorkers.Contains(_unit))
+        {
+            RegisterdWorkers.Remove(_unit);
+            if (!HasAssignedWorker)
             {
-                RegisterdWorkers.Remove(_unit);
-                if (!HasAssignedWorker)
-                {
-                    BuildingEffect.Stop();
-                }
+                BuildingEffect.Stop();
             }
+        }
     }
 
     public void RemoveWorker()
@@ -90,6 +93,7 @@ public class StructureUnit : Unit
             unit.Target = null;
             unit.UpdateWorkerTask(WorkerTask.None);
         }
+        AudioManager.Get().PlaySFX(37);
         RemoveWorker();
         sr.sprite = m_BuildingProcess.BuildingAction.CompletionSprite;
         BuildingEffect.Stop();
@@ -120,7 +124,7 @@ public class StructureUnit : Unit
         sr.sprite = DeathIcon;
         DeathEffect.Play();
 
-        if(TowerUnit != null)
+        if (TowerUnit != null)
         {
             Destroy(TowerUnit);
         }
@@ -129,11 +133,16 @@ public class StructureUnit : Unit
 
     private IEnumerator AfterDeath()
     {
+        Destroy(GetComponent<CapsuleCollider2D>());
         yield return null;
+        AudioManager.Get().PlaySFX(36);
+        yield return new WaitForFixedUpdate();
         TilemapManager.Get().UpdateNodesOverMap();
         yield return new WaitForSeconds(1f);
-        sr.DOFade(0,3f).OnComplete(() => Destroy(gameObject));
+        sr.DOFade(0, 3f).OnComplete(() => Destroy(gameObject));
 
     }
+
+    protected int FindCastleCount() => FindObjectsOfType<CastleUnit>().Where(unit => !unit.IsDead && unit.CompareTag("BlueUnit") && unit.IsCompleted).ToList().Count;
 
 }

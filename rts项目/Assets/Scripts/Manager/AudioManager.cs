@@ -20,7 +20,8 @@ public class AudioManager : SingletonManager<AudioManager>
             return;
         }
 
-        SFX[_index].pitch = Random.Range(0.8f, 1.2f);
+        if(_index != 20)
+            SFX[_index].pitch = Random.Range(0.8f, 1.2f);
         SFX[_index].Play();
     }
 
@@ -32,5 +33,15 @@ public class AudioManager : SingletonManager<AudioManager>
         }
 
         BGM[_index].Play();
+    }
+
+    public void StopPlayBGM(int _index)
+    {
+        if (_index >= BGM.Count)
+        {
+            return;
+        }
+
+        BGM[_index].Stop();
     }
 }

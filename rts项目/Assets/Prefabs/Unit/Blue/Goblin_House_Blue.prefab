@@ -10179,6 +10179,11 @@ MonoBehaviour:
   DeathEffect: {fileID: 6705211564956042338}
   DeathIcon: {fileID: 21300000, guid: db2ba63bfb1d3f14ab2fd545d281fae1, type: 3}
   IsCompleted: 0
+  RegisterdWorkers: []
+  barrackType: 1
+  woodImagePrefab: {fileID: 7712814376212877133, guid: e2c37426a4f9f3d448ee9f6917ce414a, type: 3}
+  meatImagePrefab: {fileID: 5468767430303813685, guid: 547297e336d6c2345bf58c24dcf459d8, type: 3}
+  ProductionFrequency: 10
 --- !u!114 &482923271893440664
 MonoBehaviour:
   m_ObjectHideFlags: 0

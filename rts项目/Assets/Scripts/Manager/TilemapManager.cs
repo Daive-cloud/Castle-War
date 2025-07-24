@@ -20,6 +20,8 @@ public class TilemapManager : SingletonManager<TilemapManager>
     public List<Node> FindPath(Vector3 _startPosition, Vector3 _endPosition) => m_PathFinding.FindPath(_startPosition, _endPosition);
 
     public Node FindNode(Vector3 _position) => m_PathFinding.FindNode(_position);
+
+    public bool CanReachDestination(Vector3 _startPosition, Vector3 _endPosition) => m_PathFinding.CanReachDestination(_startPosition,_endPosition);
     public bool CanPlaceBuinding(Vector3Int _position)
     {
         return BuildingAreaTilemap.HasTile(_position) && !IsPlaceOverUnreachbleArea(_position);
