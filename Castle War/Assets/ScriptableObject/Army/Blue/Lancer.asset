@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42a34e44fbab21c4bbae0f236461a5d8, type: 3}
+  m_Name: Lancer
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 1185016774, guid: eed951695365065429d1e760606a06c5, type: 3}
+  ID: 4f144e1d-271d-434a-a617-6601c5cada61
+  m_UnitPrefab: {fileID: 1655426877155196357, guid: aaa2ca94992dad64092c63224f965ed3, type: 3}
+  m_GoldCost: 300
+  m_MeatCost: 600
+  m_TrainingTime: 16
+  m_UnitType: 6

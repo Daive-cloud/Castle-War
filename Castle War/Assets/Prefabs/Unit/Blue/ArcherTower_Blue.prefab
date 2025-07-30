@@ -773,7 +773,7 @@ MonoBehaviour:
   Actions: []
   CheckFrequency: 0.4
   IsDead: 0
-  HealthBar: {fileID: 2302403103476469115}
+  HealthBar: {fileID: 1366133971771166526}
   BuildingEffect: {fileID: 4568846826122421722}
   TowerUnit: {fileID: 6715445241105376968}
   DeathEffect: {fileID: 7527831074656740747}

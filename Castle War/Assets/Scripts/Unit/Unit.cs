@@ -21,14 +21,13 @@ public class Unit : MonoBehaviour
     [SerializeField] protected GameObject HealthBar;
 
     public System.Action onFlipped;
+    public System.Action onKilledTarget;
+    public System.Action onTakedDamage;
 
     protected virtual void Start()
     {
         m_GameManager = GameManager.Get();
         m_GameManager.RegisterUnit(this);
-
-        if (HealthBar != null)
-            HideHealthBar();
     }
 
     protected virtual void Update()

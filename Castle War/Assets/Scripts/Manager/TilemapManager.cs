@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -21,7 +22,7 @@ public class TilemapManager : SingletonManager<TilemapManager>
 
     public Node FindNode(Vector3 _position) => m_PathFinding.FindNode(_position);
 
-    public bool CanReachDestination(Vector3 _startPosition, Vector3 _endPosition) => m_PathFinding.CanReachDestination(_startPosition,_endPosition);
+    public bool CanReachDestination(Vector3 _startPosition, Vector3 _endPosition) => m_PathFinding.CanReachDestination(_startPosition, _endPosition);
     public bool CanPlaceBuinding(Vector3Int _position)
     {
         return BuildingAreaTilemap.HasTile(_position) && !IsPlaceOverUnreachbleArea(_position);
@@ -29,7 +30,7 @@ public class TilemapManager : SingletonManager<TilemapManager>
 
     private bool IsPlaceOverUnreachbleArea(Vector3Int _position)
     {
-        return IsUnreachableHasTile(_position) || IsPlaceAreaOverObstacle(_position);
+        return IsUnreachableMapHasTile(_position) || IsPlaceAreaOverObstacle(_position);
     }
 
     public bool IsPlaceAreaOverObstacle(Vector3Int _position)
@@ -50,7 +51,7 @@ public class TilemapManager : SingletonManager<TilemapManager>
     public bool CanWalkAtTile(Vector3Int _position)
     {
         //        Debug.Log($"CanWalkAtTile : {_position}");
-        return WalkableTilemap.HasTile(_position) && !IsUnreachableHasTile(_position) && !IsBlockedByBuilding(_position);
+        return WalkableTilemap.HasTile(_position) && !IsUnreachableMapHasTile(_position) && !IsBlockedByBuilding(_position);
     }
 
     private bool IsBlockedByBuilding(Vector3Int _tilePosition)
@@ -86,7 +87,7 @@ public class TilemapManager : SingletonManager<TilemapManager>
         PlacementTilemap.SetColor(_position, Color.red);
     }
 
-    private bool IsUnreachableHasTile(Vector3Int _position)
+    private bool IsUnreachableMapHasTile(Vector3Int _position)
     {
         foreach (var tile in UnreachableTilemap)
         {
@@ -97,4 +98,6 @@ public class TilemapManager : SingletonManager<TilemapManager>
         }
         return false;
     }
+
+    public bool IsUnderWaterTile(Vector3Int _position) => UnreachableTilemap[2].HasTile(_position);
 }

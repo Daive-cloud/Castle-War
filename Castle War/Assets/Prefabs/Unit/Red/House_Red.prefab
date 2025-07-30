@@ -147,7 +147,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1942013991
   m_SortingLayer: 1
-  m_SortingOrder: 2
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: 99d3ef6bb68b2d74e8e1776fc1988d78, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -5196,7 +5196,7 @@ MonoBehaviour:
   Actions: []
   CheckFrequency: 0.4
   IsDead: 0
-  HealthBar: {fileID: 7759053171351356111}
+  HealthBar: {fileID: 6603958103990162395}
   BuildingEffect: {fileID: 9029476489649606482}
   TowerUnit: {fileID: 0}
   DeathEffect: {fileID: 6983472710027689032}

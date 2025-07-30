@@ -10053,7 +10053,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1942013991
   m_SortingLayer: 1
-  m_SortingOrder: 5
+  m_SortingOrder: 20
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -10207,7 +10207,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9fd4bbf7d5745804a91f6b1950840a01, type: 2}
   CheckFrequency: 1
   IsDead: 0
-  HealthBar: {fileID: 9043042811569932458}
+  HealthBar: {fileID: 4205812547211612945}
   BuildingEffect: {fileID: 4596187066718902932}
   TowerUnit: {fileID: 0}
   DeathEffect: {fileID: 2360869115601018869}

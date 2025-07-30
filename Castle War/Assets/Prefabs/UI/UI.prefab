@@ -4859,6 +4859,7 @@ MonoBehaviour:
   TorchSlot: {fileID: 5902023198081802281, guid: 31d700816b0d0f64487a5d99991bdee8, type: 3}
   DemolisherSlot: {fileID: 3226410417912402847, guid: 622ff539b8677424bb4458e8ea1a050f, type: 3}
   BarrelSlot: {fileID: 9123651829695290735, guid: 6ee593d273cdff84dabdb8050906cc1e, type: 3}
+  LancerSlot: {fileID: 8255711350451947313, guid: eb6b2de9dbc536444a81655c5aa6c153, type: 3}
 --- !u!1 &9095926152360874373
 GameObject:
   m_ObjectHideFlags: 0

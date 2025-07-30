@@ -120,7 +120,7 @@ public class GameManager : SingletonManager<GameManager>
     #region Handle Click
     private void HandleUnitBehaviour(Vector2 _mousePosition) // 处理单个单位
     {
-        Debug.Log("Handle Unit Behaviour");
+//        Debug.Log("Handle Unit Behaviour");
         Collider2D[] colliders = Physics2D.OverlapCircleAll(_mousePosition, detectedRadius);
 
         foreach (var collider in colliders)
@@ -464,7 +464,7 @@ public class GameManager : SingletonManager<GameManager>
 
         if (HvoUtils.IsPointerUp())
         {
-            Debug.Log("Pointer enend");
+//            Debug.Log("Pointer enend");
             if (BoxRenderer != null)
                 Destroy(BoxRenderer.gameObject);
             Vector3 currentPos = GetWorldPosition();

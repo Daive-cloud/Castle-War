@@ -12,7 +12,8 @@ public enum TrainingUnitType
     Worker,
     Torch,
     Demolisher,
-    Barrel
+    Barrel,
+    Lancer
 }
 
 public class TrainingUI : MonoBehaviour
@@ -25,7 +26,7 @@ public class TrainingUI : MonoBehaviour
     [SerializeField] private GameObject TorchSlot;
     [SerializeField] private GameObject DemolisherSlot;
     [SerializeField] private GameObject BarrelSlot;
-
+    [SerializeField] private GameObject LancerSlot;
     private Queue<GameObject> TrainingUnits;
     private Queue<GameObject> TrainingSlots;
     private Queue<float> TrainingTime;
@@ -121,6 +122,9 @@ public class TrainingUI : MonoBehaviour
                 break;
             case TrainingUnitType.Barrel:
                 newSlot = Instantiate(BarrelSlot, PartForm);
+                break;
+            case TrainingUnitType.Lancer:
+                newSlot = Instantiate(LancerSlot,PartForm);
                 break;
             default:
                 return;

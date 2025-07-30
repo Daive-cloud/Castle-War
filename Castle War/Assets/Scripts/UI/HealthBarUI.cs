@@ -14,6 +14,8 @@ public class HealthBarUI : MonoBehaviour
     {
         unit.onFlipped += Flip;
         unit.stats.onHealthChanged += HealthChange;
+        
+        gameObject.SetActive(false);
     }
 
     private void Flip()
@@ -25,7 +27,10 @@ public class HealthBarUI : MonoBehaviour
     {
         if (slider != null)
         {
+            float temp = (float)unit.stats.CurrentHealth / unit.stats.GetMaxHealthValue();
+//            Debug.Log($"temp value : {temp}");
             slider.value = (float)unit.stats.CurrentHealth / unit.stats.GetMaxHealthValue();
+         //   Debug.Log($"slider value : {slider.value}.");
         }
     }
 

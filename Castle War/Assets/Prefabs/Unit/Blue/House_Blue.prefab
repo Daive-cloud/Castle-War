@@ -117,12 +117,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Actions:
-  - {fileID: 11400000, guid: 070a5c5adad68544d8e73bbc149e2722, type: 2}
-  - {fileID: 11400000, guid: 6ae52a400d582904591589c0bd30b9d5, type: 2}
   - {fileID: 11400000, guid: ac942bfbb4d949b46b5faaf7a46ef44a, type: 2}
+  - {fileID: 11400000, guid: 6ae52a400d582904591589c0bd30b9d5, type: 2}
+  - {fileID: 11400000, guid: 070a5c5adad68544d8e73bbc149e2722, type: 2}
+  - {fileID: 11400000, guid: ea4e0b77ec2f33b47b674ffa0df2eac1, type: 2}
   CheckFrequency: 0.2
   IsDead: 0
-  HealthBar: {fileID: 3980691895878822695}
+  HealthBar: {fileID: 2656643633750428290}
   BuildingEffect: {fileID: 1289098592324124385}
   TowerUnit: {fileID: 0}
   DeathEffect: {fileID: 7184285826284919286}
@@ -5402,7 +5403,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1942013991
   m_SortingLayer: 1
-  m_SortingOrder: 2
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: faa229a1d5759784286983ef4e98796a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

@@ -14,24 +14,17 @@ public class UnitAnimationTrigger : MonoBehaviour
 
     private void AttackTrigger()
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, unit.AttackCheckRadius);
-
-        if (colliders.Length > 0)
+        var enemy = unit.Target;
+        if (enemy != null && !enemy.IsDead)
         {
             unit.PlayAttackSound();
-        }
-        if(!unit.IsDead && unit.Target != null)
-            unit.FlipController(unit.Target.transform.position);
-
-        foreach (var hit in colliders)
-        {
-            if (hit.TryGetComponent(out Unit enemy) && enemy.tag != unit.tag && !enemy.TryGetComponent(out TreeUnit _))
-            {
-                unit.stats.TakeDamage(enemy.GetComponent<UnitStats>());
-            }
+            unit.FlipController(enemy.transform.position);
+            unit.stats.TakeDamage(enemy.GetComponent<UnitStats>());
         }
     }
 
+    private void LancerAttackTrigger() => (unit as LancerUnit).LancerAttackTrigger();
+    private void GoblinAttackTrigger() => (unit as GoblinUnit).GoblinAttackTrigger();
     private void LaunchArrow() => (unit as ArcherUnit).LaunchArrow();
 
     private void DestroyUnit() => unit.DestroyUnit();

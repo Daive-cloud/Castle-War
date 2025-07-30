@@ -93,7 +93,8 @@ public class StructureUnit : Unit
             unit.Target = null;
             unit.UpdateWorkerTask(WorkerTask.None);
         }
-        AudioManager.Get().PlaySFX(37);
+        if(this.CompareTag("BlueUnit"))
+            AudioManager.Get().PlaySFX(37);
         RemoveWorker();
         sr.sprite = m_BuildingProcess.BuildingAction.CompletionSprite;
         BuildingEffect.Stop();

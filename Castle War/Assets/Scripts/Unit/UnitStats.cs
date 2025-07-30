@@ -119,8 +119,13 @@ public class UnitStats : MonoBehaviour
             GetExp(_stats);
             _stats.CurrentHealth = 0;
             _stats.Death();
-            if(_stats.LevelUI != null)
+            unit.onKilledTarget?.Invoke();
+            if (_stats.LevelUI != null)
                 _stats.LevelUI.gameObject.SetActive(false);
+        }
+        else
+        {
+            unit.onTakedDamage?.Invoke();
         }
         _stats.onHealthChanged?.Invoke();
     }

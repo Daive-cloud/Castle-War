@@ -274,13 +274,7 @@ public class WorkerUnit : HumanoidUnit
             Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, ObjectCheckRadius);
             bool flag = colliders.ToList().Contains(tree.GetComponent<CapsuleCollider2D>());
 
-            if (!flag)
-            {
-                ai.SwitchFindWayType(FindPathType.Direct);
-                return false;
-            }
-            ai.SwitchFindWayType(FindPathType.A_Star);
-            return true;
+            return flag;
         }
 
         return distance < ObjectCheckRadius;

@@ -73,19 +73,7 @@ public class ArcherUnit : HumanoidUnit
         }
     }
 
-    private static float ConvertAngle(float angle)
-    {
-        if (angle > 90)
-        {
-            angle = 180 - angle;
-        }
-        else if (angle < -90)
-        {
-            angle = -180 - angle;
-        }
-
-        return angle;
-    }
+   
 
     public void LaunchArrow()
     {

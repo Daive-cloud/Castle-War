@@ -18,12 +18,14 @@ public class ArrowController : MonoBehaviour
         float distance = Vector2.Distance(_owner.transform.position, _target.transform.position);
         float flyTime = distance / FlySpeed;
 
-        transform.DOMove(_target.transform.position, flyTime).SetEase(Ease.Linear).OnComplete(() => OnArrivedDestination(_target));
+        transform.DOMove(_target.transform.position, flyTime).SetEase(Ease.Linear)
+                        .OnComplete(() => OnArrivedDestination(_target));
     }
 
     private void OnArrivedDestination(Unit _target)
     {
-        if (_target != null)
+        bool isTouchedTarget = Vector2.Distance(transform.position, _target.transform.position) < 1f;
+        if (_target != null && !_target.IsDead && isTouchedTarget)
         {
             Owner.stats.TakeDamage(Target.GetComponent<UnitStats>());
             AudioManager.Get().PlaySFX(10);
@@ -31,18 +33,19 @@ public class ArrowController : MonoBehaviour
         }
         else
         {
-            StartCoroutine(DestroyWithDelay(_target.transform));
+            StartCoroutine(DestroyWithDelay());
         }
     }
 
-    private IEnumerator DestroyWithDelay(Transform _target)
+    private IEnumerator DestroyWithDelay()
     {
-        var direction = (_target.position - transform.position).normalized;
-
+//        Debug.Log($"target transform : {_target.transform.position} , arrow transform : {transform.position}");
+        var direction = (transform.position - Owner.transform.position).normalized;
+        Debug.Log($"direction : {direction}");
         float timer = 0f;
         while (timer < 2f)
         {
-            transform.position += Time.time * FlySpeed * direction;
+            transform.position += Time.deltaTime * FlySpeed * direction;
             timer += Time.deltaTime;
             yield return null;
         }

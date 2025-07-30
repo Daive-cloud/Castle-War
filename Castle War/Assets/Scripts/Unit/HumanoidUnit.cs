@@ -153,6 +153,11 @@ public class HumanoidUnit : Unit
 
     public void FindClosestEnemyInRange()
     {
+        if (Target != null)
+        {
+            return;
+        }
+
         Enemies = m_GameManager.RegisteredUnits.Where(unit => unit != null && !unit.IsDead && unit.tag != this.tag && unit.tag != "Tree" && unit.tag != "Sheep").ToList();
 
         float closestDistance = int.MaxValue;
@@ -178,7 +183,7 @@ public class HumanoidUnit : Unit
     public void FindClosestEnemyWithoutRange()
     {
         Enemies = new();
-        if(m_GameManager != null && m_GameManager.RegisteredUnits.Count > 0)
+        if (m_GameManager != null && m_GameManager.RegisteredUnits.Count > 0)
             Enemies = m_GameManager.RegisteredUnits.Where(unit => unit != null && !unit.IsDead && unit.tag != this.tag && unit.tag != "Tree" && unit.tag != "Sheep" && unit.gameObject.activeSelf).ToList();
 
         float closestDistance = int.MaxValue;
@@ -201,6 +206,20 @@ public class HumanoidUnit : Unit
     public virtual void PlayAttackSound()
     {
 
+    }
+    
+     protected  float ConvertAngle(float angle)
+    {
+        if (angle > 90)
+        {
+            angle = 180 - angle;
+        }
+        else if (angle < -90)
+        {
+            angle = -180 - angle;
+        }
+
+        return angle;
     }
 
 }

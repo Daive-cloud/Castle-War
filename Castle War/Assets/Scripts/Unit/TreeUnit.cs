@@ -38,6 +38,9 @@ public class TreeUnit : Unit , IResouceUnit
 
     private IEnumerator WorkerCollectWood()
     {
+        Destroy(GetComponent<CapsuleCollider2D>());
+        yield return new WaitForFixedUpdate();
+        TilemapManager.Get().UpdateNodesOverMap();
         int woodAmount = Random.Range(3, 7);
 
         for (int i = 0; i < woodAmount; i++)
