@@ -13,7 +13,12 @@ public enum TrainingUnitType
     Torch,
     Demolisher,
     Barrel,
-    Lancer
+    Lancer,
+    Goblin,
+    PowerWarrior,
+    PowerArcher,
+    Monk,
+    Shaman
 }
 
 public class TrainingUI : MonoBehaviour
@@ -27,6 +32,11 @@ public class TrainingUI : MonoBehaviour
     [SerializeField] private GameObject DemolisherSlot;
     [SerializeField] private GameObject BarrelSlot;
     [SerializeField] private GameObject LancerSlot;
+    [SerializeField] private GameObject GoblinSlot;
+    [SerializeField] private GameObject PowerWarriorSlot;
+    [SerializeField] private GameObject PowerArcherSlot;
+    [SerializeField] private GameObject MonkSlot;
+    [SerializeField] private GameObject ShamanSlot;
     private Queue<GameObject> TrainingUnits;
     private Queue<GameObject> TrainingSlots;
     private Queue<float> TrainingTime;
@@ -125,6 +135,21 @@ public class TrainingUI : MonoBehaviour
                 break;
             case TrainingUnitType.Lancer:
                 newSlot = Instantiate(LancerSlot,PartForm);
+                break;
+            case TrainingUnitType.Goblin:
+                newSlot = Instantiate(GoblinSlot,PartForm);
+                break;
+            case TrainingUnitType.PowerWarrior:
+                newSlot = Instantiate(PowerWarriorSlot,PartForm);
+                break;
+            case TrainingUnitType.PowerArcher:
+                newSlot = Instantiate(PowerArcherSlot,PartForm);
+                break;
+            case TrainingUnitType.Monk:
+                newSlot = Instantiate(MonkSlot,PartForm);
+                break;
+            case TrainingUnitType.Shaman:
+                newSlot = Instantiate(ShamanSlot,PartForm);
                 break;
             default:
                 return;

@@ -8,6 +8,7 @@ public class TrainingActionSO : ActionSO
     [SerializeField] private GameObject m_UnitPrefab;
     [SerializeField] private int m_GoldCost;
     [SerializeField] private int m_MeatCost;
+    [SerializeField] private int m_CrystalCost;
     [SerializeField] private float m_TrainingTime;
     [SerializeField] private TrainingUnitType m_UnitType;
 
@@ -15,7 +16,8 @@ public class TrainingActionSO : ActionSO
 
     public GameObject UnitPrefab => m_UnitPrefab;
     public int GoldCost => m_GoldCost;
-    public int MeatCost => m_MeatCost; 
+    public int MeatCost => m_MeatCost;
+    public int CrystalCost => m_CrystalCost;
     public float TrainingTime => m_TrainingTime;
     public TrainingUnitType UnitType => m_UnitType;
 

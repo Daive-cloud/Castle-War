@@ -47,7 +47,13 @@ MonoBehaviour:
   ActiveUnit: {fileID: 0}
   SelectedUnits: []
   detectedRadius: 0.5
-  pointer: {fileID: 8766676158951052083, guid: 229df1756df39da4c949bd96f650f61c, type: 3}
+  Pointer: {fileID: 8766676158951052083, guid: 229df1756df39da4c949bd96f650f61c, type: 3}
+  damageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
+  arrow: {fileID: 8761480215644265606, guid: bae159d499668b64e826fbc7eefdd9d0, type: 3}
+  firecraker: {fileID: 883175376494531638, guid: 3652ee54065144641a87a7f9ed0efed2, type: 3}
+  bigArrow: {fileID: 5485056122769629436, guid: b91a3276556286c488a78c11a1deffe3, type: 3}
+  healEffect: {fileID: 2376033709800519764, guid: 1d58de12f1c7bf14997ab88320f89eaf, type: 3}
+  magicExplosion: {fileID: 6086253548217498400, guid: f41e56150e5cf314dbdbdf6b2a60d9be, type: 3}
   ActionBar: {fileID: 0}
   PlaceBuildingUI: {fileID: 0}
   TrainingUnitUI: {fileID: 0}
@@ -56,14 +62,22 @@ MonoBehaviour:
   FaliureUI: {fileID: 0}
   OptionsUI: {fileID: 0}
   WoodCollection: {fileID: 7712814376212877133, guid: e2c37426a4f9f3d448ee9f6917ce414a, type: 3}
+  WoodProduction: {fileID: 0}
   MeatCollection: {fileID: 5468767430303813685, guid: 547297e336d6c2345bf58c24dcf459d8, type: 3}
+  MeatProduction: {fileID: 0}
   GoldCollection: {fileID: 6661404953953515677, guid: 70846c44010437b49a074f22416a5d5a, type: 3}
+  GoldProduction: {fileID: 0}
+  CrystalCollection: {fileID: 8915003699528915693, guid: 407c07028dab4c04d90c5ccadb90ff97, type: 3}
+  IsDrawing: 0
   RegisteredUnits: []
-  PanSpeed: 100
+  PanSpeed: 4
+  ZoomSpeed: 0
+  MinZoom: 0
+  MaxZoom: 0
   CameraBounds: {fileID: 0}
-  joyStick: {fileID: 0}
   WoodAmount: 0
   GoldAmount: 0
   MeatAmount: 0
-  DragDuration: 0.2
+  CrystalAmount: 0
+  DragDuration: 0.15
   DragDistance: 1

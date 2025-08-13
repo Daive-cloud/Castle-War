@@ -5,11 +5,6 @@ using UnityEngine;
 
 public class GoblinUnit : HumanoidUnit
 {
-    protected override void Start()
-    {
-        base.Start();
-        onTakedDamage += HitBackTarget;
-    }
     protected override void UpdateBehaviour()
     {
         if (Time.time - CheckTimer >= CheckFrequency)
@@ -41,28 +36,24 @@ public class GoblinUnit : HumanoidUnit
         {
             if (Target.TryGetComponent(out HumanoidUnit unit))
             {
-                stats.TakeDamage(unit.stats, stats.Damage.GetValue() * 2);
+                if (Random.Range(0, 100) <= 20)
+                {
+                    unit.Death();
+                }
             }
-            else
-            {
-                stats.TakeDamage(Target.stats);
-            }
+            AudioManager.Get().PlaySFX(42);
+            stats.TakeDamage(Target.stats);
         }
     }
 
-    private void HitBackTarget()
+    public override void PlaySelectedSound()
     {
-        var direction = IsFacingRight ? 1 : -1;
-        if (Target != null && Target.TryGetComponent(out HumanoidUnit _))
-        {
-            Target.GetComponentInChildren<Animator>().speed = 0;
-            var startPos = Target.transform.position;
-            var endPos = startPos + new Vector3(4, 0, 0) * direction;
-            var midPos = (startPos + endPos) / 2 + new Vector3(0, 2, 0);
-
-            Vector3[] path = new Vector3[] { startPos, midPos, endPos };
-
-            Target.transform.DOPath(path,.4f,PathType.CatmullRom).SetEase(Ease.Linear).OnComplete(() => { Target.GetComponentInChildren<Animator>().speed = 1; });
-        }
+         AudioManager.Get().PlaySFX(43);
     }
+
+    public override void PlayDeathSound()
+    {
+         AudioManager.Get().PlaySFX(44);
+    }
+
 }

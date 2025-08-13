@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 610360522044882011}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -0.65999997, z: -0.019180346}
+  m_LocalPosition: {x: 0, y: 1.48, z: -0.019180346}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4912,8 +4912,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.050096583, y: -0.46906394}
-  m_Size: {x: 3.7237318, y: 2.466788}
+  m_Offset: {x: -0.01687151, y: -0.4685391}
+  m_Size: {x: 3.8576756, y: 2.5394652}
   m_Direction: 1
 --- !u!114 &5083394594239544397
 MonoBehaviour:
@@ -4939,8 +4939,10 @@ MonoBehaviour:
   CritChance:
     baseValue: 0
     modifiers: 
+  DamageReduction:
+    baseValue: 0
+    modifiers: 
   CurrentHealth: 0
-  DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
   damageType: 0
   LevelUpPrefab: {fileID: 0}
   LevelUI: {fileID: 0}
@@ -4975,6 +4977,8 @@ MonoBehaviour:
   IsCompleted: 1
   RegisterdWorkers: []
   goldImagePrefab: {fileID: 6661404953953515677, guid: 70846c44010437b49a074f22416a5d5a, type: 3}
+  BaseProductionAmount: 200
+  AddProductionAmount: 40
   ProductionFrequency: 60
   placementTile: {fileID: 11400000, guid: a45db613c2e4f174ab31c1c1fa930507, type: 2}
 --- !u!1 &1166133106241007490
@@ -5002,7 +5006,7 @@ Transform:
   m_GameObject: {fileID: 1166133106241007490}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -2.18, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5082,7 +5086,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.028, y: 1.7765}
+  m_AnchoredPosition: {x: 0.028, y: 1.87}
   m_SizeDelta: {x: 2805.695, y: 278.7192}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &1977213225368435965
@@ -5259,7 +5263,7 @@ Transform:
   m_GameObject: {fileID: 7378690468769782316}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -1.08, z: -0.019180346}
+  m_LocalPosition: {x: 0, y: 1.14, z: -0.019180346}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -9,6 +9,7 @@ using System.Linq;
 public class LevelUI : MonoBehaviour
 {
     public RectTransform ChooseMapUI;
+    public RectTransform ErrorPanel;
     [Header("Drops")]
     public RectTransform PlayerDropParent;
     public GameObject PlayerDropPrefab;
@@ -61,7 +62,7 @@ public class LevelUI : MonoBehaviour
 
         for (int i = 0; i < _count; i++)
         {
-//            Debug.Log("Add Method");
+            //            Debug.Log("Add Method");
             var newDropPos = Instantiate(PositionDropPrefab, PositionDropParent);
             newDropPos.GetComponent<TMP_Dropdown>().onValueChanged.AddListener((index) => { AudioManager.Get().PlaySFX(4); });
         }
@@ -79,13 +80,15 @@ public class LevelUI : MonoBehaviour
     public void BackToMainMenu()
     {
         AudioManager.Get().PlaySFX(2);
+        SaveManager.Get().SaveGame();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 
     public void EnterGame()
     {
+        SaveManager.Get().SaveGame();
         SettingsManager.Get().ConfigEnemyInfo(out var flag);
-        Debug.Log($"Flag : {flag} , MapIndex : {MapIndex}.");
+//        Debug.Log($"Flag : {flag} , MapIndex : {MapIndex}.");
         if (flag)
         {
             LoadPanel.gameObject.SetActive(true);
@@ -97,7 +100,7 @@ public class LevelUI : MonoBehaviour
             StartCoroutine(LoadSceneProcess(process));
         }
 
-     
+
     }
 
     private IEnumerator LoadSceneProcess(AsyncOperation _process)
@@ -107,21 +110,24 @@ public class LevelUI : MonoBehaviour
 
         while (_process.progress < 1f)
         {
-//            Debug.Log($"Load process : {_process.progress}");
+            //            Debug.Log($"Load process : {_process.progress}");
             LoadPanel.GetComponentInChildren<Slider>().value = _process.progress;
 
             if (_process.progress >= .9f)
             {
-                Debug.Log("Start Waiting");
+//                Debug.Log("Start Waiting");
                 yield return new WaitForSeconds(2f);
-                Debug.Log("End Waiting");
+                //                Debug.Log("End Waiting");
                 LoadPanel.GetComponentInChildren<Slider>().value = 1f;
 
                 _process.allowSceneActivation = true;
-                Debug.Log($" can enter next scene : {_process.allowSceneActivation}");
+                //            Debug.Log($" can enter next scene : {_process.allowSceneActivation}");
                 AudioManager.Get().PlayBGM(1);
                 yield break;
             }
         }
     }
+    
+     public void HideError() => ErrorPanel.gameObject.SetActive(false);
+
 }

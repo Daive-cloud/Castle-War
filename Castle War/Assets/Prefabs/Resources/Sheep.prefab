@@ -428,7 +428,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1942013991
   m_SortingLayer: 1
-  m_SortingOrder: 2
+  m_SortingOrder: 0
   m_Sprite: {fileID: 1025061424, guid: 756ad7e205dff9a4e9c6f3528a97a592, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -597,7 +597,7 @@ MonoBehaviour:
   Actions: []
   CheckFrequency: 0.5
   IsDead: 0
-  HealthBar: {fileID: 3209757437651746003}
+  HealthBar: {fileID: 784631401642870483}
   ObjectCheckRadius: 0
   AttackCheckRadius: 0
   AttackFrequency: 0
@@ -628,8 +628,10 @@ MonoBehaviour:
   CritChance:
     baseValue: 0
     modifiers: 
+  DamageReduction:
+    baseValue: 0
+    modifiers: 
   CurrentHealth: 0
-  DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
   damageType: 0
   LevelUpPrefab: {fileID: 0}
   LevelUI: {fileID: 0}

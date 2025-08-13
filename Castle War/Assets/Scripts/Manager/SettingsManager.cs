@@ -36,10 +36,11 @@ public class PlayerChoice
 public class SettingsManager : SingletonManager<SettingsManager>
 {
     private List<SelectSourceUI> resourceUI ;
-    private RectTransform playerDropParent;
-    private RectTransform posDropParent;
+    public RectTransform playerDropParent { get; private set; }
+    public RectTransform posDropParent { get; private set; }
+    private RectTransform levelUI;
+    private Transform errorPanel;
     private ChooseMapUI chooseUI;
-    private Image errorPanel;
     public List<EnemyType> enemyTypes = new();
     private Dictionary<int, int> finalAssignments = new();
 
@@ -136,7 +137,7 @@ public class SettingsManager : SingletonManager<SettingsManager>
                 int number = chineseToArabic[chinese];
                 playerChoices.Add(i, new PlayerChoice(PlayerChoiceType.Specific, number));
             }
-            Debug.Log(playerChoices[i].Type);
+//            Debug.Log(playerChoices[i].Type);
         }
 
 
@@ -219,9 +220,6 @@ public class SettingsManager : SingletonManager<SettingsManager>
         }
         enemyTypes.Add(newType);
     }
-
-    public void HideError() => errorPanel.gameObject.SetActive(false);
-
     public void ShowError(string _log)
     {
         errorPanel.gameObject.SetActive(true);
@@ -330,7 +328,7 @@ public class SettingsManager : SingletonManager<SettingsManager>
 
     private IEnumerator RefillInfo()
     {
-        yield return null;
+        yield return new WaitForSeconds(.1f);
         resourceUI = new List<SelectSourceUI>();
         var resourcesParent = GameObject.Find("Resources").GetComponent<RectTransform>();
         for (int i = 0; i < resourcesParent.childCount; i++)
@@ -340,14 +338,9 @@ public class SettingsManager : SingletonManager<SettingsManager>
         playerDropParent = GameObject.Find("PlayerDropParent").GetComponent<RectTransform>();
         posDropParent = GameObject.Find("PositionDropParent").GetComponent<RectTransform>();
 
-        chooseUI = GameObject.Find("ChooseMapUI").GetComponent<ChooseMapUI>();
-        chooseUI.gameObject.SetActive(false);
-        errorPanel = GameObject.Find("Error").GetComponent<Image>();
-        if (errorPanel != null)
-        {
-            errorPanel.GetComponentInChildren<Button>().onClick.AddListener(() => HideError());
-            errorPanel.gameObject.SetActive(false);
-        }
+        levelUI = GameObject.Find("LevelUI").GetComponent<RectTransform>();
+        errorPanel = levelUI.Find("Error");
+        chooseUI = levelUI.GetComponent<LevelUI>().ChooseMapUI.GetComponent<ChooseMapUI>();
 
     }
 }

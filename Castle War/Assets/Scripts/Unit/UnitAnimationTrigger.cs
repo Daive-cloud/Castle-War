@@ -11,6 +11,21 @@ public class UnitAnimationTrigger : MonoBehaviour
     private void AnimationFinishTrigger_2() => unit.AnimationFinishTrigger_2();
 
     private void AnimationFinishTrigger_3() => unit.AnimationFinishTrigger_3();
+    private void AnimationFinishTrigger_4()
+    {
+        if (unit.Target == null)
+        {
+            (unit as LancerUnit).ResetAnimation();
+        }
+        else
+        {
+            float distance = Vector2.Distance(transform.position, unit.Target.transform.position);
+            if (distance > unit.AttackCheckRadius && unit.Target.TryGetComponent(out HumanoidUnit _))
+            {
+                (unit as LancerUnit).ResetAnimation();
+            }
+        }
+    }
 
     private void AttackTrigger()
     {
@@ -26,6 +41,10 @@ public class UnitAnimationTrigger : MonoBehaviour
     private void LancerAttackTrigger() => (unit as LancerUnit).LancerAttackTrigger();
     private void GoblinAttackTrigger() => (unit as GoblinUnit).GoblinAttackTrigger();
     private void LaunchArrow() => (unit as ArcherUnit).LaunchArrow();
+    private void LaunchBigArrow() => (unit as PowerArcherUnit).LaunchArrow();
+    private void LaunchMagicBall() => (unit as ShamanUnit).GenerateMagicExplosion();
+
+    private void TakeHealing() => (unit as MonkUnit).HealInjuredUnits();
 
     private void DestroyUnit() => unit.DestroyUnit();
 

@@ -10,6 +10,7 @@ public class BuildingActionSO : ActionSO
     [SerializeField] private GameObject m_StructurePrefab;
     [SerializeField] private int m_GoldCost;
     [SerializeField] private int m_WoodCost;
+    [SerializeField] private int m_CrystalCost;
     [SerializeField] private Vector3Int m_BuildingSize;
     [SerializeField] private Vector3Int m_BuildingOffset;
     public  Sprite FoundationSprite => m_FoundationSprite;
@@ -17,6 +18,7 @@ public class BuildingActionSO : ActionSO
     public GameObject StructurePrefab => m_StructurePrefab;
     public int GoldCost => m_GoldCost;
     public int WoodCost => m_WoodCost;
+    public int CrystalCost => m_CrystalCost;
     public Vector3Int BuildingSize => m_BuildingSize;
     public Vector3Int BuildingOffset => m_BuildingOffset;
   

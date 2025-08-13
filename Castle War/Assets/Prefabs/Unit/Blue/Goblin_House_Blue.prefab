@@ -111,7 +111,7 @@ Transform:
   m_GameObject: {fileID: 1258182289996035984}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.067, y: -0.3616073, z: -0.019180346}
+  m_LocalPosition: {x: -0.05700001, y: -0.29999983, z: -0.019180346}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4963,7 +4963,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.025, y: 1.314}
+  m_AnchoredPosition: {x: -0, y: 1.25}
   m_SizeDelta: {x: 1394.3696, y: 634}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &4658818636815781699
@@ -5092,7 +5092,7 @@ Transform:
   m_GameObject: {fileID: 5271690668360260370}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.03, y: -0.29160738, z: -0.019180346}
+  m_LocalPosition: {x: -0.02, y: -0.23, z: -0.019180346}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10168,6 +10168,7 @@ MonoBehaviour:
   Actions:
   - {fileID: 11400000, guid: 4f44040eb07e8944a9bea30a3dac7c1d, type: 2}
   - {fileID: 11400000, guid: bcf106dc938b9604c89aec17909317c1, type: 2}
+  - {fileID: 11400000, guid: 602a461245e7bbf4abed1d1679424850, type: 2}
   - {fileID: 11400000, guid: b7d86f04518273c48a7a48773ceeddf0, type: 2}
   CheckFrequency: 0.2
   IsDead: 0
@@ -10181,6 +10182,7 @@ MonoBehaviour:
   barrackType: 1
   woodImagePrefab: {fileID: 7712814376212877133, guid: e2c37426a4f9f3d448ee9f6917ce414a, type: 3}
   meatImagePrefab: {fileID: 5468767430303813685, guid: 547297e336d6c2345bf58c24dcf459d8, type: 3}
+  ProductionAmount: 20
   ProductionFrequency: 10
 --- !u!114 &482923271893440664
 MonoBehaviour:
@@ -10206,8 +10208,10 @@ MonoBehaviour:
   CritChance:
     baseValue: 0
     modifiers: 
+  DamageReduction:
+    baseValue: 0
+    modifiers: 
   CurrentHealth: 0
-  DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
   damageType: 0
   LevelUpPrefab: {fileID: 0}
   LevelUI: {fileID: 0}

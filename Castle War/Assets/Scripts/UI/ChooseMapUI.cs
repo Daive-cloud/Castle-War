@@ -6,7 +6,7 @@ using UnityEngine;
 using System.Linq;
 using System.Collections;
 
-public class ChooseMapUI : MonoBehaviour
+public class ChooseMapUI : MonoBehaviour , ISaveData
 {
     [Header("MapSO List")]
     public List<MapSO> Maps;
@@ -24,7 +24,6 @@ public class ChooseMapUI : MonoBehaviour
     public void Start()
     {
         GenerateMapScroll();
-        InitializeMapUI();
     }
 
     private void GenerateMapScroll()
@@ -35,21 +34,21 @@ public class ChooseMapUI : MonoBehaviour
         }
 
         for (int i = 0; i < Maps.Count; i++)
+        {
+            var newScroll = Instantiate(MapScroll, MapScrollParent);
+            var map = Maps[i];
+            StringBuilder sb = new(map.MapName);
+            sb.Append("   ");
+            if (map.PlayerCount > 2)
             {
-                var newScroll = Instantiate(MapScroll, MapScrollParent);
-                var map = Maps[i];
-                StringBuilder sb = new(map.MapName);
-                sb.Append("   ");
-                if (map.PlayerCount > 2)
-                {
-                    sb.Append("(2-").Append(map.PlayerCount.ToString()).Append(")");
-                }
-                else
-                {
-                    sb.Append("(2)");
-                }
-                newScroll.GetComponentInChildren<TextMeshProUGUI>().text = sb.ToString();
-                newScroll.GetComponent<Button>().onClick.AddListener(() => AssignMapInfo(map.MapImage, map.MapName, map.Description, map));
+                sb.Append("(2-").Append(map.PlayerCount.ToString()).Append(")");
+            }
+            else
+            {
+                sb.Append("(2)");
+            }
+            newScroll.GetComponentInChildren<TextMeshProUGUI>().text = sb.ToString();
+            newScroll.GetComponent<Button>().onClick.AddListener(() => AssignMapInfo(map.MapImage, map.MapName, map.Description, map));
             }
     }
 
@@ -64,16 +63,15 @@ public class ChooseMapUI : MonoBehaviour
 
     private void InitializeMapUI()
     {
-        var map = Maps[0];
+        var map = currentSelectedMap;
+       
         AssignMapInfo(map.MapImage, map.MapName, map.Description, map);
         ApplyLevelUIUpdate();
-       // ApplyPositionUIUpdate();
     }
 
     public void ConfirmChoice()
     {
         ApplyLevelUIUpdate();
-        // ApplyPositionUIUpdate();
         levelUI.CloseMapChooseUI();
 
         levelUI.MapIndex = Maps.IndexOf(currentSelectedMap);
@@ -96,5 +94,75 @@ public class ChooseMapUI : MonoBehaviour
     {
         levelUI.UpdateMapPreview(currentSelectedMap.MapImage, currentSelectedMap.MapName);
         levelUI.UpdateDropDownScroll(currentSelectedMap.PlayerCount);
+    }
+
+    private IEnumerator RefillGameConfigWithDelay(GameData _gameData)
+    {
+        yield return new WaitForSeconds(.05f);
+
+        var playerParent = levelUI.PlayerDropParent;
+        var posParent = levelUI.PositionDropParent;
+
+        for (int i = 1; i < playerParent.childCount; i++)
+        {
+//            Debug.Log($"player drop valus : {_gameData.playerDropValues[i]}");
+            playerParent.GetChild(i).GetComponent<TMP_Dropdown>().value = _gameData.playerDropValues[i];
+        }
+
+        for (int i = 0; i < posParent.childCount; i++)
+        {
+//            Debug.Log($"pos drop valus : {_gameData.positionDropValues[i]}");
+            posParent.GetChild(i).GetComponent<TMP_Dropdown>().value = _gameData.positionDropValues[i];
+        }
+        gameObject.SetActive(false);
+    }
+
+    public void LoadData(GameData _gameData)
+    {
+        string mapID = _gameData.selectedMapID;
+        //        Debug.Log($"mapID : {mapID}");
+        if (mapID == "")
+        {
+            currentSelectedMap = Maps[0];
+        }
+        else
+        {
+            foreach (var map in Maps)
+            {
+                if (map.MapID == mapID)
+                {
+                    currentSelectedMap = map;
+                    break;
+                }
+            }
+            if (currentSelectedMap == null)
+            {
+                currentSelectedMap = Maps[0];
+            }
+        }
+        levelUI.MapIndex = Maps.IndexOf(currentSelectedMap);
+        InitializeMapUI();
+        StartCoroutine(RefillGameConfigWithDelay(_gameData));
+    }
+
+    public void SaveData(ref GameData _gameData)
+    {
+        Debug.Log("Save map info");
+        _gameData.selectedMapID = currentSelectedMap.MapID;
+        _gameData.playerDropValues = new int[10];
+        _gameData.positionDropValues = new int[10];
+
+        var playerParent = levelUI.PlayerDropParent;
+        var posParent = levelUI.PositionDropParent;
+
+        for (int i = 1; i < playerParent.childCount; i++)
+        {
+            _gameData.playerDropValues[i] = playerParent.GetChild(i).GetComponent<TMP_Dropdown>().value;
+        }
+
+        for (int i = 0; i < posParent.childCount; i++)
+        {
+            _gameData.positionDropValues[i] = posParent.GetChild(i).GetComponent<TMP_Dropdown>().value;
+        }
     }
 }

@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -10,23 +7,51 @@ public class TrainingUnitUI : MonoBehaviour
 {
     [SerializeField] private Button ConfirmButton;
     [SerializeField] private Button CancleButton;
-    [SerializeField] private TextMeshProUGUI goldCost;
-    [SerializeField] private TextMeshProUGUI meatCost;
-
+     [SerializeField] private RectTransform telemplateParent;
+    [SerializeField] private GameObject costTelemplate;
+    [SerializeField] private Sprite meatIcon;
+    [SerializeField] private Sprite goldIcon;
+    [SerializeField] private Sprite crystalIcon;
     private void Start()
     {
         HideRectangle();
     }
 
-    public void ShowRectangle(int _goldCost, int _meatCost)
+    public void ShowRectangle(int _goldCost, int _meatCost,int _crystalCost)
     {
-        gameObject.SetActive(true);
-        goldCost.text = _goldCost.ToString();
-        meatCost.text = _meatCost.ToString();
-
+       gameObject.SetActive(true);
         var manager = GameManager.Get();
-        goldCost.color = manager.GoldAmount >= _goldCost ? Color.black : Color.red;
-        meatCost.color = manager.MeatAmount >= _meatCost ? Color.black : Color.red;
+        for (int i = 0; i < telemplateParent.childCount; i++)
+        {
+            Destroy(telemplateParent.GetChild(i).gameObject);
+        }
+
+        if (_goldCost > 0)
+        {
+            var newTelemplate = Instantiate(costTelemplate, telemplateParent);
+            newTelemplate.GetComponentInChildren<Image>().sprite = goldIcon;
+            var content = newTelemplate.GetComponentInChildren<TextMeshProUGUI>();
+            content.text = _goldCost.ToString("N0");
+            content.color = manager.GoldAmount >= _goldCost ? Color.black : Color.red;
+        }
+
+        if (_meatCost > 0)
+        {
+            var newTelemplate = Instantiate(costTelemplate, telemplateParent);
+            newTelemplate.GetComponentInChildren<Image>().sprite = meatIcon;
+            var content = newTelemplate.GetComponentInChildren<TextMeshProUGUI>();
+            content.text = _meatCost.ToString("N0");
+            content.color = manager.MeatAmount >= _meatCost ? Color.black : Color.red;
+        }
+        
+        if (_crystalCost > 0)
+        {
+            var newTelemplate = Instantiate(costTelemplate, telemplateParent);
+            newTelemplate.GetComponentInChildren<Image>().sprite = crystalIcon;
+            var content = newTelemplate.GetComponentInChildren<TextMeshProUGUI>();
+            content.text = _crystalCost.ToString("N0");
+            content.color = manager.CrystalAmount >= _crystalCost ? Color.black : Color.red;
+        }
     }
 
     public void HideRectangle()

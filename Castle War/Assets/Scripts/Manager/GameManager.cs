@@ -5,18 +5,26 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using UnityEngine.EventSystems;
 using TMPro;
 using DG.Tweening;
 using IUnit;
+using System;
 
 public class GameManager : SingletonManager<GameManager>
 {
+    #region Paramters
     [Header("Selected Units")]
     public Unit ActiveUnit;
     public List<Unit> SelectedUnits;
     [SerializeField] private float detectedRadius = .3f;
-    [SerializeField] private GameObject pointer;
+    [SerializeField] private GameObject Pointer;
+    [Header("Pool Object")]
+    public GameObject damageFont;
+    public GameObject arrow;
+    public GameObject firecraker;
+    public GameObject bigArrow;
+    public GameObject healEffect;
+    public GameObject magicExplosion;
 
     [Header("UI Parameters")]
     [SerializeField] private ActionBar ActionBar;
@@ -29,25 +37,37 @@ public class GameManager : SingletonManager<GameManager>
 
     [Header("Resource UI")]
     [SerializeField] private GameObject WoodCollection;
+    [SerializeField] private TextMeshProUGUI WoodProduction;
+    private Queue<(float time, int amount)> producedWoodHistroy = new();
     [SerializeField] private GameObject MeatCollection;
+    [SerializeField] private TextMeshProUGUI MeatProduction;
+    private Queue<(float time, int amount)> producedMeatHistroy = new();
     [SerializeField] private GameObject GoldCollection;
+    [SerializeField] private TextMeshProUGUI GoldProduction;
+    private Queue<(float time, int amount)> producedGoldHistroy = new();
+    [SerializeField] private GameObject CrystalCollection; 
+    private float timeWindow = 60f;
+    private float lastUpdateTimer;
     [Header("Box Renderer")]
     private LineRenderer BoxRenderer;
     private Vector3 StartPos;
-    private bool IsDrawing = false;
+    public bool IsDrawing = false;
 
     [Header("Registered Target")]
     public List<Unit> RegisteredUnits = new List<Unit>();
 
-    [Header("Camera Options")]
+    [Header("Camera Config")]
     [SerializeField] private float PanSpeed;
+    [SerializeField] private float ZoomSpeed;
+    [SerializeField] private float MinZoom;
+    [SerializeField] private float MaxZoom;
     [SerializeField] private CameraBounds CameraBounds;
-    [SerializeField] private Joystick joyStick;
 
     [Header("Resources Amount")]
     public int WoodAmount;
     public int GoldAmount;
     public int MeatAmount;
+    public int CrystalAmount;
 
     [Header("Point Or Drag")]
     public float DragDuration = .3f;
@@ -57,6 +77,7 @@ public class GameManager : SingletonManager<GameManager>
     private bool m_IsDrag;
 
     public UnityAction onResourcesChanged;
+    public UnityAction onSelectionFinished;
     private Vector2 m_MousePosition;
     private LineRenderer ActiveRay;
     private Dictionary<Unit, LineRenderer> ActionRays = new();
@@ -64,42 +85,52 @@ public class GameManager : SingletonManager<GameManager>
     private TilemapManager m_TilemapManager;
     private CameraController m_CameraController;
     private Coroutine recordUnWalkableNodes;
-
+    #endregion
     private void Start()
     {
         m_TilemapManager = TilemapManager.Get();
-        m_CameraController = new(PanSpeed, CameraBounds, joyStick);
+        m_CameraController = new(PanSpeed, ZoomSpeed, MinZoom, MaxZoom, CameraBounds);
 
         InitializeGame();
 
         Time.timeScale = 1f;
+        lastUpdateTimer = Time.time;
     }
     private void Update()
     {
-        m_CameraController.Update();
         if (m_PlacementProcess != null)
         {
             m_PlacementProcess.Update();
             return;
         }
-
-        bool flowControl = HandleClick();
-        if (!flowControl)
+        if (IsDrawing)
         {
+            DrawRectangle();
             return;
         }
-        DrawRectangle(); // 处理多个单位
+        if (!HvoUtils.IsPointerOverUIElement())
+            m_CameraController.Update();
+
+        HandleClick();
         UpdateMovementRay();
+
+        if (Time.time - lastUpdateTimer >= 1f)
+        {
+            lastUpdateTimer = Time.time;
+            UpdateGoldProduction(0);
+            UpdateMeatProduction(0);
+            UpdateWoodProduction(0);
+        }
     }
 
-    private bool HandleClick()
+    private void HandleClick()
     {
 
-        if (HvoUtils.IsCancleSelect() && !HvoUtils.IsPointerOverUIElement())
+        if (HvoUtils.IsPointerOverUIElement())
         {
             // Debug.Log("Cancle Selected.");
-            ResetSelectedUnits();
-            return false;
+            //ResetSelectedUnits();
+            return;
         }
         if (HvoUtils.IsPointerUp() && !HvoUtils.IsPointerOverUIElement())
         {
@@ -114,13 +145,13 @@ public class GameManager : SingletonManager<GameManager>
             // }
         }
 
-        return true;
+        return;
     }
 
     #region Handle Click
     private void HandleUnitBehaviour(Vector2 _mousePosition) // 处理单个单位
     {
-//        Debug.Log("Handle Unit Behaviour");
+        //        Debug.Log("Handle Unit Behaviour");
         Collider2D[] colliders = Physics2D.OverlapCircleAll(_mousePosition, detectedRadius);
 
         foreach (var collider in colliders)
@@ -166,26 +197,25 @@ public class GameManager : SingletonManager<GameManager>
                 }
             }
         }
-        IsDrawing = false;
     }
 
     private void SelectNewUnit(Unit _unit, Vector2 _mousePosition)
     {
- //       Debug.Log("Select New Unit Part 0.");
+        //       Debug.Log("Select New Unit Part 0.");
         // 处理工人
         bool flowControl = HandleWorkerTask(_unit);
         if (!flowControl)
         {
             return;
         }
-//        Debug.Log("Select New Unit Part 1.");
+        //        Debug.Log("Select New Unit Part 1.");
         // 处理攻击的情况
         flowControl = HandleUnitsAttack(_unit, _mousePosition);
         if (!flowControl)
         {
             return;
         }
-        Debug.Log($"IsDrawing : {IsDrawing}");
+        // Debug.Log($"IsDrawing : {IsDrawing}");
 
 
         if ((_unit is StructureUnit house && !house.IsCompleted) || _unit.IsDead || IsDrawing || ActiveUnit == _unit)
@@ -244,7 +274,7 @@ public class GameManager : SingletonManager<GameManager>
         }
         else
         {
-            if (ActiveUnit is WorkerUnit worker && worker.currentTask == WorkerTask.None)
+            if (ActiveUnit is WorkerUnit worker)
             {
                 if (_unit.TryGetComponent(out StructureUnit structure) && structure.IsUnderConstruction)
                 {
@@ -252,24 +282,29 @@ public class GameManager : SingletonManager<GameManager>
                     worker.UpdateWorkerTask(WorkerTask.Building);
                     return false;
                 }
-                else if (_unit.TryGetComponent(out TreeUnit tree) && !tree.IsDead)
+                else if (_unit.TryGetComponent(out TreeUnit tree) && !tree.IsDead && worker.currentTask == WorkerTask.None)
                 {
                     tree.AssignWorker(worker);
                     worker.AssignTarget(tree);
                     worker.UpdateWorkerTask(WorkerTask.Chopping);
                     return false;
                 }
-                else if (_unit.TryGetComponent(out SheepUnit sheep) && !sheep.IsDead)
+                else if (_unit.TryGetComponent(out SheepUnit sheep) && !sheep.IsDead && worker.currentTask == WorkerTask.None)
                 {
                     sheep.AssignTarget(worker);
                     worker.AssignTarget(sheep);
                     worker.UpdateWorkerTask(WorkerTask.Killing);
                     return false;
                 }
-                else if (_unit.TryGetComponent(out GoldMinerUnit miner) && !miner.IsDead && miner.IsCompleted)
+                else if (_unit.TryGetComponent(out GoldMinerUnit miner) && !miner.IsDead && miner.IsCompleted && worker.currentTask == WorkerTask.None)
                 {
                     worker.AssignTarget(miner);
                     worker.UpdateWorkerTask(WorkerTask.Mining);
+                    return false;
+                }
+                else if (_unit.TryGetComponent(out CastleUnit castle) && castle.IsCompleted && worker.currentTask == WorkerTask.Trasporting)
+                {
+                    worker.AssignTarget(castle);
                     return false;
                 }
             }
@@ -289,7 +324,7 @@ public class GameManager : SingletonManager<GameManager>
             GenerateFollowRay(_mousePosition, Color.red);
             if (SelectedUnits.Count > 0)
             {
-                foreach (var unit in SelectedUnits.Where(unit => unit != null && !unit.TryGetComponent(out WorkerUnit _) && !unit.IsDead))
+                foreach (var unit in SelectedUnits.Where(unit => unit != null && !unit.TryGetComponent(out WorkerUnit _) && !unit.TryGetComponent(out MonkUnit _) && !unit.IsDead))
                 {
                     unit.GetComponent<HumanoidUnit>().AssignTarget(_unit);
                 }
@@ -297,7 +332,7 @@ public class GameManager : SingletonManager<GameManager>
             }
             else
             {
-                if (ActiveUnit != null && (!ActiveUnit.TryGetComponent(out WorkerUnit _) || !ActiveUnit.TryGetComponent(out StructureUnit _)))
+                if (ActiveUnit != null && (!ActiveUnit.TryGetComponent(out WorkerUnit _) || !ActiveUnit.TryGetComponent(out StructureUnit _) || !ActiveUnit.TryGetComponent(out MonkUnit _)))
                 {
                     (ActiveUnit as HumanoidUnit).AssignTarget(_unit);
                     return false;
@@ -311,13 +346,13 @@ public class GameManager : SingletonManager<GameManager>
     private void SelectUnitsInRectangle(Vector3 _startPos, Vector3 _endPos)
     {
         ResetSelectedUnits();
-        Debug.Log("Reset Units In Rectangle methods");
+        //        Debug.Log("Reset Units In Rectangle methods");
         float minX = Mathf.Min(_startPos.x, _endPos.x);
         float maxX = Mathf.Max(_startPos.x, _endPos.x);
         float minY = Mathf.Min(_startPos.y, _endPos.y);
         float maxY = Mathf.Max(_startPos.y, _startPos.y);
 
-        var vaildUnits = RegisteredUnits.Where(unit => unit.CompareTag("BlueUnit") && !unit.IsDead && unit.TryGetComponent(out HumanoidUnit _) && !unit.TryGetComponent(out TowerUnit _)).ToList();
+        var vaildUnits = RegisteredUnits.Where(unit => unit != null && unit.CompareTag("BlueUnit") && !unit.IsDead && unit.TryGetComponent(out HumanoidUnit _) && !unit.TryGetComponent(out TowerUnit _)).ToList();
 
         foreach (var unit in vaildUnits)
         {
@@ -332,11 +367,12 @@ public class GameManager : SingletonManager<GameManager>
                 }
             }
         }
+        onSelectionFinished?.Invoke();
+        IsDrawing = false;
     }
 
-    private void ResetSelectedUnits()
+    public void ResetSelectedUnits()
     {
-        IsDrawing = false;
         if (SelectedUnits.Count > 0)
         {
             foreach (var unit in SelectedUnits.Where(unit => !unit.IsDead && unit != null))
@@ -369,18 +405,13 @@ public class GameManager : SingletonManager<GameManager>
             ClearActionRays();
             foreach (var unit in SelectedUnits)
             {
-                GameObject go = new GameObject("ActoinRay");
-                LineRenderer line = go.AddComponent<LineRenderer>();
-                line.material = new Material(Shader.Find("Sprites/Default"));
-                line.sortingOrder = 50;
+                var line = GameObjectPool.Get().GetFromPool("ActionRay").GetComponent<LineRenderer>();
                 line.startColor = _color;
                 line.endColor = _color;
-                line.startWidth = .07f;
-                line.endWidth = .07f;
 
                 ActionRays[unit] = line;
-                StartCoroutine(HideRayAfterDelay(go));
-                Instantiate(pointer, _mousePosition, Quaternion.identity);
+                StartCoroutine(HideRayAfterDelay(line.gameObject));
+                Instantiate(Pointer, _mousePosition, Quaternion.identity);
             }
         }
         else
@@ -399,7 +430,7 @@ public class GameManager : SingletonManager<GameManager>
             ActiveRay.startWidth = .07f;
             ActiveRay.endWidth = .07f;
             StartCoroutine(HideRayAfterDelay(go));
-            Instantiate(pointer, _mousePosition, Quaternion.identity);
+            Instantiate(Pointer, _mousePosition, Quaternion.identity);
         }
 
     }
@@ -464,7 +495,7 @@ public class GameManager : SingletonManager<GameManager>
 
         if (HvoUtils.IsPointerUp())
         {
-//            Debug.Log("Pointer enend");
+            //            Debug.Log("Pointer enend");
             if (BoxRenderer != null)
                 Destroy(BoxRenderer.gameObject);
             Vector3 currentPos = GetWorldPosition();
@@ -477,10 +508,9 @@ public class GameManager : SingletonManager<GameManager>
             float pointPosition = Vector2.Distance(PointerDownPosition, HvoUtils.GetPointerPositoin());
             float pointDuration = Time.time - PointerDownTime;
             m_IsDrag = pointPosition > DragDistance && pointDuration > DragDuration;
-//            Debug.Log($"drag distance : {pointDuration} , pointDuraion : {pointDuration} , isDrag : {m_IsDrag}");
+            //            Debug.Log($"drag distance : {pointDuration} , pointDuraion : {pointDuration} , isDrag : {m_IsDrag}");
             if (m_IsDrag)
             {
-                IsDrawing = true;
                 SelectUnitsInRectangle(StartPos, currentPos);
             }
 
@@ -521,7 +551,7 @@ public class GameManager : SingletonManager<GameManager>
         foreach (var pair in ActionRays)
         {
             if (pair.Value != null)
-                Destroy(pair.Value.gameObject);
+                GameObjectPool.Get().ReturnToPool("ActionRay", pair.Value.gameObject);
         }
 
         ActionRays.Clear();
@@ -530,7 +560,7 @@ public class GameManager : SingletonManager<GameManager>
     private IEnumerator HideRayAfterDelay(GameObject _ray)
     {
         yield return new WaitForSeconds(.3f);
-        Destroy(_ray);
+        GameObjectPool.Get().ReturnToPool("ActionRay", _ray);
         ActiveRay = null;
     }
 
@@ -542,13 +572,13 @@ public class GameManager : SingletonManager<GameManager>
         ClearPlacement();
 
         m_PlacementProcess = new(_action, m_TilemapManager);
-        PlaceBuildingUI.ShowRectangle(_action.GoldCost, _action.WoodCost);
+        PlaceBuildingUI.ShowRectangle(_action.GoldCost, _action.WoodCost,_action.CrystalCost);
         PlaceBuildingUI.RegisterHooks(() => ConfirmPlacement(_action), CanclePlacement);
     }
 
     private void ConfirmPlacement(BuildingActionSO _action)
     {
-        if (WoodAmount >= _action.WoodCost && GoldAmount >= _action.GoldCost)
+        if (WoodAmount >= _action.WoodCost && GoldAmount >= _action.GoldCost && CrystalAmount >= _action.CrystalCost)
         {
             var buildingAction = m_PlacementProcess.BuildingAction;
 
@@ -561,6 +591,8 @@ public class GameManager : SingletonManager<GameManager>
 
                 WoodAmount -= _action.WoodCost;
                 GoldAmount -= _action.GoldCost;
+                CrystalAmount -= _action.CrystalCost;
+
                 onResourcesChanged?.Invoke();
                 AudioManager.Get().PlaySFX(11);
                 ClearActionBarUI();
@@ -627,33 +659,46 @@ public class GameManager : SingletonManager<GameManager>
     {
         AudioManager.Get().PlaySFX(31);
         GameObject newImage = null;
+        var pool = GameObjectPool.Get();
         string sb = "+ " + _amount.ToString();
 
         switch (_type)
         {
             case ResourceType.wood:
-                newImage = Instantiate(WoodCollection, _startPos, Quaternion.identity);
+                newImage = pool.GetFromPool(WoodCollection.name);
                 WoodAmount += _amount;
                 break;
             case ResourceType.meat:
-                newImage = Instantiate(MeatCollection, _startPos, Quaternion.identity);
+                newImage = pool.GetFromPool(MeatCollection.name);
                 MeatAmount += _amount;
                 break;
             case ResourceType.gold:
-                newImage = Instantiate(GoldCollection, _startPos, Quaternion.identity);
+                newImage = pool.GetFromPool(GoldCollection.name);
                 GoldAmount += _amount;
+                break;
+            case ResourceType.crystal:
+                newImage = pool.GetFromPool(CrystalCollection.name);
+                CrystalAmount += _amount;
                 break;
             default:
                 return;
         }
+        newImage.transform.position = _startPos;
+        newImage.transform.rotation = Quaternion.identity;
         newImage.GetComponentInChildren<TextMeshProUGUI>().text = sb;
-        newImage.transform.DOMove(_startPos + new Vector3(0, 2f, 0), 1.2f).SetEase(Ease.Linear).OnComplete(() => Destroy(newImage.gameObject));
+        newImage.transform.DOMove(_startPos + new Vector3(0, 2f, 0), 1f).SetEase(Ease.Linear).OnComplete(() => OnPopUpImage(newImage));
 
         onResourcesChanged?.Invoke();
     }
     public void CollectWood(int _woodCount, Vector3 _startPos) => CollectResource(ResourceType.wood, _woodCount, _startPos);
     public void CollectMeat(int _meatCount, Vector3 _startPos) => CollectResource(ResourceType.meat, _meatCount, _startPos);
     public void CollectGold(int _goldCount, Vector3 _startPos) => CollectResource(ResourceType.gold, _goldCount, _startPos);
+    public void CollectCrystal(int _crystalCount, Vector3 _startPos) => CollectResource(ResourceType.crystal,_crystalCount,_startPos);
+    private void OnPopUpImage(GameObject _image)
+    {
+        var name = _image.name.Replace("(Clone)", "");
+        GameObjectPool.Get().ReturnToPool(name, _image);
+    }
 
     public void PauseGame()
     {
@@ -672,16 +717,17 @@ public class GameManager : SingletonManager<GameManager>
     private IEnumerator TrainingProcessWithDelay(TrainingActionSO _action)
     {
         yield return new WaitForEndOfFrame();
-         TrainingUnitUI.ShowRectangle(_action.GoldCost, _action.MeatCost);
+        TrainingUnitUI.ShowRectangle(_action.GoldCost, _action.MeatCost,_action.CrystalCost);
         TrainingUnitUI.RegisterHooks(() => ConfirmTraining(_action), CancleTraining);
     }
 
     private void ConfirmTraining(TrainingActionSO _trainingAction)
     {
-        if (GoldAmount >= _trainingAction.GoldCost && MeatAmount >= _trainingAction.MeatCost)
+        if (GoldAmount >= _trainingAction.GoldCost && MeatAmount >= _trainingAction.MeatCost && CrystalAmount >= _trainingAction.CrystalCost)
         {
             GoldAmount -= _trainingAction.GoldCost;
             MeatAmount -= _trainingAction.MeatCost;
+            CrystalAmount -= _trainingAction.CrystalCost;
             onResourcesChanged();
         }
         else
@@ -732,14 +778,18 @@ public class GameManager : SingletonManager<GameManager>
 
     private IEnumerator GameOver()
     {
+        FindObjectsOfType<DamageFontUI>().Where(font => font != null && font.gameObject.activeSelf).ToList().ForEach(font => Destroy(font.gameObject));
+        FindObjectsOfType<ArrowController>().Where(arrow => arrow != null && arrow.gameObject.activeSelf).ToList().ForEach(arrow => Destroy(arrow.gameObject));
+        FindObjectsOfType<GrenadeController>().Where(grenade => grenade != null && grenade.gameObject.activeSelf).ToList().ForEach(grenade => Destroy(grenade.gameObject));
         yield return new WaitForSeconds(2f);
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        SceneManager.LoadScene("选择关卡");
     }
 
     public void InitializeGame()
     {
         var manager = SettingsManager.Get();
+        var pool = GameObjectPool.Get();
         WoodAmount = manager.woodAmount;
         MeatAmount = manager.meatAmount;
         GoldAmount = manager.goldAmount;
@@ -747,7 +797,22 @@ public class GameManager : SingletonManager<GameManager>
         onResourcesChanged?.Invoke();
 
         SettingsManager.Get().AssignOriginalPositions();
-       
+
+        InitializeRay();
+        EventCenter.Instance.AddEventListener<int>("WoodProduction", UpdateWoodProduction);
+        EventCenter.Instance.AddEventListener<int>("MeatProduction", UpdateMeatProduction);
+        EventCenter.Instance.AddEventListener<int>("GoldProduction", UpdateGoldProduction);
+
+        pool.RegisterPool(damageFont.name, damageFont, 80);
+        pool.RegisterPool(arrow.name, arrow, 60);
+        pool.RegisterPool(firecraker.name, firecraker, 40);
+        pool.RegisterPool(WoodCollection.name, WoodCollection, 40);
+        pool.RegisterPool(MeatCollection.name, MeatCollection, 40);
+        pool.RegisterPool(GoldCollection.name, GoldCollection, 40);
+        pool.RegisterPool(CrystalCollection.name,CrystalCollection,20);
+        pool.RegisterPool(bigArrow.name, bigArrow, 60);
+        pool.RegisterPool(healEffect.name, healEffect, 30);
+        pool.RegisterPool(magicExplosion.name,magicExplosion,25);
     }
 
     private void SwitchBGM()
@@ -755,4 +820,68 @@ public class GameManager : SingletonManager<GameManager>
         AudioManager.Get().StopPlayBGM(1);
         AudioManager.Get().PlayBGM(0);
     }
+
+    private void InitializeRay()
+    {
+        GameObject go = new GameObject("ActoinRay");
+        LineRenderer line = go.AddComponent<LineRenderer>();
+        line.material = new Material(Shader.Find("Sprites/Default"));
+        line.sortingOrder = 50;
+
+        line.startWidth = .07f;
+        line.endWidth = .07f;
+
+        GameObjectPool.Get().RegisterPool("ActionRay", line.gameObject, 30);
+    }
+
+    #region Update Production Info
+    private void UpdateWoodProduction(int _amount)
+    {
+        float now = Time.time;
+        producedWoodHistroy.Enqueue((now, _amount));
+
+        while (producedWoodHistroy.Count > 0 && now - producedWoodHistroy.Peek().time > timeWindow)
+        {
+            producedWoodHistroy.Dequeue();
+        }
+        int totalProduced = 0;
+        foreach (var record in producedWoodHistroy)
+        {
+            totalProduced += record.amount;
+        }
+        WoodProduction.text = "木材产量:" + totalProduced.ToString() + "/分钟";
+    }
+    private void UpdateMeatProduction(int _amount)
+    {
+        float now = Time.time;
+        producedMeatHistroy.Enqueue((now, _amount));
+
+        while (producedMeatHistroy.Count > 0 && now - producedMeatHistroy.Peek().time > timeWindow)
+        {
+            producedMeatHistroy.Dequeue();
+        }
+        int totalProduced = 0;
+        foreach (var record in producedMeatHistroy)
+        {
+            totalProduced += record.amount;
+        }
+        MeatProduction.text = "兽肉产量:" + totalProduced.ToString() + "/分钟";
+    }
+    private void UpdateGoldProduction(int _amount)
+    {
+        float now = Time.time;
+        producedGoldHistroy.Enqueue((now, _amount));
+
+        while (producedGoldHistroy.Count > 0 && now - producedGoldHistroy.Peek().time > timeWindow)
+        {
+            producedGoldHistroy.Dequeue();
+        }
+        int totalProduced = 0;
+        foreach (var record in producedGoldHistroy)
+        {
+            totalProduced += record.amount;
+        }
+        GoldProduction.text = "金矿产量:" + totalProduced.ToString() + "/分钟";
+    }
+    #endregion
 }

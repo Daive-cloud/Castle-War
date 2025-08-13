@@ -30,13 +30,20 @@ public class DamageFontUI : MonoBehaviour
     {
         Sequence seq = DOTween.Sequence();
 
-        seq.Append(transform.DOScale(Random.Range(1.2f,1.4f), 1f).From(Vector2.zero)).SetEase(Ease.OutBack);
+        seq.Append(transform.DOScale(Random.Range(1.2f, 1.4f), 1f).From(Vector2.zero)).SetEase(Ease.OutBack);
 
         Vector2 endPos = transform.position + Vector3.up;
 
         seq.Append(transform.DOMove(endPos, 1f).SetEase(Ease.InQuad));
         seq.Join(DamageFont.DOFade(0, 2f));
-        seq.OnComplete(() => Destroy(gameObject));
+        seq.OnComplete(() => ReturnToPool());
+    }
+
+    private void ReturnToPool()
+    {
+//        Debug.Log($"font name : {gameObject.name}");
+        string fontName = gameObject.name.Replace("(Clone)","");
+        GameObjectPool.Get().ReturnToPool(fontName,this.gameObject);
     }
 
 }

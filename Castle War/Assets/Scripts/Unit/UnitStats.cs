@@ -7,7 +7,7 @@ public enum DamageType
     Physical,
     Explosion,
     Healing,
-    Lighting,
+    Magical,
 }
 
 public class UnitStats : MonoBehaviour
@@ -18,18 +18,22 @@ public class UnitStats : MonoBehaviour
     public Stats Armor;
     public Stats MaxHealth;
     public Stats CritChance;
+    public Stats DamageReduction;
+    [Header("Current Health")]
     public int CurrentHealth;
 
     [Header("Damage Font")]
-    [SerializeField] private GameObject DamageFont;
     [SerializeField] private DamageType damageType = DamageType.Physical;
+    private GameObject newFont;
     private Color fontColor;
+    public bool isInjured => CurrentHealth < GetMaxHealthValue();
     [Header("Exp Config")]
     [SerializeField] private GameObject LevelUpPrefab;
     [SerializeField] private Image LevelUI;
     public List<int> ExpList;
     public int currentExp;
     public int ExpIndex { get; private set; } = 0;
+
 
     public System.Action onHealthChanged;
 
@@ -52,6 +56,9 @@ public class UnitStats : MonoBehaviour
             _damage *= 2;
         }
         _damage -= _stat.Armor.GetValue();
+        _damage = Mathf.FloorToInt(_damage * (1 - (float)_stat.DamageReduction.GetValue() / 100 * 1f));
+
+        _damage = Mathf.Clamp(_damage,1,int.MaxValue);
 
         var fx = _stat.GetComponent<Unit>().fx;
         if (fx != null)
@@ -64,6 +71,27 @@ public class UnitStats : MonoBehaviour
 
         DecreaseHealth(_stat, _damage);
     }
+    public void TakeHealing(UnitStats _stats, float _value)
+    {
+        if (!_stats.isInjured)
+        {
+            return;
+        }
+
+        int healValue = Mathf.FloorToInt(_stats.GetMaxHealthValue() * _value);
+        if (healValue + _stats.CurrentHealth >= _stats.GetMaxHealthValue())
+        {
+            healValue = _stats.GetMaxHealthValue() - _stats.CurrentHealth;
+        }
+        _stats.CurrentHealth += healValue;
+        if (_stats.CurrentHealth >= _stats.GetMaxHealthValue())
+        {
+            _stats.CurrentHealth = _stats.GetMaxHealthValue();
+        }
+        _stats.onHealthChanged?.Invoke();
+
+        PopupDamageFont(_stats,healValue);
+    }
 
     private void PopupDamageFont(UnitStats _stat, int _damage, int _fontSize = 6)
     {
@@ -71,25 +99,25 @@ public class UnitStats : MonoBehaviour
             return;
 
         switch (damageType)
-            {
-                case DamageType.Physical:
-                    fontColor = Color.white;
-                    break;
-                case DamageType.Explosion:
-                    fontColor = Color.red;
-                    break;
-                case DamageType.Healing:
-                    fontColor = Color.green;
-                    break;
-                case DamageType.Lighting:
-                    fontColor = Color.yellow;
-                    break;
-                default:
-                    fontColor = Color.white;
-                    break;
-            }
+        {
+            case DamageType.Physical:
+                fontColor = Color.white;
+                break;
+            case DamageType.Explosion:
+                fontColor = Color.red;
+                break;
+            case DamageType.Healing:
+                fontColor = Color.green;
+                break;
+            case DamageType.Magical:
+                fontColor = Color.magenta;
+                break;
+            default:
+                fontColor = Color.white;
+                break;
+        }
 
-        GameObject newFont = Instantiate(DamageFont);
+        GameObject newFont = GameObjectPool.Get().GetFromPool(GameManager.Get().damageFont.name);
         newFont.GetComponent<DamageFontUI>().SetFontValue(_damage, _fontSize, _stat.transform.position, fontColor, _stat.GetComponent<CapsuleCollider2D>().size.x * .5f);
     }
 
@@ -98,7 +126,7 @@ public class UnitStats : MonoBehaviour
         if (_damage <= 0)
             return;
 
-        GameObject newFont = Instantiate(DamageFont);
+        newFont = GameObjectPool.Get().GetFromPool(GameManager.Get().damageFont.name);
         newFont.GetComponent<DamageFontUI>().SetFontValue(_damage, _fontSize, _stat.transform.position, _color, _stat.GetComponent<CapsuleCollider2D>().size.x * .5f);
     }
 

@@ -14,6 +14,12 @@ public class SheepUnit : HumanoidUnit, IResouceUnit
 
     public bool HasAssignedWorker => Target != null;
 
+    protected override void Start()
+    {
+        base.Start();
+        lastTimeMoved = Time.time;
+    }
+
     protected override void UpdateBehaviour()
     {
         if (Time.time - lastTimeMoved >= MoveFrequency)
@@ -86,8 +92,11 @@ public class SheepUnit : HumanoidUnit, IResouceUnit
         yield return new WaitForSeconds(1.5f);
         AudioManager.Get().PlaySFX(32);
         var worker = Target.GetComponent<WorkerUnit>();
-        worker.TransportResource(0, meatAmount * 50, 0);
-        worker.UpdateWorkerTask(WorkerTask.Trasporting);
+        if (worker != null)
+        {
+            worker.TransportResource(0, meatAmount * 50, 0,0);
+            worker.UpdateWorkerTask(WorkerTask.Trasporting);
+        }
     }
 
     public void AssignWorker(WorkerUnit _worker) => AssignTarget(_worker);

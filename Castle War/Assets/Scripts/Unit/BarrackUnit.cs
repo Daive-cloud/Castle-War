@@ -1,4 +1,5 @@
 using DG.Tweening;
+using DG.Tweening.Core.Easing;
 using TMPro;
 using UnityEngine;
 
@@ -11,34 +12,47 @@ public enum BarrackType
 public class BarrackUnit : StructureUnit
 {
     [Header("Generate Resources")]
-    [SerializeField] private BarrackType barrackType = BarrackType.Knight; 
+    [SerializeField] private BarrackType barrackType = BarrackType.Knight;
     [SerializeField] private GameObject woodImagePrefab;
     [SerializeField] private GameObject meatImagePrefab;
+    [SerializeField] private int ProductionAmount;
     [SerializeField] private float ProductionFrequency;
-    private float Timer;
+    private float ProductionTimer;
+    private GameObjectPool pool;
+    protected override void Start()
+    {
+        base.Start();
+        ProductionTimer = Time.time;
+        pool = GameObjectPool.Get();
+    }
 
     protected override void UpdateBehaviour()
     {
         base.UpdateBehaviour();
 
-        if (Time.time - Timer >= ProductionFrequency && CompareTag("BlueUnit") && IsCompleted)
+        if (Time.time - ProductionTimer >= ProductionFrequency && CompareTag("BlueUnit") && IsCompleted && !IsDead)
         {
-            Timer = Time.time;
+            ProductionTimer = Time.time;
             GameObject newImage = null;
-            int amount = 20 * FindCastleCount();
+            int amount = ProductionAmount * FindCastleCount();
             if (barrackType == BarrackType.Knight)
             {
-                newImage = Instantiate(woodImagePrefab, transform.position + new Vector3(0, 1, 0), Quaternion.identity);
+                newImage = pool.GetFromPool(woodImagePrefab.name);
                 m_GameManager.WoodAmount += amount;
+                EventCenter.Instance.EventTrigger("WoodProduction", amount);
             }
             else
             {
-                newImage = Instantiate(meatImagePrefab, transform.position + new Vector3(0, 1, 0), Quaternion.identity);
+                newImage = pool.GetFromPool(meatImagePrefab.name);
                 m_GameManager.MeatAmount += amount;
+                EventCenter.Instance.EventTrigger("MeatProduction", amount);
             }
-            newImage.GetComponentInChildren<TextMeshProUGUI>().text = "+ " + amount.ToString();
+            BounceEffect();
+            newImage.transform.position = transform.position + new Vector3(0, 1, 0);
+            newImage.transform.rotation = Quaternion.identity;
 
-            newImage.transform.DOMove(newImage.transform.position + new Vector3(0, 2, 0), 1f).SetEase(Ease.Linear).OnComplete(() => Destroy(newImage.gameObject));
+            newImage.GetComponentInChildren<TextMeshProUGUI>().text = "+ " + amount.ToString();
+            newImage.transform.DOMove(newImage.transform.position + new Vector3(0, 2, 0), .8f).SetEase(Ease.Linear).OnComplete(() => OnPopUpImage(newImage));
 
             m_GameManager?.onResourcesChanged?.Invoke();
             AudioManager.Get().PlaySFX(31);
@@ -49,5 +63,11 @@ public class BarrackUnit : StructureUnit
         base.UnselectedUnit();
 
         m_GameManager.CancleTraining();
+    }
+    
+    private void OnPopUpImage(GameObject _image)
+    {
+        var name = _image.name.Replace("(Clone)", "");
+        GameObjectPool.Get().ReturnToPool(name,_image);
     }
 }

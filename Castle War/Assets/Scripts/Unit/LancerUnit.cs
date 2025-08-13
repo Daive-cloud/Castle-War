@@ -36,10 +36,6 @@ public class LancerUnit : HumanoidUnit
                     MoveToDestination(Target.transform.position);
                 }
             }
-            else
-            {
-                ResetAnimation();
-            }
         }
     }
 
@@ -55,7 +51,7 @@ public class LancerUnit : HumanoidUnit
         JudgeAngleToAttack(angle);
     }
 
-    private void ResetAnimation()
+    public void ResetAnimation()
     {
         anim.SetBool("Horizontal", false);
         anim.SetBool("Top", false);
@@ -133,8 +129,32 @@ public class LancerUnit : HumanoidUnit
             {
                 angle = -90;
             }
-            var targetPosX = pos.x + Mathf.Cos(angle) * 2f * direction;
-            var targetPosY = pos.y + Mathf.Sin(angle) * 2f;
+
+            float targetPosX = pos.x;
+            float targetPosY = pos.y;
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    targetPosX = pos.x + Mathf.Cos(angle) * i * direction;
+                    targetPosY = pos.y + Mathf.Sin(angle) * j;
+                    var tempNode = TilemapManager.Get().FindNode(new Vector3(targetPosX, targetPosY, 0));
+                    if (!TilemapManager.Get().CanWalkAtTile(new Vector3Int(tempNode.ButtomX, tempNode.ButtomY)))
+                    {
+                        if (i == 0 || j == 0)
+                        {
+                            targetPosX = pos.x;
+                            targetPosY = pos.y;
+                            goto Endloop;
+                        }
+                        targetPosX = pos.x + Mathf.Cos(angle) * (i - 1) * direction;
+                        targetPosY = pos.y + Mathf.Sin(angle) * (j - 1);
+                        goto Endloop;
+                    }
+                    
+                }
+            }
+            Endloop:
             Vector2 targetPos = new Vector2(targetPosX, targetPosY);
 
             var node = TilemapManager.Get().FindNode(targetPos);
@@ -167,5 +187,35 @@ public class LancerUnit : HumanoidUnit
     public override void PlaySelectedSound()
     {
         AudioManager.Get().PlaySFX(40);
+    }
+
+    public override void FindClosestEnemyInRange()
+    {
+        base.FindClosestEnemyInRange();
+
+        if (Target != null)
+        {
+            float distance = Vector2.Distance(transform.position, Target.transform.position);
+            if (distance > AttackCheckRadius)
+            {
+                ResetAnimation();
+            }
+        }
+        else
+        {
+            ResetAnimation();
+        }
+        
+    }
+
+    public override void FindClosestEnemyWithoutRange()
+    {
+        base.FindClosestEnemyWithoutRange();
+
+        float distance = Vector2.Distance(transform.position, Target.transform.position);
+        if (distance > AttackCheckRadius)
+        {
+            ResetAnimation();
+        }
     }
 }

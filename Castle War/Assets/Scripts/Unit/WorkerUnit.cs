@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using IUnit;
+using System.Collections;
 
 public enum WorkerTask
 {
@@ -28,16 +29,21 @@ public class WorkerUnit : HumanoidUnit
     private int meatCount;
     [SerializeField] private Sprite GoldIcon;
     private int goldCount;
+    [SerializeField] private Sprite CrystalIcon;
+    private int crystalCount;
     private GoldMinerUnit lastEnteredMiner;
     private bool IsTransportGold = false;
     private bool IsTransportMeat = false;
     private bool IsTransportWood = false;
+    public bool IsDiggedCrystal;
 
     protected override void Start()
     {
         base.Start();
         TaskUI.gameObject.SetActive(false);
         ResourceUI.gameObject.SetActive(false);
+
+        onArrivedDestination += ArriveDestination;
     }
 
     protected override void Update()
@@ -56,44 +62,13 @@ public class WorkerUnit : HumanoidUnit
         }
     }
 
-    protected override void UpdateBehaviour()
-    {
-        if (Time.time - CheckTimer >= CheckFrequency)
-        {
-            CheckTimer = Time.time;
-            //Debug.Log($"Has Assigned Target : {HasRegisteredTarget}");
-            if (HasRegisteredTarget)
-                MoveToDestination(Target.transform.position);
-
-            if (IsTargetDetected())
-            {
-                if (currentTask == WorkerTask.Building)
-                {
-                    anim.SetBool("Build", true);
-                    StartBuildingProcess(Target as StructureUnit);
-                }
-                else if (currentTask == WorkerTask.Chopping || currentTask == WorkerTask.Killing)
-                {
-                    anim.SetBool("Chop", true);
-                }
-                else if (currentTask == WorkerTask.Mining)
-                {
-                    (Target as GoldMinerUnit).EnterMiner(this);
-                }
-                else if (currentTask == WorkerTask.Trasporting)
-                {
-                    FinishTransportResources();
-                }
-
-            }
-
-        }
-    }
-
     private void FinishTransportResources()
     {
         HideResourceUI();
         ResetAnimation();
+        if(HasRegisteredTarget)
+            (Target as StructureUnit).BounceEffect();
+            
         if (IsTransportWood)
         {
             m_GameManager.CollectWood(woodCount, Target.transform.position + new Vector3(0, 1f, 0));
@@ -102,6 +77,7 @@ public class WorkerUnit : HumanoidUnit
             {
                 UpdateWorkerTask(WorkerTask.Chopping);
             }
+            EventCenter.Instance.EventTrigger("WoodProduction", woodCount);
         }
         else if (IsTransportMeat)
         {
@@ -111,16 +87,28 @@ public class WorkerUnit : HumanoidUnit
             {
                 UpdateWorkerTask(WorkerTask.Killing);
             }
+            EventCenter.Instance.EventTrigger("MeatProduction", meatCount);
         }
         else if (IsTransportGold)
         {
-            m_GameManager.CollectGold(goldCount, Target.transform.position + new Vector3(0, 1f, 0));
+            if (IsDiggedCrystal)
+                m_GameManager.CollectCrystal(crystalCount, Target.transform.position + new Vector3(0, 1f, 0));
+            else
+                m_GameManager.CollectGold(goldCount, Target.transform.position + new Vector3(0, 1f, 0));
+
             if (lastEnteredMiner != null)
             {
-                AssignTarget(lastEnteredMiner);
+                StartCoroutine(EnterGoldMinerWithDelay());
             }
             UpdateWorkerTask(WorkerTask.Mining);
+            EventCenter.Instance.EventTrigger("GoldProduction", goldCount);
         }
+    }
+
+    private IEnumerator EnterGoldMinerWithDelay()
+    {
+        yield return new WaitForFixedUpdate();
+        AssignTarget(lastEnteredMiner);
     }
 
     public void StartBuildingProcess(StructureUnit _structure)
@@ -181,9 +169,23 @@ public class WorkerUnit : HumanoidUnit
     }
 
     #region Override Methods
+
+    public override void AssignTarget(Unit _unit)
+    {
+        base.AssignTarget(_unit);
+        if (_unit.TryGetComponent(out GoldMinerUnit _))
+        {
+            var offset = sr.bounds.size.y * .5f;
+            MoveToDestination(_unit.transform.position, Vector2.down * offset);
+        }
+        else
+        {
+            MoveToDestination(_unit.transform.position);
+        }
+    }
     public override void UnassignTarget()
     {
-//        Debug.Log("Uassing Target.");
+        //        Debug.Log("Uassing Target.");
         if (Target != null && Target.TryGetComponent(out StructureUnit _))
         {
             Target.GetComponent<StructureUnit>().UnassignWorker(this);
@@ -229,58 +231,29 @@ public class WorkerUnit : HumanoidUnit
     }
 
     #endregion
-    public bool IsTargetDetected()
+  
+    private void ArriveDestination()
     {
-        if (!HasRegisteredTarget)
-            return false;
-
-        var distance = Vector2.Distance(Target.transform.position, transform.position);
-        if (Target.TryGetComponent(out StructureUnit structure))
-        {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, ObjectCheckRadius);
-            bool flag = colliders.ToList().Contains(structure.GetComponent<CapsuleCollider2D>());
-
-            if (structure.TryGetComponent(out CastleUnit _))
+         if (currentTask == WorkerTask.Building)
             {
-                return flag;
+                anim.SetBool("Build", true);
+                StartBuildingProcess(Target as StructureUnit);
             }
-            else if (structure.TryGetComponent(out GoldMinerUnit _) && currentTask == WorkerTask.Mining)
+            else if (currentTask == WorkerTask.Chopping || currentTask == WorkerTask.Killing)
             {
-                if (distance < ObjectCheckRadius * 1.5f)
-                {
-                    //                    Debug.Log("Switch Find Way");
-                    ai.SwitchFindWayType(FindPathType.Direct);
-                    if (distance < ObjectCheckRadius * .6f)
-                    {
-                        ai.SwitchFindWayType(FindPathType.A_Star);
-                        return true;
-                    }
-                    return false;
-                }
-                else
-                {
-                    return false;
-                }
+                FlipController(Target.transform.position);
+                anim.SetBool("Chop", true);
             }
-            else if (structure.IsCompleted)
+            else if (currentTask == WorkerTask.Mining)
             {
-                UnassignTarget();
-                return false;
+                (Target as GoldMinerUnit).EnterMiner(this);
             }
-            return flag;
-        }
-        else if (Target.TryGetComponent(out TreeUnit tree))
-        {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, ObjectCheckRadius);
-            bool flag = colliders.ToList().Contains(tree.GetComponent<CapsuleCollider2D>());
-
-            return flag;
-        }
-
-        return distance < ObjectCheckRadius;
+            else if (currentTask == WorkerTask.Trasporting)
+            {
+                FinishTransportResources();
+            }
     }
     #endregion
-
     private void ResetTransportState()
     {
         IsTransportGold = false;
@@ -296,7 +269,7 @@ public class WorkerUnit : HumanoidUnit
         anim.SetBool("Transport", false);
     }
 
-    public void TransportResource(int _woodCount, int _meatCount, int _goldCount)
+    public void TransportResource(int _woodCount, int _meatCount, int _goldCount, int _crystalCount)
     {
         var castle = FindMainCastle();
         if (castle != null)
@@ -308,6 +281,7 @@ public class WorkerUnit : HumanoidUnit
         woodCount = _woodCount;
         meatCount = _meatCount;
         goldCount = _goldCount;
+        crystalCount = _crystalCount;
     }
 
     private CastleUnit FindMainCastle() => FindObjectsOfType<CastleUnit>().Where(unit => !unit.IsDead && unit.CompareTag(this.tag) && unit.IsCompleted).FirstOrDefault();
@@ -317,7 +291,7 @@ public class WorkerUnit : HumanoidUnit
         var resources = FindObjectsOfType<T>().Where(unit => !unit.IsDead && !unit.HasAssignedWorker && unit.TryGetComponent(out T _));
         T closestUnit = null;
         float closestDistance = Mathf.Infinity;
-        //  Debug.Log($"Start Distance : {closestDistance}");
+
         foreach (var unit in resources)
         {
             float distance = Vector2.Distance(transform.position, unit.transform.position);
@@ -331,16 +305,20 @@ public class WorkerUnit : HumanoidUnit
         if (closestUnit != null)
         {
             closestUnit.AssignWorker(this);
-            AssignTarget(closestUnit as Unit);
+            StartCoroutine(FindTargetWithDelay(closestUnit as Unit));
         }
         else
         {
-//            Debug.Log("Not Found Target");
             UnassignTarget();
             UpdateWorkerTask(WorkerTask.None);
         }
+    }
 
-       // Debug.Log($"Target : {Target}");
+    private IEnumerator FindTargetWithDelay(Unit _unit)
+    {
+        yield return new WaitForFixedUpdate();
+
+        AssignTarget(_unit);
     }
 
     private void ShowResourceIcon()
@@ -355,7 +333,10 @@ public class WorkerUnit : HumanoidUnit
                 ResourceUI.sprite = MeatIcon;
                 break;
             case WorkerTask.Mining:
-                ResourceUI.sprite = GoldIcon;
+                if (IsDiggedCrystal)
+                    ResourceUI.sprite = CrystalIcon;
+                else
+                    ResourceUI.sprite = GoldIcon;
                 break;
             default:
                 return;
@@ -364,5 +345,5 @@ public class WorkerUnit : HumanoidUnit
     
     private void HideResourceUI() =>  ResourceUI.gameObject.SetActive(false);
 
-    public void RecordLastGoldMiner(GoldMinerUnit _goldMiner) => lastEnteredMiner = _goldMiner;
+    public void RecordLastEnteredGoldMiner(GoldMinerUnit _goldMiner) => lastEnteredMiner = _goldMiner;
 }

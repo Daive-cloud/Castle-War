@@ -19,7 +19,7 @@ public class WarriorUnit : HumanoidUnit
                     {
                         AttackTimer = Time.time;
                         ComboCounter %= 2;
-                        AttackEnemyInRange();
+                        AdjustAttackAngle();
                     }
                 }
                 else
@@ -30,7 +30,7 @@ public class WarriorUnit : HumanoidUnit
         }
     }
 
-    private void AttackEnemyInRange()
+    private void AdjustAttackAngle()
     {
         if (Mathf.Abs(Target.transform.position.y - transform.position.y) > 1f)
         {

@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50926536d9d69c94dbfc4dd2fd111ee7, type: 3}
   m_Name: "\u5C71\u811A\u51B2\u7A81"
   m_EditorClassIdentifier: 
-  MapImage: {fileID: 21300000, guid: efe3474a3cbea9a4d8bb9e422a13e306, type: 3}
+  MapImage: {fileID: 21300000, guid: e2a2ab88b34d81c4696bea65d1389bab, type: 3}
   MapName: "\u5C71\u811A\u51B2\u7A81"
-  Description: "\u5C71\u5934\u7684\u4F4D\u7F6E\u597D,\u5C71\u811A\u7684\u8D44\u6E90\u4E30\u5BCC,\u95EA\u7535\u6218\u9009\u5C71\u5934,\u6301\u4E45\u6218\u9009\u5C71\u811A"
+  Description: "\u5C71\u5934\u7684\u5730\u7406\u4F4D\u7F6E\u597D,\u5C71\u811A\u7684\u8D44\u6E90\u4E30\u5BCC"
   PlayerPositions:
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
+  - {x: 0, y: 36}
+  - {x: 0, y: 60}

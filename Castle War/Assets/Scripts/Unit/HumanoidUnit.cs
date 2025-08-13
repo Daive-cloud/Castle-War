@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class HumanoidUnit : Unit
 {
@@ -20,7 +21,9 @@ public class HumanoidUnit : Unit
     [SerializeField] protected float AttackFrequency;
     protected float AttackTimer;
     public List<Unit> Enemies = new List<Unit>();
-
+    protected bool isSelected;
+    protected bool isMoving;
+    public UnityAction onArrivedDestination;
     public Unit Target;
     public bool HasRegisteredTarget
     {
@@ -51,15 +54,25 @@ public class HumanoidUnit : Unit
         m_Velocity = (transform.position - m_LastPosition).magnitude;
         m_LastPosition = transform.position;
 
-        bool state = m_Velocity > 0;
+        isMoving = m_Velocity > 0;
         if (anim != null)
-            anim.SetBool("Move", state);
+            anim.SetBool("Move", isMoving);
     }
 
     public virtual void MoveToDestination(Vector2 _position)
     {
+//        Debug.Log("Move To destination");
         Vector3 position = new Vector3(_position.x, _position.y, transform.position.z);
-        ai.RegisterDestination(position);
+        if(ai != null)
+            ai.RegisterDestination(position);
+        FlipController(position);
+    }
+
+    public virtual void MoveToDestination(Vector2 _position, Vector2 _offset)
+    {
+         Vector3 position = new Vector3(_position.x + _offset.x, _position.y + _offset.y, transform.position.z);
+        if(ai != null)
+            ai.RegisterDestination(position);
         FlipController(position);
     }
 
@@ -80,6 +93,17 @@ public class HumanoidUnit : Unit
         return Mathf.Abs(_position.x - transform.position.x) > .2f;
     }
 
+    public override void SelectedUnit()
+    {
+        base.SelectedUnit();
+        isSelected = true;
+    }
+
+    public override void UnselectedUnit()
+    {
+        base.UnselectedUnit();
+        isSelected = false;
+    }
     protected void Flip()
     {
         IsFacingRight = !IsFacingRight;
@@ -146,14 +170,14 @@ public class HumanoidUnit : Unit
         anim.SetBool("Attack_Down", false);
     }
 
-    public void AnimationFinishTrigger_3()
+    public virtual void AnimationFinishTrigger_3()
     {
         anim.SetBool("Attack", false);
     }
 
-    public void FindClosestEnemyInRange()
+    public virtual void FindClosestEnemyInRange()
     {
-        if (Target != null)
+        if (Target != null || (isSelected && isMoving))
         {
             return;
         }
@@ -180,7 +204,14 @@ public class HumanoidUnit : Unit
         }
     }
 
-    public void FindClosestEnemyWithoutRange()
+    public virtual void FindFriendlyForce()
+    {
+        Enemies = m_GameManager.RegisteredUnits.Where(unit => unit != null && !unit.IsDead && unit.tag == this.tag && unit.stats.isInjured).ToList();
+
+        Target = Enemies.FirstOrDefault();
+    }
+
+    public virtual void FindClosestEnemyWithoutRange()
     {
         Enemies = new();
         if (m_GameManager != null && m_GameManager.RegisteredUnits.Count > 0)

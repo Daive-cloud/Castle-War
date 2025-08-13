@@ -5,12 +5,14 @@ using DG.Tweening;
 using TMPro;
 using UnityEditor;
 using Unity.VisualScripting;
+using Unity.Collections;
 
 public class ResourcesUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI WoodAmount;
     [SerializeField] private TextMeshProUGUI GoldAmount;
     [SerializeField] private TextMeshProUGUI MeatAmount;
+    [SerializeField] private TextMeshProUGUI CrystalAmount;
 
     private GameManager m_GameManager;
 
@@ -32,6 +34,9 @@ public class ResourcesUI : MonoBehaviour
 
         DOTween.To(() => int.Parse(MeatAmount.text.Replace(",", "")), x => { MeatAmount.text = x.ToString("N0"); },
                                     m_GameManager.MeatAmount, .5f).SetEase(Ease.InQuad);
+                                    
+        DOTween.To(() => int.Parse(CrystalAmount.text.Replace(",", "")), x => { CrystalAmount.text = x.ToString("N0"); },
+                                    m_GameManager.CrystalAmount, .5f).SetEase(Ease.InQuad);
     }
 
     private void InitializeResourcesValue()
@@ -39,6 +44,7 @@ public class ResourcesUI : MonoBehaviour
         WoodAmount.text = m_GameManager.WoodAmount.ToString("N0");
         GoldAmount.text = m_GameManager.GoldAmount.ToString("N0");
         MeatAmount.text = m_GameManager.MeatAmount.ToString("N0");
+        CrystalAmount.text = m_GameManager.CrystalAmount.ToString("N0");
     }
 
 }

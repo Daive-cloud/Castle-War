@@ -17,5 +17,5 @@ MonoBehaviour:
   m_UnitPrefab: {fileID: 6017765085285212632, guid: d05f4e2d133ac8e4cad25ed4a4936fd8, type: 3}
   m_GoldCost: 0
   m_MeatCost: 0
-  m_TrainingTime: 24
+  m_TrainingTime: 10
   m_UnitType: 1

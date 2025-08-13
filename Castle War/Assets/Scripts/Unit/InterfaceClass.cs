@@ -6,7 +6,9 @@ namespace IUnit
     {
         wood,
         meat,
-        gold
+        gold,
+        crystal,
+        army
     }
     public interface IResouceUnit
     {

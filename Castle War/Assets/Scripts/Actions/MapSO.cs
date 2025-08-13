@@ -7,6 +7,7 @@ public class MapSO : ScriptableObject
 {
     public Sprite MapImage;
     public string MapName;
+    public string MapID = System.Guid.NewGuid().ToString();
     public string Description;
     public List<Vector2> PlayerPositions;
     public int PlayerCount => PlayerPositions.Count;

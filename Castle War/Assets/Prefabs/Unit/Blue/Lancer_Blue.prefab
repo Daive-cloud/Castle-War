@@ -227,7 +227,7 @@ MonoBehaviour:
   HealthBar: {fileID: 6453763298907862510}
   ObjectCheckRadius: 8
   AttackCheckRadius: 2.3
-  AttackFrequency: 1.5
+  AttackFrequency: 2
   Enemies: []
   Target: {fileID: 0}
 --- !u!114 &1750891074733368742

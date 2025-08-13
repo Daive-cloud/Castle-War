@@ -29,7 +29,6 @@ public class HvoUtils
     public static bool IsPointerDown() => Input.touchCount > 0 ? Input.GetTouch(0).phase == TouchPhase.Began : Input.GetMouseButtonDown(0);
     public static bool IsPointerPress() => Input.touchCount > 0 ? Input.GetTouch(0).phase == TouchPhase.Moved : Input.GetMouseButton(0);
     public static bool IsPointerUp() => Input.touchCount > 0 ? Input.GetTouch(0).phase == TouchPhase.Ended : Input.GetMouseButtonUp(0);
-    public static bool IsCancleSelect() => Input.touchCount > 0 ? Input.touchCount > 1 && Input.GetTouch(0).phase == TouchPhase.Ended : Input.GetMouseButtonUp(1);
     public static Vector3 GetPointerPositoin() => Input.touchCount > 0 ? Input.GetTouch(0).position : Input.mousePosition;
 
     public static int ComputeTrainingTime(int _barrackCount, float _maxTime, float _minTime)

@@ -3,6 +3,7 @@ using DG.Tweening;
 using System.Runtime.InteropServices;
 using System.Linq;
 using Unity.VisualScripting;
+using System.Collections;
 
 public class GrenadeController : MonoBehaviour
 {
@@ -12,23 +13,25 @@ public class GrenadeController : MonoBehaviour
     [SerializeField] private float duration = 1f;
     [SerializeField] private float blastRadius = 1f;
     private Tween rotateTween;
+    private Tween pathTween;
     private Unit owner;
 
     public void ThrowAnimation(Vector3 _startPos, Vector3 _endPos, Unit _owner)
     {
         transform.position = _startPos;
         owner = _owner;
+        ResetTween();
 
         rotateTween = transform.DORotate(new Vector3(0, 0, 360f), 0.15f, RotateMode.FastBeyond360)
-                                .SetLoops(-1, LoopType.Restart)
-                                .SetEase(Ease.Linear);
+                            .SetLoops(-1, LoopType.Restart)
+                            .SetEase(Ease.Linear);
 
         Vector3 midPoint = (_startPos + _endPos) * .5f;
         midPoint.y += arcHeight;
 
         Vector3[] path = new Vector3[] { _startPos, midPoint, _endPos };
 
-        transform.DOPath(path, duration, PathType.CatmullRom)
+        pathTween = transform.DOPath(path, duration, PathType.CatmullRom)
                         .SetEase(Ease.Linear)
                         .OnComplete(() => OnHitTarget());
 
@@ -37,15 +40,32 @@ public class GrenadeController : MonoBehaviour
     private void OnHitTarget()
     {
         rotateTween.Kill();
+        pathTween.Kill();
+
         AudioManager.Get().PlaySFX(8);
         anim.SetTrigger("Boom");
         DoDamage();
-        Destroy(gameObject, 2f);
+    }
+
+    private void ResetTween()
+    {
+        if (rotateTween != null)
+        {
+            rotateTween.Kill();
+            rotateTween = null;
+        }
+
+        if (pathTween != null)
+        {
+            pathTween.Kill();
+            pathTween = null;
+        }
+        transform.DOKill();
     }
 
     private void DoDamage()
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position,blastRadius);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, blastRadius);
         var vaildUnits = colliders.ToList().Where(unit => unit != null && unit.TryGetComponent(out Unit _) && unit.tag != owner.tag);
         foreach (var unit in vaildUnits)
         {
@@ -59,6 +79,25 @@ public class GrenadeController : MonoBehaviour
             }
         }
     }
-    
+
+    private void ReturnToPool() => StartCoroutine(ReturnToPoolCoroutine());
+
+    private IEnumerator ReturnToPoolCoroutine()
+    {
+        var trail = GetComponent<TrailRenderer>();
+        var sr = GetComponent<SpriteRenderer>();
+        sr.enabled = false;
+
+        yield return new WaitForSeconds(trail.time);
+        sr.enabled = true;
+        var firecraker = gameObject.name.Replace("(Clone)", "");
+        GameObjectPool.Get().ReturnToPool(firecraker, gameObject);
+    }
+
+    void OnDisable()
+    {
+        ResetTween();
+    }
+
 
 }

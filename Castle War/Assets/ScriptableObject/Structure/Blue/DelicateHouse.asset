@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdb84294578037243bc5a3d40925b25b, type: 3}
+  m_Name: DelicateHouse
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 21300000, guid: c2c45693ce377ae49a0ee4dd99ec8a1b, type: 3}
+  ID: def962f1-66d0-42e0-a09e-c89efd7b1a36
+  m_FoundationSprite: {fileID: 21300000, guid: 81674510ef22d7a4181100f9a10f4352, type: 3}
+  m_CompletionSprite: {fileID: 21300000, guid: c2c45693ce377ae49a0ee4dd99ec8a1b, type: 3}
+  m_StructurePrefab: {fileID: 5461258051027153209, guid: 63eb285558f97a94dbd598d3d6773fda, type: 3}
+  m_GoldCost: 0
+  m_WoodCost: 3600
+  m_CrystalCost: 100
+  m_BuildingSize: {x: 2, y: 2, z: 0}
+  m_BuildingOffset: {x: -1, y: -1, z: 0}

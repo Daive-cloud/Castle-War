@@ -148,7 +148,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1942013991
   m_SortingLayer: 1
-  m_SortingOrder: 5
+  m_SortingOrder: 0
   m_Sprite: {fileID: 1889362157, guid: 1442398a5d191ce4d83176fe5ab5d954, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -342,7 +342,7 @@ MonoBehaviour:
   Actions: []
   CheckFrequency: 0
   IsDead: 0
-  HealthBar: {fileID: 6840675266207938028}
+  HealthBar: {fileID: 9100434479404086930}
   woodPrefab: {fileID: 6768936061606965065, guid: 20afe5444901a12479fc94bd8d861c22, type: 3}
 --- !u!114 &4949527880057806136
 MonoBehaviour:
@@ -368,8 +368,10 @@ MonoBehaviour:
   CritChance:
     baseValue: 0
     modifiers: 
+  DamageReduction:
+    baseValue: 0
+    modifiers: 
   CurrentHealth: 0
-  DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
   damageType: 0
   LevelUpPrefab: {fileID: 0}
   LevelUI: {fileID: 0}

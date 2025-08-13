@@ -29,19 +29,19 @@ public class ArrowController : MonoBehaviour
         {
             Owner.stats.TakeDamage(Target.GetComponent<UnitStats>());
             AudioManager.Get().PlaySFX(10);
-            Destroy(gameObject);
+            StartCoroutine(ReturnToPool());
         }
         else
         {
-            StartCoroutine(DestroyWithDelay());
+            StartCoroutine(GCWithDelay());
         }
     }
 
-    private IEnumerator DestroyWithDelay()
+    private IEnumerator GCWithDelay()
     {
-//        Debug.Log($"target transform : {_target.transform.position} , arrow transform : {transform.position}");
+        //        Debug.Log($"target transform : {_target.transform.position} , arrow transform : {transform.position}");
         var direction = (transform.position - Owner.transform.position).normalized;
-        Debug.Log($"direction : {direction}");
+        //        Debug.Log($"direction : {direction}");
         float timer = 0f;
         while (timer < 2f)
         {
@@ -49,7 +49,19 @@ public class ArrowController : MonoBehaviour
             timer += Time.deltaTime;
             yield return null;
         }
-        Destroy(gameObject);
+        ReturnToPool();
+    }
+
+    private IEnumerator ReturnToPool()
+    {
+        var trail = GetComponent<TrailRenderer>();
+        var sr = GetComponent<SpriteRenderer>();
+        sr.enabled = false;
+
+        yield return new WaitForSeconds(trail.time);
+        sr.enabled = true;
+        var arrow = gameObject.name.Replace("(Clone)","");
+        GameObjectPool.Get().ReturnToPool(arrow,gameObject);
     }
 
 }

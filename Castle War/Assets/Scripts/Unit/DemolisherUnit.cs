@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class DemolisherUnit : HumanoidUnit
 {
-    [Header("Firecraker")]
-    [SerializeField] private GameObject FirecrakerPrefab;
-
     protected override void UpdateBehaviour()
     {
         if (Time.time - CheckTimer >= CheckFrequency)
@@ -30,7 +27,7 @@ public class DemolisherUnit : HumanoidUnit
                 }
                 else
                 {
-                    if(Target != null)
+                    if(Target != null && !TryGetComponent(out TowerUnit _))
                         MoveToDestination(Target.transform.position);
                 }
             }
@@ -40,11 +37,9 @@ public class DemolisherUnit : HumanoidUnit
     public void ThrowFirecraker()
     {
         AudioManager.Get().PlaySFX(12);
-        var grenade = Instantiate(FirecrakerPrefab);
+        var grenade = GameObjectPool.Get().GetFromPool(GameManager.Get().firecraker.name);
         if (Target != null)
             grenade.GetComponent<GrenadeController>().ThrowAnimation(transform.position, Target.transform.position, this);
-        else
-            Destroy(grenade.gameObject);
     }
 
     public override void PlayDeathSound()

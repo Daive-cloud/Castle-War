@@ -20,6 +20,7 @@ public class EnemyAIEditor : EditorWindow
 
     private List<TrainingActionSO> availableTrainings = new();
     private Dictionary<TrainingActionSO, int> trainingSelectionCounts = new();
+   // private float Timer = 0;
 
     [MenuItem("Tools/Enemy AI Creator")]
     public static void ShowWindow()
@@ -173,7 +174,7 @@ public class EnemyAIEditor : EditorWindow
             ResetConfig();
             return;
         }
-
+//        Timer = config.TrainingActions.
 
         AssetDatabase.CreateAsset(config, fullPath);
         AssetDatabase.SaveAssets();

@@ -64,7 +64,8 @@ public class TreeUnit : Unit , IResouceUnit
         AudioManager.Get().PlaySFX(32);
         if (worker != null)
         {
-            worker.TransportResource(woodAmount * 50,0,0);
+            worker.GetComponent<AI>().SwitchFindWayType(FindPathType.A_Star);
+            worker.TransportResource(woodAmount * 50,0,0,0);
             worker.UpdateWorkerTask(WorkerTask.Trasporting);
         }
     }

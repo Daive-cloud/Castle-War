@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class ArcherUnit : HumanoidUnit
 {
-    [Header("Arrow Prefab")]
-    [SerializeField] private GameObject ArrowPrefab;
     protected override void UpdateBehaviour()
     {
         if (Time.time - CheckTimer >= CheckFrequency)
@@ -30,7 +28,8 @@ public class ArcherUnit : HumanoidUnit
                 }
                 else
                 {
-                    MoveToDestination(Target.transform.position);
+                    if(Target != null && !TryGetComponent(out TowerUnit _))
+                        MoveToDestination(Target.transform.position);
                 }
             }
 
@@ -83,7 +82,10 @@ public class ArcherUnit : HumanoidUnit
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             Quaternion rotation = Quaternion.Euler(0, 0, angle);
 
-            GameObject newArrow = Instantiate(ArrowPrefab, transform.position, rotation);
+            GameObject newArrow = GameObjectPool.Get().GetFromPool(GameManager.Get().arrow.name);
+            newArrow.transform.position = transform.position;
+            newArrow.transform.rotation = rotation;
+            
             newArrow.GetComponent<ArrowController>().RegisterArrow(this, Target);
             AudioManager.Get().PlaySFX(9);
         }

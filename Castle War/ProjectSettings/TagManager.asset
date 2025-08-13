@@ -13,6 +13,8 @@ TagManager:
   - AudioManager
   - SettingsManager
   - Sheep
+  - GameObjectPool
+  - SaveManager
   layers:
   - Default
   - TransparentFX

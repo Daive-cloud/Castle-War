@@ -3,13 +3,17 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.Tilemaps;
 using System.Net;
+using System.Linq;
+using DG.Tweening.Core.Easing;
 
 public class CastleUnit : StructureUnit
 {
     [Header("Generate Resource")]
     [SerializeField] private GameObject goldImagePrefab;
+    [SerializeField] private int BaseProductionAmount;
+    [SerializeField] private int AddProductionAmount;
     [SerializeField] private float ProductionFrequency;
-    private float Timer;
+    private float ProductionTimer;
     [SerializeField] private Tile placementTile;
 
     protected override void Start()
@@ -18,22 +22,25 @@ public class CastleUnit : StructureUnit
 
         if (CompareTag("BlueUnit") && !IsDead)
         {
-            SetTile();
+            SetTile(transform);
         }
+        ProductionTimer = Time.time;
     }
 
     protected override void UpdateBehaviour()
     {
         base.UpdateBehaviour();
 
-        if (Time.time - Timer >= ProductionFrequency && CompareTag("BlueUnit") && IsCompleted)
+        if (Time.time - ProductionTimer >= ProductionFrequency && CompareTag("BlueUnit") && IsCompleted && !IsDead)
         {
-            Timer = Time.time;
-            int amount = 160 + FindCastleCount() * 40;
+            ProductionTimer = Time.time;
+            int amount = BaseProductionAmount + FindCastleCount() * AddProductionAmount;
             GameObject newImage = Instantiate(goldImagePrefab, transform.position + new Vector3(0, 1, 0), Quaternion.identity);
+            EventCenter.Instance.EventTrigger("GoldProduction",amount);
+            BounceEffect();
 
             newImage.GetComponentInChildren<TextMeshProUGUI>().text = "+ " + amount.ToString();
-            newImage.transform.DOMove(newImage.transform.position + new Vector3(0, 2, 0), 1f).SetEase(Ease.Linear).OnComplete(() => Destroy(newImage.gameObject));
+            newImage.transform.DOMove(newImage.transform.position + new Vector3(0, 2, 0), .8f).SetEase(Ease.Linear).OnComplete(() => Destroy(newImage.gameObject));
 
             m_GameManager.GoldAmount += amount;
             m_GameManager.onResourcesChanged?.Invoke();
@@ -41,9 +48,9 @@ public class CastleUnit : StructureUnit
         }
     }
 
-    private void PlaceTile(Tile _tile)
+    private void PlaceTile(Transform _castle,Tile _tile)
     {
-        var node = TilemapManager.Get().FindNode(transform.position);
+        var node = TilemapManager.Get().FindNode(_castle.position);
         var pos = new Vector3Int(node.ButtomX, node.ButtomY, 0);
         for (int i = -8; i <= 8; i++)
         {
@@ -63,7 +70,16 @@ public class CastleUnit : StructureUnit
         ClearTile();
     }
 
-    private void SetTile() => PlaceTile(placementTile);
+    private void SetTile(Transform _castle) => PlaceTile(_castle,placementTile);
 
-    private void ClearTile() => PlaceTile(null);
+    private void ClearTile()
+    {
+        PlaceTile(transform, null);
+
+        var castles = FindObjectsOfType<CastleUnit>().Where(unit => unit != null && !unit.IsDead && unit.CompareTag("BlueUnit"));
+        foreach (var castle in castles)
+        {
+            SetTile(castle.transform);
+        }
+    } 
 }

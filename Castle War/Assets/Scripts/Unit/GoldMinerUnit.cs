@@ -33,7 +33,7 @@ public class GoldMinerUnit : StructureUnit
                 return;
             }
 
-            if (HasVaildWorker)
+            if (HasVaildWorker && !IsDead)
             {
                 sr.sprite = ProductionImage;
                 if (!IsTakeMining)
@@ -51,26 +51,39 @@ public class GoldMinerUnit : StructureUnit
 
     public void EnterMiner(WorkerUnit _worker)
     {
-        _worker.RecordLastGoldMiner(this);
+        _worker.RecordLastEnteredGoldMiner(this);
         _worker.gameObject.SetActive(false);
+        AudioManager.Get().PlaySFX(54);
         WorkersInMiner.Enqueue(_worker);
+        BounceEffect();
     }
 
     private void LevelMiner(WorkerUnit _worker)
     {
-        int goldAmount = Random.Range(3, 7);
-
         _worker.gameObject.SetActive(true);
         AudioManager.Get().PlaySFX(32);
-        
-        _worker.TransportResource(0, 0, goldAmount *50);
+
+        if (Random.Range(0, 100) <= 10)
+        {
+            int crystalAmount = Random.Range(2, 5);
+            _worker.IsDiggedCrystal = true;
+            _worker.TransportResource(0, 0, 0, crystalAmount * 5);
+        }
+        else
+        {
+            int goldAmount = Random.Range(3, 7);
+            _worker.IsDiggedCrystal = false;
+            _worker.TransportResource(0, 0, goldAmount * 50, 0);
+        }
+
         _worker.UpdateWorkerTask(WorkerTask.Trasporting);
+        BounceEffect();
     }
 
     private IEnumerator TakeMiningProcess()
     {
         IsTakeMining = true;
-        float time = Mathf.Clamp(ProductionFrequency - FindCastleCount(),ProductionFrequency * .5f,ProductionFrequency);
+        float time = Mathf.Clamp(ProductionFrequency -WorkersInMiner.Count * 2,ProductionFrequency * .5f,ProductionFrequency);
 
 //        Debug.Log($"Enter Time : {time}");
         yield return new WaitForSeconds(time);

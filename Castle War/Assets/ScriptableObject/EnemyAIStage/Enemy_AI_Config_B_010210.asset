@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d945a1c1971090846b70a24d82a49bc0, type: 3}
   m_Name: Enemy_AI_Config_B_010210
   m_EditorClassIdentifier: 
+  StageExistTimer: 30
   BuildingAction: {fileID: 11400000, guid: 36a3b6e7fbaa8674b908305721fd32f3, type: 2}
   TrainingActions:
   - {fileID: 11400000, guid: a8cd34c489cf7e5469a75b2dad83aa76, type: 2}
