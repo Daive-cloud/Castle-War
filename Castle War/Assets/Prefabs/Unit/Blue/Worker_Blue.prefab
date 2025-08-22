@@ -481,7 +481,7 @@ MonoBehaviour:
   CheckFrequency: 0.25
   IsDead: 0
   HealthBar: {fileID: 2185612874172579871}
-  ObjectCheckRadius: 1.4
+  ObjectCheckRadius: 3
   AttackCheckRadius: 0
   AttackFrequency: 0
   Enemies: []
@@ -499,6 +499,7 @@ MonoBehaviour:
   MeatIcon: {fileID: -1485073552, guid: 76dace93a29e48c48b079c119265d655, type: 3}
   GoldIcon: {fileID: 856286164, guid: cf590dea127476343a4712dac9e6e24a, type: 3}
   CrystalIcon: {fileID: 831240400, guid: 9803a46012b48b94abfbf6d0dc379ebc, type: 3}
+  IsDiggedCrystal: 0
 --- !u!114 &425251613063951071
 MonoBehaviour:
   m_ObjectHideFlags: 0

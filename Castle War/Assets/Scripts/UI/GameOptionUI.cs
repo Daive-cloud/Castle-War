@@ -15,6 +15,8 @@ public class GameOptionUI : MonoBehaviour
         Time.timeScale = 1f;
         AudioManager.Get().StopPlayBGM(1);
         AudioManager.Get().PlayBGM(0);
+
+        GameManager.Get().ClearGameData();
         gameObject.SetActive(false);
         SceneManager.LoadScene("选择关卡");
     }

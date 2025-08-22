@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: PowerArcher
   m_EditorClassIdentifier: 
   Icon: {fileID: 1922411248, guid: dce55c2c63dee1c4e8ddce28dce989e5, type: 3}
-  ID: 20196c75-919e-4f78-b201-3746121ef5f0
+  UnitName: "\u901F\u5C04\u5F13\u7BAD\u624B"
   m_UnitPrefab: {fileID: 1507461214918507642, guid: 6edf00430f1461e4f935a979cf905c45, type: 3}
   m_GoldCost: 1500
   m_MeatCost: 0
   m_CrystalCost: 50
-  m_TrainingTime: 0
+  m_TrainingTime: 32
   m_UnitType: 9

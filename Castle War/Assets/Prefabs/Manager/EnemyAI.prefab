@@ -116,3 +116,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 72ef5965593713c4b85e40ec85d0c5b8, type: 2}
   EnemyCheckFrequency: 0.5
   EnemyRefillFrequency: 40
+  EnemyAIColor: RedUnit

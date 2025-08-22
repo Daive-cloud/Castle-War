@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: Castle
   m_EditorClassIdentifier: 
   Icon: {fileID: 21300000, guid: 460d8898fc1b7c94a8d39999a9d39cfb, type: 3}
-  ID: 3d45081d-787e-4da0-9ce3-95fd0b7514cd
+  UnitName: "\u5927\u672C\u8425"
   m_FoundationSprite: {fileID: 21300000, guid: 3f8cd42afcd30224f8f127a2bd90dea7, type: 3}
   m_CompletionSprite: {fileID: 21300000, guid: 460d8898fc1b7c94a8d39999a9d39cfb, type: 3}
   m_StructurePrefab: {fileID: 5145310480760242148, guid: 807431e2821ff2e4b8eee01c842d8351, type: 3}
   m_GoldCost: 2000
   m_WoodCost: 4000
+  m_CrystalCost: 0
   m_BuildingSize: {x: 4, y: 3, z: 0}
   m_BuildingOffset: {x: -2, y: -2, z: 0}

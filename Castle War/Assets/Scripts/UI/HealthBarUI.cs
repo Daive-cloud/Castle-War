@@ -25,10 +25,8 @@ public class HealthBarUI : MonoBehaviour
 
     private void HealthChange()
     {
-        if (slider != null)
+        if (slider != null && unit != null)
         {
-            float temp = (float)unit.stats.CurrentHealth / unit.stats.GetMaxHealthValue();
-//            Debug.Log($"temp value : {temp}");
             slider.value = (float)unit.stats.CurrentHealth / unit.stats.GetMaxHealthValue();
          //   Debug.Log($"slider value : {slider.value}.");
         }

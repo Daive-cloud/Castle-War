@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: PowerWarrior
   m_EditorClassIdentifier: 
   Icon: {fileID: 810046289, guid: 11eeed37418b750428f94a2df3e054db, type: 3}
-  ID: dcbcb41e-9ca0-4455-8ef5-020edb1c9df5
+  UnitName: "\u7CBE\u9510\u9A91\u58EB"
   m_UnitPrefab: {fileID: 434325055480769490, guid: 5aaac5bc546349d4f9f90d918ef8c54d, type: 3}
   m_GoldCost: 1500
   m_MeatCost: 0
   m_CrystalCost: 50
-  m_TrainingTime: 0
+  m_TrainingTime: 30
   m_UnitType: 8

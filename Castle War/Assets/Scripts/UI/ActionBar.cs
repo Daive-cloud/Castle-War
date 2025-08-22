@@ -16,10 +16,10 @@ public class ActionBar : MonoBehaviour
         HideActionBar();
     }
 
-    public void RegisterActionButton(Sprite _icon,UnityAction _action)
+    public void RegisterActionButton(Sprite _icon,string _name,UnityAction _action)
     {
         GameObject newButton = Instantiate(ActionButtonPrefab,transform);
-        newButton.GetComponent<ActionButton>().InitializeButton(_icon,_action);
+        newButton.GetComponent<ActionButton>().InitializeButton(_icon,_name,_action);
         ActionButtons.Add(newButton.GetComponent<ActionButton>());
     }
 

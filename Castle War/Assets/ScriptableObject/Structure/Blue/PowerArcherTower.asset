@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PowerArcherTower
   m_EditorClassIdentifier: 
   Icon: {fileID: 21300000, guid: e694cbd860322734497e5cda35d1468f, type: 3}
-  ID: 73f4ac98-9d63-4316-86e3-9b7e1d4efc53
+  UnitName: "\u901F\u5C04\u7BAD\u5854"
   m_FoundationSprite: {fileID: 21300000, guid: 3056d25f8cc025f4a84999807ad522aa, type: 3}
   m_CompletionSprite: {fileID: 21300000, guid: e694cbd860322734497e5cda35d1468f, type: 3}
   m_StructurePrefab: {fileID: 7289662566700758512, guid: 4df7eb76e738a3b4394e2114c1d99974, type: 3}

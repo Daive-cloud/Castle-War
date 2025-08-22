@@ -17,7 +17,6 @@ public class AI : MonoBehaviour
     private TilemapManager m_TilemapManager;
     private List<Node> m_CurrentPath;
     private int m_CurrentNodeIndex;
-
     public FindPathType currentType = FindPathType.A_Star;
 
     private void Awake()
@@ -48,8 +47,15 @@ public class AI : MonoBehaviour
             m_CurrentNodeIndex++;
             if (m_CurrentNodeIndex >= m_CurrentPath.Count)
             {
-//                Debug.Log("Find path ended");
-                unit.onArrivedDestination?.Invoke();
+                if (unit.Target != null)
+                {
+                    float distance = Vector2.Distance(transform.position, unit.Target.transform.position);
+                    if (distance < unit.ObjectCheckRadius)
+                        unit.onArrivedDestination?.Invoke();
+                    else
+                        unit.MoveToDestination(unit.transform.position);
+                }
+
                 ClearPath();
                 return;
             }

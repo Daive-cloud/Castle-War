@@ -137,7 +137,7 @@ public class PlacementProcess
 
         foreach(var position in m_HighlightedArea)
         {
-            if(m_TilemapManager.IsPlaceAreaOverObstacle(position))
+            if(m_TilemapManager.IsPlaceOverUnreachbleArea(position))
             {
                 return false;
             }

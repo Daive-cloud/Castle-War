@@ -231,27 +231,36 @@ public class WorkerUnit : HumanoidUnit
     }
 
     #endregion
-  
+
     private void ArriveDestination()
     {
-         if (currentTask == WorkerTask.Building)
+        if (currentTask == WorkerTask.Building)
+        {
+            var building = Target as StructureUnit;
+            if (Target != null && !building.IsDead && !building.IsCompleted)
             {
                 anim.SetBool("Build", true);
                 StartBuildingProcess(Target as StructureUnit);
             }
-            else if (currentTask == WorkerTask.Chopping || currentTask == WorkerTask.Killing)
+            else
             {
-                FlipController(Target.transform.position);
-                anim.SetBool("Chop", true);
+                UpdateWorkerTask(WorkerTask.None);
             }
-            else if (currentTask == WorkerTask.Mining)
-            {
-                (Target as GoldMinerUnit).EnterMiner(this);
-            }
-            else if (currentTask == WorkerTask.Trasporting)
-            {
-                FinishTransportResources();
-            }
+        }
+        else if (currentTask == WorkerTask.Chopping || currentTask == WorkerTask.Killing)
+        {
+            anim.SetBool("Chop", true);
+        }
+        else if (currentTask == WorkerTask.Mining)
+        {
+            (Target as GoldMinerUnit).EnterMiner(this);
+        }
+        else if (currentTask == WorkerTask.Trasporting)
+        {
+            FinishTransportResources();
+        }
+        if(Target != null)
+            FlipController(Target.transform.position);
     }
     #endregion
     private void ResetTransportState()

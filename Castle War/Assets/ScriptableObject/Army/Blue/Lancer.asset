@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Lancer
   m_EditorClassIdentifier: 
   Icon: {fileID: 1185016774, guid: eed951695365065429d1e760606a06c5, type: 3}
-  ID: 4f144e1d-271d-434a-a617-6601c5cada61
+  UnitName: "\u957F\u67AA\u5175"
   m_UnitPrefab: {fileID: 1655426877155196357, guid: aaa2ca94992dad64092c63224f965ed3, type: 3}
   m_GoldCost: 300
   m_MeatCost: 600
+  m_CrystalCost: 0
   m_TrainingTime: 16
   m_UnitType: 6

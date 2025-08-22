@@ -29,11 +29,25 @@ public class ArrowController : MonoBehaviour
         {
             Owner.stats.TakeDamage(Target.GetComponent<UnitStats>());
             AudioManager.Get().PlaySFX(10);
-            StartCoroutine(ReturnToPool());
+            if (gameObject.activeSelf)
+            {
+                StartCoroutine(ReturnToPool());
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
         else
         {
-            StartCoroutine(GCWithDelay());
+            if (gameObject.activeSelf)
+            {
+                StartCoroutine(GCWithDelay());
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
     }
 
@@ -49,7 +63,7 @@ public class ArrowController : MonoBehaviour
             timer += Time.deltaTime;
             yield return null;
         }
-        ReturnToPool();
+        StartCoroutine(ReturnToPool());
     }
 
     private IEnumerator ReturnToPool()
@@ -61,6 +75,7 @@ public class ArrowController : MonoBehaviour
         yield return new WaitForSeconds(trail.time);
         sr.enabled = true;
         var arrow = gameObject.name.Replace("(Clone)","");
+        // Debug.Log("Return To Pool");
         GameObjectPool.Get().ReturnToPool(arrow,gameObject);
     }
 

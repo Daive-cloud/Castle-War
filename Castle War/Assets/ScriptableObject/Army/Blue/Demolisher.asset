@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Demolisher
   m_EditorClassIdentifier: 
   Icon: {fileID: -1900024874, guid: f05b4d1ddaa9d884d9379cd26f379533, type: 3}
-  ID: e1224968-faa2-4693-9ca4-41a81ba28e69
+  UnitName: "\u54E5\u5E03\u6797\u6295\u5F39\u624B"
   m_UnitPrefab: {fileID: 4533010710076404875, guid: b72e0318af12e8846a2b8c6b3748c4b7, type: 3}
   m_GoldCost: 300
   m_MeatCost: 600
+  m_CrystalCost: 0
   m_TrainingTime: 16
   m_UnitType: 4

@@ -385,7 +385,7 @@ MonoBehaviour:
   IsDead: 0
   HealthBar: {fileID: 2326926130959300090}
   ObjectCheckRadius: 5
-  AttackCheckRadius: 1.5
+  AttackCheckRadius: 1.8
   AttackFrequency: 1
   Enemies: []
   Target: {fileID: 0}
@@ -413,8 +413,10 @@ MonoBehaviour:
   CritChance:
     baseValue: 15
     modifiers: 
+  DamageReduction:
+    baseValue: 0
+    modifiers: 
   CurrentHealth: 0
-  DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
   damageType: 0
   LevelUpPrefab: {fileID: 1251873176143866736, guid: 171ed8bd240910b478af0d69d36e61f9, type: 3}
   LevelUI: {fileID: 757041313642857163}

@@ -237,7 +237,7 @@ public class GameManager : SingletonManager<GameManager>
                 ActionBar.ShowActionBar();
                 foreach (var action in ActiveUnit.Actions)
                 {
-                    ActionBar.RegisterActionButton(action.Icon, () => action.ExecuteAction());
+                    ActionBar.RegisterActionButton(action.Icon,action.UnitName, () => action.ExecuteAction());
                 }
             }
         }
@@ -318,9 +318,8 @@ public class GameManager : SingletonManager<GameManager>
         if (!HasSelectUnits())
             return true;
 
-        if (_unit.CompareTag("RedUnit") && !_unit.IsDead)
+        if (IsEnemy(_unit) && !_unit.IsDead)
         {
-            Debug.Log("Attack Target");
             GenerateFollowRay(_mousePosition, Color.red);
             if (SelectedUnits.Count > 0)
             {
@@ -755,19 +754,24 @@ public class GameManager : SingletonManager<GameManager>
     public void RemoveUnit(Unit _unit)
     {
         RegisteredUnits.Remove(_unit);
+    }
 
+    private void CheckGameFinishedCondition()
+    {
         bool HasActiveBlueBuilding = RegisteredUnits.Where(unit => unit != null && !unit.IsDead && unit.TryGetComponent(out StructureUnit _) && unit.CompareTag("BlueUnit")).Any();
         bool HasActiveRedBuilding = RegisteredUnits.Where(unit => unit != null && !unit.IsDead && unit.TryGetComponent(out StructureUnit _) && unit.CompareTag("RedUnit")).Any();
+        bool HasActiveYellowBuilding = RegisteredUnits.Where(unit => unit != null && !unit.IsDead && unit.TryGetComponent(out StructureUnit _) && unit.CompareTag("YellowUnit")).Any();
 
         if (!HasActiveBlueBuilding)
         {
+            Debug.Log("Game Ended");
             SwitchBGM();
             FaliureUI.gameObject.SetActive(true);
             RegisteredUnits.Where(unit => !unit.IsDead && unit.CompareTag("BlueUnit")).ToList().ForEach(unit => unit.Death());
             StartCoroutine(GameOver());
         }
 
-        if (!HasActiveRedBuilding)
+        if (!HasActiveRedBuilding && !HasActiveYellowBuilding)
         {
             SwitchBGM();
             WiningUI.gameObject.SetActive(true);
@@ -778,12 +782,19 @@ public class GameManager : SingletonManager<GameManager>
 
     private IEnumerator GameOver()
     {
-        FindObjectsOfType<DamageFontUI>().Where(font => font != null && font.gameObject.activeSelf).ToList().ForEach(font => Destroy(font.gameObject));
-        FindObjectsOfType<ArrowController>().Where(arrow => arrow != null && arrow.gameObject.activeSelf).ToList().ForEach(arrow => Destroy(arrow.gameObject));
-        FindObjectsOfType<GrenadeController>().Where(grenade => grenade != null && grenade.gameObject.activeSelf).ToList().ForEach(grenade => Destroy(grenade.gameObject));
+        ClearGameData();
+
         yield return new WaitForSeconds(2f);
 
         SceneManager.LoadScene("选择关卡");
+    }
+
+    public void ClearGameData()
+    {
+        FindObjectsOfType<DamageFontUI>().Where(font => font != null && font.gameObject.activeSelf).ToList().ForEach(font => Destroy(font.gameObject));
+        FindObjectsOfType<ArrowController>().Where(arrow => arrow != null && arrow.gameObject.activeSelf).ToList().ForEach(arrow => Destroy(arrow.gameObject));
+        FindObjectsOfType<GrenadeController>().Where(grenade => grenade != null && grenade.gameObject.activeSelf).ToList().ForEach(grenade => Destroy(grenade.gameObject));
+        EventCenter.Instance.Clear();
     }
 
     public void InitializeGame()
@@ -802,6 +813,7 @@ public class GameManager : SingletonManager<GameManager>
         EventCenter.Instance.AddEventListener<int>("WoodProduction", UpdateWoodProduction);
         EventCenter.Instance.AddEventListener<int>("MeatProduction", UpdateMeatProduction);
         EventCenter.Instance.AddEventListener<int>("GoldProduction", UpdateGoldProduction);
+        EventCenter.Instance.AddEventListener("CheckGameEnded",CheckGameFinishedCondition);
 
         pool.RegisterPool(damageFont.name, damageFont, 80);
         pool.RegisterPool(arrow.name, arrow, 60);
@@ -833,6 +845,8 @@ public class GameManager : SingletonManager<GameManager>
 
         GameObjectPool.Get().RegisterPool("ActionRay", line.gameObject, 30);
     }
+
+    private bool IsEnemy(Unit _unit) => _unit.CompareTag("RedUnit") || _unit.CompareTag("YellowUnit") || _unit.CompareTag("PurpleUnit");
 
     #region Update Production Info
     private void UpdateWoodProduction(int _amount)

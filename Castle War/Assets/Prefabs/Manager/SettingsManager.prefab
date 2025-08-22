@@ -44,15 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ef8bb11754adbb4b958fa12586620dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resourceUI:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  playerDropParent: {fileID: 0}
-  posDropParent: {fileID: 0}
-  chooseUI: {fileID: 0}
-  ErrorPanel: {fileID: 0}
   enemyTypes: 
   blueArmy:
   - {fileID: 1084518793275309658, guid: bdbdc82edc7698f43b8f9530b3c9cd32, type: 3}
@@ -78,3 +69,16 @@ MonoBehaviour:
   - {fileID: 6017765085285212632, guid: d05f4e2d133ac8e4cad25ed4a4936fd8, type: 3}
   - {fileID: 6017765085285212632, guid: d05f4e2d133ac8e4cad25ed4a4936fd8, type: 3}
   - {fileID: 6017765085285212632, guid: d05f4e2d133ac8e4cad25ed4a4936fd8, type: 3}
+  yellowArmy:
+  - {fileID: 3298391131085946845, guid: ead31854571bb3b469a1001d26de233d, type: 3}
+  - {fileID: 5412174046915606710, guid: 5246325c59c5fa547b6c4936ad6bbdcb, type: 3}
+  - {fileID: 5412174046915606710, guid: 5246325c59c5fa547b6c4936ad6bbdcb, type: 3}
+  - {fileID: 5412174046915606710, guid: 5246325c59c5fa547b6c4936ad6bbdcb, type: 3}
+  - {fileID: 5412174046915606710, guid: 5246325c59c5fa547b6c4936ad6bbdcb, type: 3}
+  - {fileID: 3849715747029618784, guid: de8ba50e3ce42c14198111aab11f0a84, type: 3}
+  - {fileID: 3849715747029618784, guid: de8ba50e3ce42c14198111aab11f0a84, type: 3}
+  - {fileID: 3849715747029618784, guid: de8ba50e3ce42c14198111aab11f0a84, type: 3}
+  - {fileID: 4745126799740299392, guid: d9d720167fb54984ca34e29e0476db69, type: 3}
+  - {fileID: 4745126799740299392, guid: d9d720167fb54984ca34e29e0476db69, type: 3}
+  - {fileID: 4745126799740299392, guid: d9d720167fb54984ca34e29e0476db69, type: 3}
+  purpleArmy: []

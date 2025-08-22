@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Torch
   m_EditorClassIdentifier: 
   Icon: {fileID: -87914526, guid: 5e1b84209f8bc6f40af7a67c619ed09c, type: 3}
-  ID: 9db3003b-5c48-4665-a0e7-b6c63a0bb123
+  UnitName: "\u5C0F\u54E5\u5E03\u6797"
   m_UnitPrefab: {fileID: 8879277551984428306, guid: b6fdd79a3c263ec4c8bedb3a0d5a6e5e, type: 3}
   m_GoldCost: 150
   m_MeatCost: 250
+  m_CrystalCost: 0
   m_TrainingTime: 8
   m_UnitType: 3

@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Worker
   m_EditorClassIdentifier: 
   Icon: {fileID: 1228714333, guid: a464a47dc226c63419698857bc0cf83f, type: 3}
-  ID: ffee1f69-776f-48dc-aa9c-3a1fa42ef656
+  UnitName: "\u5DE5\u4EBA"
   m_UnitPrefab: {fileID: 3339719448614179751, guid: 13e34eef3755f8647a582c966db6e593, type: 3}
   m_GoldCost: 100
   m_MeatCost: 200
+  m_CrystalCost: 0
   m_TrainingTime: 8
   m_UnitType: 2

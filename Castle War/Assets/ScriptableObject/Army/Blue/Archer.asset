@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Archer
   m_EditorClassIdentifier: 
   Icon: {fileID: 817934937, guid: b1b04f74b7777544f89295ae9d80a77e, type: 3}
-  ID: 0338b49b-68b7-4047-b8f8-51655c3922f7
+  UnitName: "\u5F13\u7BAD\u624B"
   m_UnitPrefab: {fileID: 4121930742748061984, guid: 0b0ebc8e472dccf4d92db2483f6d9c5d, type: 3}
   m_GoldCost: 250
   m_MeatCost: 400
+  m_CrystalCost: 0
   m_TrainingTime: 16
   m_UnitType: 1

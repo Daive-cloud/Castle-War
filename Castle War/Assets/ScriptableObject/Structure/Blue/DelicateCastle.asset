@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DelicateCastle
   m_EditorClassIdentifier: 
   Icon: {fileID: 21300000, guid: e55c5c4652ee4b744bc4cbb41f8ea5d8, type: 3}
-  ID: 954d55df-592b-4e0a-b1f7-45560d6a1fdc
+  UnitName: "\u4E8C\u7EA7\u5927\u672C\u8425"
   m_FoundationSprite: {fileID: 21300000, guid: 3f8cd42afcd30224f8f127a2bd90dea7, type: 3}
   m_CompletionSprite: {fileID: 21300000, guid: e55c5c4652ee4b744bc4cbb41f8ea5d8, type: 3}
   m_StructurePrefab: {fileID: 1262453947489822619, guid: 6244424f1c3a5c3479e1c396df1bd8fc, type: 3}

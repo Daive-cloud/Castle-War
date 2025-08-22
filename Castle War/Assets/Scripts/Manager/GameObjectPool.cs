@@ -61,10 +61,11 @@ public class GameObjectPool : SingletonManager<GameObjectPool>
     {
         if (!poolDict.ContainsKey(_key))
         {
+            Debug.Log($"Not found : {_key}");
             Destroy(_obj);
             return;
         }
-//        Debug.Log($"return object : {_key}");
+        // Debug.Log($"return object : {_key}");
         var parent = GameObject.Find(_key + "Parent");
         _obj.transform.SetParent(parent.transform);
         _obj.SetActive(false);

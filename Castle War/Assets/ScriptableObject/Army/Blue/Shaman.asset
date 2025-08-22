@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Shaman
   m_EditorClassIdentifier: 
   Icon: {fileID: -1053889294, guid: a24217dff13ee2f4f9051a8c8bf8fa06, type: 3}
-  ID: 1ac17bbd-7066-4f25-bb55-be3bd6900e62
+  UnitName: "\u9AB7\u9AC5\u6CD5\u5E08"
   m_UnitPrefab: {fileID: 7855622464789169390, guid: 8dda8576dffa8aa4981f20a086dc4bcc, type: 3}
   m_GoldCost: 2400
   m_MeatCost: 0
   m_CrystalCost: 60
-  m_TrainingTime: 0
+  m_TrainingTime: 36
   m_UnitType: 11

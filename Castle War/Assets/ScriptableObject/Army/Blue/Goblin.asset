@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Goblin
   m_EditorClassIdentifier: 
   Icon: {fileID: -831430743, guid: 2598b1d1e976c7443ba4ec34112d7e9c, type: 3}
-  ID: eca6fced-05cf-4ff2-8d2e-f0712a9c6725
+  UnitName: "\u7CBE\u9510\u54E5\u5E03\u6797"
   m_UnitPrefab: {fileID: 4952715040215997611, guid: 4b0424fbf316ba947b3fa666cd7d63bc, type: 3}
   m_GoldCost: 400
   m_MeatCost: 700
+  m_CrystalCost: 0
   m_TrainingTime: 20
   m_UnitType: 7

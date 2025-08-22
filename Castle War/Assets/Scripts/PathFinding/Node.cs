@@ -35,6 +35,8 @@ public class Node
         parent = null;
     }
 
+    public Vector2 GetPosition() => new Vector2(CenterX,CenterY);
+
     public string GetNodePosition()
     {
         return new string($"({ButtomX},{ButtomY})");

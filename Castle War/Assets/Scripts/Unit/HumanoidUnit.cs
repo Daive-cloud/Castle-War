@@ -211,11 +211,11 @@ public class HumanoidUnit : Unit
         Target = Enemies.FirstOrDefault();
     }
 
-    public virtual void FindClosestEnemyWithoutRange()
+    public virtual void EnemyAIFindTarget()
     {
         Enemies = new();
         if (m_GameManager != null && m_GameManager.RegisteredUnits.Count > 0)
-            Enemies = m_GameManager.RegisteredUnits.Where(unit => unit != null && !unit.IsDead && unit.tag != this.tag && unit.tag != "Tree" && unit.tag != "Sheep" && unit.gameObject.activeSelf).ToList();
+            Enemies = m_GameManager.RegisteredUnits.Where(unit => unit != null && !unit.IsDead && unit.CompareTag("BlueUnit") && unit.tag != "Tree" && unit.tag != "Sheep" && unit.gameObject.activeSelf).ToList();
 
         float closestDistance = int.MaxValue;
         Unit closestEnemy = null;

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42a34e44fbab21c4bbae0f236461a5d8, type: 3}
+  m_Name: Barrel
+  m_EditorClassIdentifier: 
+  Icon: {fileID: -1998337416, guid: 9a79717ad0ce62249ac463461be305a2, type: 3}
+  m_UnitPrefab: {fileID: 4816343252281488769, guid: e11930cd45950154fafb526c640c3005, type: 3}
+  m_GoldCost: 1000
+  m_MeatCost: 200
+  m_CrystalCost: 0
+  m_TrainingTime: 20
+  m_UnitType: 5

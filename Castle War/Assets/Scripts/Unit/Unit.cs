@@ -27,7 +27,13 @@ public class Unit : MonoBehaviour
     protected virtual void Start()
     {
         m_GameManager = GameManager.Get();
-        m_GameManager.RegisterUnit(this);
+    }
+
+    protected void OnEnable()
+    {
+        if (CompareTag("Tree") || CompareTag("Sheep"))
+            return;
+        GameManager.Get().RegisterUnit(this);
     }
 
     protected virtual void Update()

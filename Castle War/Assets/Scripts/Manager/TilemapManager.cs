@@ -28,7 +28,7 @@ public class TilemapManager : SingletonManager<TilemapManager>
         return BuildingAreaTilemap.HasTile(_position) && !IsPlaceOverUnreachbleArea(_position);
     }
 
-    private bool IsPlaceOverUnreachbleArea(Vector3Int _position)
+    public bool IsPlaceOverUnreachbleArea(Vector3Int _position)
     {
         return IsUnreachableMapHasTile(_position) || IsPlaceAreaOverObstacle(_position);
     }

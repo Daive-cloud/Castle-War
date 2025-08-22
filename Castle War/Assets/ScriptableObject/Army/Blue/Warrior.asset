@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Warrior
   m_EditorClassIdentifier: 
   Icon: {fileID: 1511150309, guid: e035abadbc01b84458e0420079bb5995, type: 3}
-  ID: 8dcf12d7-6884-4a2c-9d7f-56cc6aa97e8a
+  UnitName: "\u9A91\u58EB"
   m_UnitPrefab: {fileID: 5708269229620098888, guid: 14bc3a759e7ab4e46acd902bc5292369, type: 3}
   m_GoldCost: 200
   m_MeatCost: 400
+  m_CrystalCost: 0
   m_TrainingTime: 12
   m_UnitType: 0

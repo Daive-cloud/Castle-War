@@ -645,7 +645,7 @@ MonoBehaviour:
   CheckFrequency: 0.25
   IsDead: 0
   HealthBar: {fileID: 1303517999331439903}
-  ObjectCheckRadius: 1.4
+  ObjectCheckRadius: 3
   AttackCheckRadius: 0
   AttackFrequency: 0
   Enemies: []
@@ -662,6 +662,8 @@ MonoBehaviour:
   WoodIcon: {fileID: -118058652, guid: f6f48ff38c064d541bcf1de9d975c09a, type: 3}
   MeatIcon: {fileID: -1485073552, guid: 76dace93a29e48c48b079c119265d655, type: 3}
   GoldIcon: {fileID: 856286164, guid: cf590dea127476343a4712dac9e6e24a, type: 3}
+  CrystalIcon: {fileID: 831240400, guid: 9803a46012b48b94abfbf6d0dc379ebc, type: 3}
+  IsDiggedCrystal: 0
 --- !u!114 &4453409110273040702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -700,8 +702,10 @@ MonoBehaviour:
   CritChance:
     baseValue: 0
     modifiers: 
+  DamageReduction:
+    baseValue: 0
+    modifiers: 
   CurrentHealth: 0
-  DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
   damageType: 0
   LevelUpPrefab: {fileID: 1251873176143866736, guid: 171ed8bd240910b478af0d69d36e61f9, type: 3}
   LevelUI: {fileID: 0}

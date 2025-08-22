@@ -35,18 +35,20 @@ public class PlayerChoice
 
 public class SettingsManager : SingletonManager<SettingsManager>
 {
-    private List<SelectSourceUI> resourceUI ;
+    private List<SelectSourceUI> resourceUI;
     public RectTransform playerDropParent { get; private set; }
     public RectTransform posDropParent { get; private set; }
     private RectTransform levelUI;
     private Transform errorPanel;
     private ChooseMapUI chooseUI;
-    public List<EnemyType> enemyTypes = new();
+    public List<EnemyType> enemyTypes = new() { EnemyType.None, EnemyType.None, EnemyType.None };
     private Dictionary<int, int> finalAssignments = new();
 
     [Header("Player Prefab")]
     [SerializeField] private List<GameObject> blueArmy;
     [SerializeField] private List<GameObject> redArmy;
+    [SerializeField] private List<GameObject> yellowArmy;
+    [SerializeField] private List<GameObject> purpleArmy;
     public int woodAmount { get; private set; }
     public int meatAmount { get; private set; }
     public int goldAmount { get; private set; }
@@ -57,8 +59,8 @@ public class SettingsManager : SingletonManager<SettingsManager>
         {
             {0,"Blue"},
             {1,"Red"},
-            {2,"Purple"},
-            {3,"Yellow"}
+            {2,"Yellow"},
+            {3,"Purple"}
         };
     protected override void Awake()
     {
@@ -137,7 +139,7 @@ public class SettingsManager : SingletonManager<SettingsManager>
                 int number = chineseToArabic[chinese];
                 playerChoices.Add(i, new PlayerChoice(PlayerChoiceType.Specific, number));
             }
-//            Debug.Log(playerChoices[i].Type);
+            //            Debug.Log(playerChoices[i].Type);
         }
 
 
@@ -281,7 +283,7 @@ public class SettingsManager : SingletonManager<SettingsManager>
 
             Vector2 spawnPos = positionCroods[positionId];
             string color = vaildColors[playerId];
-            //Debug.Log($"玩家{playerId}（颜色：{color}）出生在位置 {positionId} 坐标：{spawnPos}");
+//            Debug.Log($"玩家{playerId}（颜色：{color}）出生在位置 {positionId} 坐标：{spawnPos}");
             SpawnUnitsWithColor(color, spawnPos);
         }
     }
@@ -307,6 +309,32 @@ public class SettingsManager : SingletonManager<SettingsManager>
             Instantiate(castle, _position, Quaternion.identity);
 
             var vaildArmy = redArmy.Take(unitAmount + 1).ToList();
+
+            for (int i = 1; i < vaildArmy.Count; i++)
+            {
+                float angleStep = 360f / (vaildArmy.Count - 1);
+                SpawnUnitsAroundCastle(_position, vaildArmy[i], angleStep, i - 1);
+            }
+        }
+        else if (_color == "Yellow")
+        {
+            var castle = yellowArmy[0];
+            Instantiate(castle, _position, Quaternion.identity);
+
+            var vaildArmy = yellowArmy.Take(unitAmount + 1).ToList();
+
+            for (int i = 1; i < vaildArmy.Count; i++)
+            {
+                float angleStep = 360f / (vaildArmy.Count - 1);
+                SpawnUnitsAroundCastle(_position, vaildArmy[i], angleStep, i - 1);
+            }
+        }
+        else if (_color == "Purple")
+        {
+            var castle = purpleArmy[0];
+            Instantiate(castle, _position, Quaternion.identity);
+
+            var vaildArmy = purpleArmy.Take(unitAmount + 1).ToList();
 
             for (int i = 1; i < vaildArmy.Count; i++)
             {
@@ -341,6 +369,7 @@ public class SettingsManager : SingletonManager<SettingsManager>
         levelUI = GameObject.Find("LevelUI").GetComponent<RectTransform>();
         errorPanel = levelUI.Find("Error");
         chooseUI = levelUI.GetComponent<LevelUI>().ChooseMapUI.GetComponent<ChooseMapUI>();
-
     }
+
+    public void ResetEnemyTypes() => enemyTypes = new List<EnemyType>() {EnemyType.None,EnemyType.None,EnemyType.None };
 }

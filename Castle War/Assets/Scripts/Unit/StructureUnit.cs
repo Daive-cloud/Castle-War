@@ -93,6 +93,15 @@ public class StructureUnit : Unit
         RegisterdWorkers.Clear();
     }
 
+    private void RemoveWorkersWhenDeath()
+    {
+        foreach (var unit in RegisterdWorkers)
+        {
+            unit.UpdateWorkerTask(WorkerTask.None);
+        }
+        RemoveWorker();
+    }
+
     protected void CompleteConstruction()
     {
         foreach (var unit in RegisterdWorkers)
@@ -136,6 +145,8 @@ public class StructureUnit : Unit
         {
             Destroy(TowerUnit);
         }
+        RemoveWorkersWhenDeath();
+        EventCenter.Instance.EventTrigger("CheckGameEnded");
         StartCoroutine(AfterDeath());
     }
 

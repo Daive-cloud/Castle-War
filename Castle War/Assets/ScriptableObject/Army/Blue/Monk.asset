@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Monk
   m_EditorClassIdentifier: 
   Icon: {fileID: -1486961051, guid: a6581545018cf904cb070da205d347b0, type: 3}
-  ID: fcef10b9-e317-40d2-ae70-22363b0aed05
+  UnitName: "\u6CBB\u7597\u7267\u5E08"
   m_UnitPrefab: {fileID: 8342467936363952656, guid: 89e6a479eedaa41469f7148922ad1c73, type: 3}
   m_GoldCost: 2000
   m_MeatCost: 0
   m_CrystalCost: 60
-  m_TrainingTime: 0
+  m_TrainingTime: 40
   m_UnitType: 10

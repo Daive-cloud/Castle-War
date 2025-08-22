@@ -11,9 +11,11 @@ using System.Runtime.Remoting.Messaging;
 public class EnemyAIEditor : EditorWindow
 {
     // 指定搜索的文件路径和保存路径
-    private const string buildingActionPath = "Assets/ScriptableObject/Structure/Red";
-    private const string trainingActionPath = "Assets/ScriptableObject/Army/Red";
-    private const string savePath = "Assets/ScriptableObject/EnemyAIStage";
+    private string[] enemyActionPaths = new string[] {"Red","Yellow","Purple" };
+    private int selectedPathIndex = 0;
+    private string buildingActionPath;
+    private string trainingActionPath;
+    private string savePath;
 
     private List<BuildingActionSO> availableBuildings = new();
     private BuildingActionSO selectedBuilding;
@@ -30,8 +32,21 @@ public class EnemyAIEditor : EditorWindow
 
     private void OnEnable()
     {
+        UpdateEnemyActionPath();
+        LoadAssets();
+    }
+
+    private void UpdateEnemyActionPath()
+    {
+        buildingActionPath = $"Assets/ScriptableObject/Structure/{enemyActionPaths[selectedPathIndex]}";
+        trainingActionPath = $"Assets/ScriptableObject/Army/{enemyActionPaths[selectedPathIndex]}";
+        savePath = $"Assets/ScriptableObject/EnemyAIStage/{enemyActionPaths[selectedPathIndex]}";
+    }
+
+    private void LoadAssets()
+    {
         availableBuildings = AssetDatabase.FindAssets("t:BuildingActionSO", new[] { buildingActionPath })
-                            .Select(guid => AssetDatabase.LoadAssetAtPath<BuildingActionSO>(AssetDatabase.GUIDToAssetPath(guid))).ToList();
+                                    .Select(guid => AssetDatabase.LoadAssetAtPath<BuildingActionSO>(AssetDatabase.GUIDToAssetPath(guid))).ToList();
 
         availableTrainings = AssetDatabase.FindAssets("t:TrainingActionSO", new[] { trainingActionPath }).
                             Select(guid => AssetDatabase.LoadAssetAtPath<TrainingActionSO>(AssetDatabase.GUIDToAssetPath(guid))).ToList();
@@ -43,12 +58,30 @@ public class EnemyAIEditor : EditorWindow
                 trainingSelectionCounts[training] = 0;
             }
         }
-
     }
+
 
     private void OnGUI()
     {
         GUILayout.Label("Enemy AI Config Creator", EditorStyles.boldLabel);
+
+         EditorGUILayout.Space(10);
+        EditorGUILayout.BeginHorizontal();
+        int newIndex = EditorGUILayout.Popup( "Enemy Action Path",selectedPathIndex, enemyActionPaths);
+        if (newIndex != selectedPathIndex)
+        {
+            // 用户选择了新的路径，弹出确认窗口
+            if (EditorUtility.DisplayDialog("确认更改路径",
+                $"是否将路径切换到 '{enemyActionPaths[newIndex]}'？",
+                "确认", "取消"))
+            {
+                selectedPathIndex = newIndex;
+                UpdateEnemyActionPath();
+                LoadAssets();
+            }
+        }
+        EditorGUILayout.EndHorizontal();
+         EditorGUILayout.Space(10);
 
         DrawBuildingSelection();
         EditorGUILayout.Space(10);
@@ -159,10 +192,11 @@ public class EnemyAIEditor : EditorWindow
         }
 
         config.TrainingActions = finalTrainings;
+        config.StageExistTimer = 15 + finalTrainings.Count * 5;
 
         if (!IsTrainingSelectionVaild())
         {
-            EditorUtility.DisplayDialog("Error", "Please select a training action at least.","OK");
+            EditorUtility.DisplayDialog("Error", "Please select a training action at least.", "OK");
             return;
         }
         string fileName = $"Enemy_AI_Config_{selectedBuilding.name.Substring(0, 1)}_{GenerateCountID()}.asset";

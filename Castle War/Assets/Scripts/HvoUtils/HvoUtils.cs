@@ -58,7 +58,15 @@ public class HvoUtils
             }
         }
 
-        return vaildPos[Random.Range(0, vaildPos.Count - 1)];
+        if (vaildPos.Count == 0)
+        {
+            return Vector2.zero;
+        }
+        else
+        {
+            return vaildPos[Random.Range(0, vaildPos.Count - 1)];
+        }
+
     }
 
     public static float GetAccelerateBuildingParemter(Unit _unit,EnemyType _type)

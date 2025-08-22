@@ -2,12 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Tilemaps;
+
+public enum EnemyColor
+{
+    Red,
+    Yellow,
+    Purple
+}
+
 public class EnemyAgent : MonoBehaviour
 {
-    public StructureUnit MainCastle => FindObjectsOfType<CastleUnit>().Where(unit => !unit.IsDead && unit.CompareTag("RedUnit") && unit.IsCompleted).FirstOrDefault();
+    public StructureUnit MainCastle => FindObjectsOfType<CastleUnit>().Where(unit => !unit.IsDead && unit.CompareTag(ColorToTag()) && unit.IsCompleted).FirstOrDefault();
     public List<WorkerUnit> Workers;
     public List<HumanoidUnit> ActiveArmy;
-    private GameManager m_GameManger;
+    private GameManager m_GameManager;
+    private SettingsManager m_SettingsManager;
     private List<Vector3> m_PlacementGrid;
     private Queue<TrainingActionSO> m_TrainingActions;
     private Queue<StructureUnit> m_TrainingBarracks;
@@ -26,10 +36,14 @@ public class EnemyAgent : MonoBehaviour
     private float lastCheckTimer;
     private float currentStageTimer;
     private float currentStageDuration;
+    public EnemyColor enemyColor = EnemyColor.Red;
 
     private void Start()
     {
-        m_GameManger = GameManager.Get();
+
+        m_GameManager = GameManager.Get();
+        m_SettingsManager = SettingsManager.Get();
+        IsEnemyChoosed();
 
         m_TrainingBarracks = new();
         m_TrainingActions = new();
@@ -37,7 +51,7 @@ public class EnemyAgent : MonoBehaviour
         RefillActiveUnits();
 
         GetRandomStage();
-        EnterNextStage();
+        ImplementCurrentStage();
     }
 
     private void Update()
@@ -49,7 +63,7 @@ public class EnemyAgent : MonoBehaviour
             // 判断能否进入下一个阶段
             if (IsCurrentStageEnded())
             {
-                EnterNextStage();
+                ImplementCurrentStage();
             }
             if (currentStageStructure != null && !currentStageStructure.IsCompleted && !currentStageStructure.HasAssignedWorker)
             {
@@ -70,7 +84,7 @@ public class EnemyAgent : MonoBehaviour
                 ActiveArmy = ActiveArmy.Where(unit => unit != null && !unit.IsDead).ToList();
                 foreach (var unit in ActiveArmy)
                 {
-                    unit.FindClosestEnemyWithoutRange();
+                    unit.EnemyAIFindTarget();
                 }
             }
         }
@@ -82,22 +96,23 @@ public class EnemyAgent : MonoBehaviour
         StartCoroutine(StartTrainingProcess());
     }
 
-    private void EnterNextStage()
+    private void ImplementCurrentStage()
     {
         lastCheckTimer = Time.time;
         currentStageTimer = Time.time;
         EnemyPlaceBuilding(currentStage.BuildingAction);
+        SelectTrainingBarrack(out BarrackUnit barrack);
         foreach (var action in currentStage.TrainingActions)
         {
-            EnemyTrainingUnit(action);
+            AddTrainingAction(action,barrack);
         }
         GetRandomStage();
     }
 
     private void RefillActiveUnits()
     {
-        Debug.Log("FindUnits");
-        var allUnits = FindObjectsOfType<HumanoidUnit>().Where(unit => unit != null && !unit.IsDead && unit.CompareTag("RedUnit") && !unit.TryGetComponent(out TowerUnit _)).ToList();
+        var tag = ColorToTag();
+        var allUnits = FindObjectsOfType<HumanoidUnit>().Where(unit => unit != null && !unit.IsDead && unit.CompareTag(tag) && !unit.TryGetComponent(out TowerUnit _)).ToList();
         Workers.Clear();
         ActiveArmy.Clear();
 
@@ -121,7 +136,7 @@ public class EnemyAgent : MonoBehaviour
         IsTraining = true;
         var trainingAction = m_TrainingActions.Dequeue();
         float time = trainingAction.TrainingTime;
-        float actualTime = HvoUtils.ComputeTrainingTime(FindBarracksCount, time, time / 4) * TrainingParamter(SettingsManager.Get().enemyTypes[1]);
+        float actualTime = HvoUtils.ComputeTrainingTime(FindBarracksCount, time, time / 4) * TrainingParamter(GetEnemyType());
 
         yield return new WaitForSeconds(actualTime);
         var unit = trainingAction.UnitPrefab;
@@ -133,19 +148,23 @@ public class EnemyAgent : MonoBehaviour
                 break;
             barrack = m_TrainingBarracks.Dequeue();
         } while (barrack == null);
-        
+
         if (barrack != null)
         {
-            var newUnit = Instantiate(unit, barrack.transform.position, Quaternion.identity);
             var targetPos = HvoUtils.MoveToVaildPosition(barrack.transform.position);
-            newUnit.GetComponent<HumanoidUnit>().MoveToDestination(targetPos);
-            if (newUnit.TryGetComponent(out BarrelUnit barrel))
+            if (targetPos != Vector2.zero)
             {
-                barrel.SelectedUnit();
+                var newUnit = Instantiate(unit, barrack.transform.position, Quaternion.identity);
+                newUnit.GetComponent<HumanoidUnit>().MoveToDestination(targetPos);
+                if (newUnit.TryGetComponent(out BarrelUnit barrel))
+                {
+                    barrel.SelectedUnit();
+                }
             }
+           
         }
 
-        
+
 
         // if (newUnit.TryGetComponent(out WorkerUnit worker))
         // {
@@ -174,7 +193,7 @@ public class EnemyAgent : MonoBehaviour
             {
                 var placePosition = MainCastle.transform.position + new Vector3(i, j, 0);
 
-                if (m_GameManger.CanEnemyPlaceBuilding(_buildingAction, placePosition))
+                if (m_GameManager.CanEnemyPlaceBuilding(_buildingAction, placePosition))
                 {
                     m_PlacementGrid.Add(placePosition);
                 }
@@ -204,26 +223,59 @@ public class EnemyAgent : MonoBehaviour
         }
     }
 
-    private void EnemyTrainingUnit(TrainingActionSO _trainingAction)
+    private void AddTrainingAction(TrainingActionSO _trainingAction,BarrackUnit _barrack)
     {
-        var barracks = FindObjectsOfType<BarrackUnit>().Where(unit => !unit.IsDead && unit.CompareTag("RedUnit") && !unit.IsUnderConstruction).ToList();
-        if (barracks.Count == 0)
-        {
+        if (_barrack == null)
             return;
-        }
-        var barrack = barracks[Random.Range(0, barracks.Count - 1)];
 
         m_TrainingActions.Enqueue(_trainingAction);
-        m_TrainingBarracks.Enqueue(barrack);
+        m_TrainingBarracks.Enqueue(_barrack);
     }
 
-    private int FindBarracksCount => FindObjectsOfType<BarrackUnit>().Where(unit => unit != null && unit.CompareTag("RedUnit") && unit.IsCompleted && !unit.IsDead).ToList().Count;
+    private bool SelectTrainingBarrack(out BarrackUnit barrack)
+    {
+        var barracks = FindObjectsOfType<BarrackUnit>().Where(unit => !unit.IsDead && unit.CompareTag(ColorToTag()) && !unit.IsUnderConstruction).ToList();
+        if (barracks.Count == 0)
+        {
+            barrack = null;
+            return false;
+        }
+        int leastNodeCount = int.MaxValue;
+        barrack = barracks[0];
+        foreach (var unit in barracks)
+        {
+            var node = TilemapManager.Get().FindNode(unit.transform.position);
+            var pos = node.GetPosition();
+            int unwalkableNodeCount = 0;
+            for (int i = -2; i <= 2; i++)
+            {
+                for (int j = -2; j <= 2; j++)
+                {
+                    var nodePos = pos + new Vector2(i, j);
+                    var currentNode = TilemapManager.Get().FindNode(nodePos);
+                    if (!currentNode.IsWalkable)
+                    {
+                        unwalkableNodeCount++;
+                    }
+                }
+            }
+            if (unwalkableNodeCount < leastNodeCount)
+            {
+                leastNodeCount = unwalkableNodeCount;
+                barrack = unit;
+            }
+        }
+
+        return true;
+    }
+
+    private int FindBarracksCount => FindObjectsOfType<BarrackUnit>().Where(unit => unit != null && unit.CompareTag(ColorToTag()) && unit.IsCompleted && !unit.IsDead).ToList().Count;
 
     private void GetRandomStage()
     {
         currentStage = EnemyAIStages[Random.Range(0, EnemyAIStages.Count - 1)];
         currentStageDuration = currentStage.StageExistTimer;
-    } 
+    }
 
     private bool ExceedTimer() => Time.time - lastCheckTimer >= limitedCheckFrequency;
     private bool IsCurrentStageTimeEnded() => Time.time - currentStageTimer >= currentStageDuration;
@@ -259,4 +311,43 @@ public class EnemyAgent : MonoBehaviour
     }
 
     private bool IsCurrentStageEnded() => (currentStageStructure != null && currentStageStructure.IsCompleted && IsCurrentStageTimeEnded()) || ExceedTimer();
+
+    public string ColorToTag()
+    {
+        return enemyColor.ToString() + "Unit";
+    }
+
+    private void IsEnemyChoosed()
+    {
+        switch (enemyColor)
+        {
+            case EnemyColor.Red:
+                if (m_SettingsManager.enemyTypes[1] == EnemyType.None)
+                    gameObject.SetActive(false);
+                break;
+            case EnemyColor.Yellow:
+                if (m_SettingsManager.enemyTypes[2] == EnemyType.None)
+                    gameObject.SetActive(false);
+                break;
+            case EnemyColor.Purple:
+                if (m_SettingsManager.enemyTypes[3] == EnemyType.None)
+                    gameObject.SetActive(false);
+                break;
+        }
+    }
+
+    private EnemyType GetEnemyType()
+    {
+        switch (enemyColor)
+        {
+            case EnemyColor.Red:
+                return m_SettingsManager.enemyTypes[1];
+            case EnemyColor.Yellow:
+                return m_SettingsManager.enemyTypes[2];
+            case EnemyColor.Purple:
+                return m_SettingsManager.enemyTypes[3];
+            default:
+                return EnemyType.None;
+        }
+    }
 }

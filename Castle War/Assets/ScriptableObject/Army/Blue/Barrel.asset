@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Barrel
   m_EditorClassIdentifier: 
   Icon: {fileID: -1998337416, guid: 9a79717ad0ce62249ac463461be305a2, type: 3}
-  ID: 967624a7-ea21-4ee2-b35e-73fc61d83141
+  UnitName: "\u70B8\u836F\u6876"
   m_UnitPrefab: {fileID: 2535793588476695701, guid: ff856670973fa5444aa7b637b8c21249, type: 3}
   m_GoldCost: 600
   m_MeatCost: 200
+  m_CrystalCost: 0
   m_TrainingTime: 36
   m_UnitType: 5

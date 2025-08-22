@@ -207,15 +207,4 @@ public class LancerUnit : HumanoidUnit
         }
         
     }
-
-    public override void FindClosestEnemyWithoutRange()
-    {
-        base.FindClosestEnemyWithoutRange();
-
-        float distance = Vector2.Distance(transform.position, Target.transform.position);
-        if (distance > AttackCheckRadius)
-        {
-            ResetAnimation();
-        }
-    }
 }

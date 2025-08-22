@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d945a1c1971090846b70a24d82a49bc0, type: 3}
+  m_Name: Enemy_AI_Config_B_112000
+  m_EditorClassIdentifier: 
+  StageExistTimer: 35
+  BuildingAction: {fileID: 11400000, guid: 08d10ab037b8e894987c6aaa4f675533, type: 2}
+  TrainingActions:
+  - {fileID: 11400000, guid: 95b292cd02b5f1045a405e30e2ece371, type: 2}
+  - {fileID: 11400000, guid: ff51afa2b53f11643abb5765aaac8dec, type: 2}
+  - {fileID: 11400000, guid: 31aea2c4b250b1a4f88728bbbadfc9df, type: 2}
+  - {fileID: 11400000, guid: 31aea2c4b250b1a4f88728bbbadfc9df, type: 2}

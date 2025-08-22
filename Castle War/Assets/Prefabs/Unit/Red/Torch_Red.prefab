@@ -381,12 +381,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Actions: []
-  CheckFrequency: 0.1
+  CheckFrequency: 0.2
   IsDead: 0
   HealthBar: {fileID: 769640140099307280}
   ObjectCheckRadius: 4
-  AttackCheckRadius: 1.35
-  AttackFrequency: 0.6
+  AttackCheckRadius: 1.6
+  AttackFrequency: 0.7
   Enemies: []
   Target: {fileID: 0}
 --- !u!114 &5382004439272876636
@@ -413,8 +413,10 @@ MonoBehaviour:
   CritChance:
     baseValue: 20
     modifiers: 
+  DamageReduction:
+    baseValue: 0
+    modifiers: 
   CurrentHealth: 0
-  DamageFont: {fileID: 7138607608365067921, guid: fe1e38683150dfc4aae1b7aa46e07cbb, type: 3}
   damageType: 1
   LevelUpPrefab: {fileID: 1251873176143866736, guid: 171ed8bd240910b478af0d69d36e61f9, type: 3}
   LevelUI: {fileID: 1552235787583503490}
